@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KPIs, Results & Expectations | Confirmations Team</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0A3542;--navy2:#071F28;--navy3:#0D4A5E;
+  --sky:#00AEEF;--sky2:#0090C4;--sky-lt:#EAF6FD;--sky-bg:#F2FAFF;
+  --green:#0B7A4E;--green-lt:#E3F5EC;--green2:#0A6040;
+  --gold:#D4940A;--gold-lt:#FEF8E6;
+  --orange:#D4620A;--orange-lt:#FEF3EB;
+  --red:#B5251B;--red-lt:#FDECEB;
+  --purple:#6B4FBB;--purple-lt:#F0ECFC;
+  --body:#1A2A32;--muted:#5A6E78;--light:#F4F8FB;
+  --border:#C8DDE8;--line:#E2EEF4;
+  --font:'DM Sans',system-ui,sans-serif;
+  --serif:'DM Serif Display',Georgia,serif;
+  --shadow:0 1px 4px rgba(10,53,66,.07),0 4px 14px rgba(10,53,66,.09);
+  --shadow-lg:0 6px 24px rgba(10,53,66,.13),0 16px 48px rgba(10,53,66,.10);
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--light);color:var(--body);overflow-x:hidden;}
+#prog{position:fixed;top:0;left:0;right:0;height:3px;background:rgba(0,174,239,.15);z-index:200;}
+#prog-fill{height:100%;background:linear-gradient(90deg,var(--sky),#00D4FF);width:0%;transition:width .4s;}
+
+/* ── HERO ── */
+#hero{background:var(--navy);padding:0;position:relative;overflow:hidden;min-height:300px;display:flex;flex-direction:column;justify-content:flex-end;}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,174,239,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,174,239,.05) 1px,transparent 1px);background-size:48px 48px;}
+.hero-glow{position:absolute;top:-100px;right:-60px;width:460px;height:460px;border-radius:50%;background:radial-gradient(circle,rgba(0,174,239,.18) 0%,transparent 70%);pointer-events:none;}
+.hero-glow2{position:absolute;bottom:-80px;left:5%;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(0,174,239,.08) 0%,transparent 70%);pointer-events:none;}
+.hero-stripe{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--sky);}
+.hero-inner{max-width:960px;margin:0 auto;padding:56px 28px 40px;position:relative;z-index:1;width:100%;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(0,174,239,.12);border:1px solid rgba(0,174,239,.28);border-radius:20px;padding:5px 14px;font-size:9px;font-weight:700;color:var(--sky);letter-spacing:.22em;margin-bottom:16px;}
+.hero-eyebrow span{width:5px;height:5px;border-radius:50%;background:var(--sky);display:inline-block;}
+.hero-title{font-family:var(--serif);color:#fff;font-size:clamp(28px,4.5vw,50px);line-height:1.06;margin-bottom:10px;}
+.hero-title em{color:var(--sky);font-style:italic;}
+.hero-sub{color:rgba(255,255,255,.55);font-size:14px;line-height:1.7;max-width:540px;margin-bottom:22px;}
+.hero-stats{display:flex;flex-wrap:wrap;gap:10px;}
+.hero-stat{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 16px;text-align:center;}
+.hero-stat-n{font-family:var(--serif);font-size:24px;color:var(--sky);font-weight:700;line-height:1;}
+.hero-stat-l{font-size:9px;color:rgba(255,255,255,.45);letter-spacing:.12em;margin-top:3px;}
+
+/* ── LAYOUT ── */
+.section{padding:36px 28px;}
+.inner{max-width:960px;margin:0 auto;}
+.s-label{font-size:9px;letter-spacing:.26em;font-weight:700;color:var(--sky);margin-bottom:8px;}
+.s-title{font-family:var(--serif);font-size:26px;color:var(--navy);line-height:1.2;margin-bottom:4px;}
+.s-bar{width:36px;height:3px;background:var(--sky);border-radius:2px;margin-bottom:20px;}
+.sep{height:1px;background:var(--line);max-width:960px;margin:0 auto;}
+
+/* ── INTRO CARD ── */
+.intro-card{background:var(--navy);border-radius:16px;padding:22px 26px;border-left:4px solid var(--sky);display:flex;gap:14px;align-items:flex-start;}
+.intro-icon{width:38px;height:38px;border-radius:10px;background:rgba(0,174,239,.15);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.intro-title{font-size:11px;font-weight:700;color:var(--sky);margin-bottom:4px;letter-spacing:.1em;}
+.intro-text{font-size:13px;color:rgba(255,255,255,.65);line-height:1.7;}
+.intro-text strong{color:#fff;}
+
+/* ── KPI GRID ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+@media(max-width:780px){.kpi-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:460px){.kpi-grid{grid-template-columns:1fr;}}
+
+/* ── KPI CARD ── */
+.kpi-card{
+  background:#fff;border-radius:16px;border:1.5px solid var(--line);
+  box-shadow:var(--shadow);cursor:pointer;
+  transition:all .22s cubic-bezier(.4,0,.2,1);
+  overflow:hidden;position:relative;
+}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kpi-color,var(--sky));}
+.kpi-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--kpi-color,var(--sky));}
+.kpi-card.active{border-color:var(--kpi-color,var(--sky));box-shadow:0 0 0 3px color-mix(in srgb,var(--kpi-color,var(--sky)) 15%,transparent),var(--shadow-lg);}
+.kpi-card.has-bonus::after{
+  content:'💰 BONUS';position:absolute;top:10px;right:10px;
+  background:var(--gold-lt);border:1px solid #E8C050;
+  border-radius:6px;padding:2px 7px;font-size:8px;font-weight:700;color:var(--gold);letter-spacing:.1em;
+}
+.kc-top{padding:16px 16px 10px;display:flex;align-items:flex-start;gap:10px;}
+.kc-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+.kc-name{font-size:12.5px;font-weight:700;color:var(--navy);line-height:1.3;margin-bottom:2px;}
+.kc-desc{font-size:10.5px;color:var(--muted);line-height:1.4;}
+.kc-meters{padding:0 16px 14px;display:flex;flex-direction:column;gap:6px;}
+.kc-meter{display:flex;flex-direction:column;gap:3px;}
+.kc-meter-label{display:flex;justify-content:space-between;font-size:9.5px;font-weight:600;}
+.kc-meter-label span:first-child{color:var(--muted);}
+.kc-meter-label span:last-child{color:var(--kpi-color,var(--sky));font-weight:700;}
+.kc-bar-bg{height:5px;background:var(--line);border-radius:3px;overflow:hidden;}
+.kc-bar-fill{height:100%;border-radius:3px;background:var(--kpi-color,var(--sky));transition:width .6s cubic-bezier(.4,0,.2,1);}
+.kc-tap{padding:0 16px 12px;font-size:10px;color:var(--muted);font-style:italic;}
+
+/* ── DETAIL PANEL ── */
+.kpi-detail{
+  display:none;background:var(--navy);border-radius:16px;
+  padding:24px 26px;margin-bottom:16px;
+  border:1.5px solid rgba(0,174,239,.15);
+  animation:fadeUp .28s ease;
+}
+.kpi-detail.visible{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+.kd-top{display:flex;align-items:flex-start;gap:16px;margin-bottom:18px;}
+.kd-icon{width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;}
+.kd-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,174,239,.12);border:1px solid rgba(0,174,239,.22);border-radius:6px;padding:3px 10px;font-size:9px;font-weight:700;color:var(--sky);letter-spacing:.1em;margin-bottom:6px;}
+.kd-title{font-family:var(--serif);font-size:22px;color:#fff;line-height:1.15;}
+.kd-title em{color:var(--sky);font-style:italic;}
+
+.kd-thresholds{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+@media(max-width:500px){.kd-thresholds{grid-template-columns:1fr;}}
+.kd-thresh{border-radius:10px;padding:14px 14px;text-align:center;border:1px solid rgba(255,255,255,.08);}
+.kd-thresh.min{background:rgba(181,37,27,.12);}
+.kd-thresh.target{background:rgba(0,174,239,.1);}
+.kd-thresh.bonus{background:rgba(212,148,10,.12);}
+.kd-thresh-label{font-size:8.5px;font-weight:700;letter-spacing:.18em;margin-bottom:6px;}
+.kd-thresh.min .kd-thresh-label{color:#E07070;}
+.kd-thresh.target .kd-thresh-label{color:var(--sky);}
+.kd-thresh.bonus .kd-thresh-label{color:var(--gold);}
+.kd-thresh-val{font-family:var(--serif);font-size:20px;color:#fff;line-height:1.1;margin-bottom:3px;}
+.kd-thresh-sub{font-size:10px;color:rgba(255,255,255,.4);line-height:1.4;}
+
+.kd-why{background:rgba(255,255,255,.05);border-radius:10px;padding:14px 16px;border:1px solid rgba(255,255,255,.07);margin-bottom:12px;}
+.kd-why-label{font-size:8.5px;font-weight:700;letter-spacing:.18em;color:var(--sky);margin-bottom:6px;opacity:.8;}
+.kd-why-text{font-size:12.5px;color:rgba(255,255,255,.75);line-height:1.65;}
+
+.kd-bonus-callout{background:rgba(212,148,10,.1);border:1px solid rgba(212,148,10,.25);border-radius:10px;padding:12px 16px;display:flex;gap:10px;align-items:flex-start;}
+.kd-bonus-callout-icon{font-size:18px;flex-shrink:0;}
+.kd-bonus-label{font-size:9px;font-weight:700;color:var(--gold);letter-spacing:.12em;margin-bottom:3px;}
+.kd-bonus-text{font-size:12px;color:rgba(255,255,255,.65);line-height:1.55;}
+
+.kd-close{display:block;margin-top:14px;text-align:right;font-size:11px;color:rgba(255,255,255,.3);cursor:pointer;font-weight:600;letter-spacing:.06em;transition:color .2s;}
+.kd-close:hover{color:var(--sky);}
+
+/* ── PERFORMANCE CHAIN ── */
+.chain{display:flex;align-items:center;gap:0;flex-wrap:wrap;justify-content:center;}
+.chain-item{background:#fff;border-radius:12px;padding:14px 16px;border:1.5px solid var(--line);box-shadow:var(--shadow);text-align:center;flex:1;min-width:130px;}
+.chain-emoji{font-size:24px;margin-bottom:6px;}
+.chain-title{font-size:11.5px;font-weight:700;color:var(--navy);line-height:1.3;margin-bottom:3px;}
+.chain-sub{font-size:10.5px;color:var(--muted);line-height:1.4;}
+.chain-arrow{font-size:20px;color:var(--sky);padding:0 6px;flex-shrink:0;align-self:center;}
+@media(max-width:600px){.chain{flex-direction:column;}.chain-arrow{transform:rotate(90deg);}}
+
+/* ── BONUS CALCULATOR ── */
+.calc-wrap{background:var(--navy);border-radius:16px;padding:28px 26px;border:1.5px solid rgba(212,148,10,.2);}
+.calc-title{font-family:var(--serif);font-size:22px;color:#fff;margin-bottom:4px;}
+.calc-title em{color:var(--gold);}
+.calc-sub{font-size:12.5px;color:rgba(255,255,255,.5);margin-bottom:22px;line-height:1.5;}
+.calc-checks{display:flex;flex-direction:column;gap:12px;margin-bottom:22px;}
+.calc-check{
+  display:flex;align-items:center;gap:14px;
+  background:rgba(255,255,255,.05);border-radius:10px;padding:14px 16px;
+  border:1px solid rgba(255,255,255,.07);cursor:pointer;
+  transition:all .18s;user-select:none;
+}
+.calc-check:hover{background:rgba(255,255,255,.08);border-color:rgba(212,148,10,.3);}
+.calc-check.earned{background:rgba(212,148,10,.1);border-color:rgba(212,148,10,.3);}
+.calc-check-box{
+  width:24px;height:24px;border-radius:6px;border:2px solid rgba(255,255,255,.2);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:13px;transition:all .18s;
+}
+.calc-check.earned .calc-check-box{background:var(--gold);border-color:var(--gold);}
+.calc-check-name{font-size:13px;font-weight:600;color:rgba(255,255,255,.8);flex:1;}
+.calc-check.earned .calc-check-name{color:#fff;}
+.calc-check-req{font-size:10.5px;color:rgba(255,255,255,.4);margin-top:2px;line-height:1.4;}
+.calc-check-amt{font-family:var(--serif);font-size:18px;color:rgba(255,255,255,.25);font-weight:700;flex-shrink:0;transition:color .18s;}
+.calc-check.earned .calc-check-amt{color:var(--gold);}
+
+.calc-total-wrap{background:rgba(212,148,10,.12);border:1.5px solid rgba(212,148,10,.3);border-radius:12px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.calc-total-label{font-size:11px;font-weight:700;color:var(--gold);letter-spacing:.1em;}
+.calc-total-sub{font-size:11.5px;color:rgba(255,255,255,.5);margin-top:3px;}
+.calc-total-amount{font-family:var(--serif);font-size:42px;font-weight:700;color:var(--gold);line-height:1;}
+.calc-total-pw{font-size:10px;color:rgba(255,255,255,.35);margin-top:3px;text-align:right;}
+
+/* ── ACE FRAMEWORK ── */
+.ace-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+@media(max-width:600px){.ace-grid{grid-template-columns:1fr;}}
+.ace-card{border-radius:16px;padding:24px 20px;position:relative;overflow:hidden;}
+.ace-card.a{background:linear-gradient(140deg,#0D5A78,var(--navy));}
+.ace-card.c{background:linear-gradient(140deg,#3A2880,#1A1040);}
+.ace-card.e{background:linear-gradient(140deg,#0A6040,#061F14);}
+.ace-letter{font-family:var(--serif);font-size:72px;color:rgba(255,255,255,.07);position:absolute;top:-8px;right:12px;line-height:1;pointer-events:none;}
+.ace-badge{display:inline-block;background:rgba(255,255,255,.12);border-radius:6px;padding:3px 10px;font-size:9px;font-weight:700;letter-spacing:.16em;color:rgba(255,255,255,.7);margin-bottom:10px;}
+.ace-title{font-family:var(--serif);font-size:20px;color:#fff;margin-bottom:8px;}
+.ace-title em{font-style:italic;}
+.ace-text{font-size:12.5px;color:rgba(255,255,255,.65);line-height:1.7;}
+.ace-text strong{color:#fff;}
+
+/* ── NARRATION ── */
+.narration{background:var(--navy);border-radius:14px;padding:22px 26px;display:flex;gap:14px;align-items:flex-start;border-left:4px solid var(--sky);}
+.narration-q{font-size:26px;color:var(--sky);line-height:1;flex-shrink:0;margin-top:-4px;}
+.narration-text{font-size:14px;color:rgba(255,255,255,.75);line-height:1.75;font-style:italic;}
+.narration-text strong{color:#fff;font-style:normal;}
+.sc-row{
+  background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.08);
+  border-radius:12px;padding:14px 16px;
+  display:flex;align-items:center;justify-content:space-between;gap:13px;
+  cursor:pointer;transition:all .18s;
+}
+.sc-row:hover{background:rgba(255,255,255,.08);border-color:rgba(0,174,239,.3);}
+.sc-row.hit{background:rgba(0,174,239,.1);border-color:rgba(0,174,239,.4);}
+.sc-left{display:flex;align-items:center;gap:13px;}
+.sc-check{
+  width:22px;height:22px;border-radius:6px;flex-shrink:0;
+  border:2px solid rgba(255,255,255,.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;transition:all .18s;
+}
+.sc-row.hit .sc-check{background:var(--sky);border-color:var(--sky);content:'✓';}
+.sc-row.hit .sc-check::after{content:'✓';color:#fff;font-weight:700;}
+.sc-name{font-size:13px;font-weight:600;color:rgba(255,255,255,.8);margin-bottom:5px;}
+.sc-row.hit .sc-name{color:#fff;}
+.sc-tiers{display:flex;gap:6px;flex-wrap:wrap;}
+.sc-tier{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;}
+.sc-tier.min{background:rgba(181,37,27,.2);color:#FF8F8A;}
+.sc-tier.tgt{background:rgba(0,174,239,.15);color:var(--sky);}
+.sc-tier.goal{background:rgba(11,122,78,.2);color:#4ADE80;}
+.sc-status{font-size:11px;font-weight:600;color:rgba(255,255,255,.3);flex-shrink:0;transition:color .18s;}
+.sc-row.hit .sc-status{color:var(--sky);}
+</style>
+</head>
+<body>
+<div id="prog"><div id="prog-fill"></div></div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-stripe"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow"><span></span>CONFIRMATIONS TEAM · DAY 2</div>
+    <h1 class="hero-title">KPIs, Expected Results<br><em>& Bonus Structure</em></h1>
+    <p class="hero-sub">These are the numbers that define performance in the Confirmations Team. Click any metric to understand what minimum looks like, what the target is, and what you're aiming for. Then see how the metrics connect.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-n">6</div><div class="hero-stat-l">METRICS</div></div>
+      <div class="hero-stat"><div class="hero-stat-n">4</div><div class="hero-stat-l">BONUS OPP.</div></div>
+      <div class="hero-stat"><div class="hero-stat-n">$200</div><div class="hero-stat-l">MAX WEEKLY BONUS</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- INTRO -->
+<div class="section" style="padding-bottom:20px;">
+  <div class="inner">
+    <div class="intro-card">
+      <div class="intro-icon">📊</div>
+      <div>
+        <div class="intro-title">HOW TO READ THIS</div>
+        <div class="intro-text">These metrics are not separate — <strong>they feed into each other.</strong> Focus on activity, attitude, and following the system, and the results will take care of themselves. Click any metric card to see the full breakdown.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- KPI GRID -->
+<div class="section" style="padding-top:20px;">
+  <div class="inner">
+    <div class="s-label">YOUR PERFORMANCE METRICS</div>
+    <div class="s-title">The 6 KPIs</div>
+    <div class="s-bar"></div>
+
+    <!-- Detail panel -->
+    <div class="kpi-detail" id="kpi-detail"></div>
+
+    <div class="kpi-grid">
+
+      <!-- 1: Call Efficiency -->
+      <div class="kpi-card" style="--kpi-color:var(--sky);" onclick="showKPI('efficiency')" id="kcard-efficiency">
+        <div class="kc-top"><div class="kc-icon">📞</div><div><div class="kc-name">Call Efficiency</div><div class="kc-desc">Talk time vs available hours</div></div></div>
+        <div class="kc-meters">
+          <div class="kc-meter"><div class="kc-meter-label"><span>Minimum</span><span>30%</span></div><div class="kc-bar-bg"><div class="kc-bar-fill" style="width:60%"></div></div></div>
+          <div class="kc-meter"><div class="kc-meter-label"><span>Target</span><span>40%+</span></div><div class="kc-bar-bg"><div class="kc-bar-fill" style="width:80%"></div></div></div>
+        </div>
+        <div class="kc-tap">💰 Bonus available · tap to explore</div>
+      </div>
+
+      <!-- 2: Active Hours -->
+      <div class="kpi-card" style="--kpi-color:#6B4FBB;" onclick="showKPI('hours')" id="kcard-hours">
+        <div class="kc-top"><div class="kc-icon">⏱️</div><div><div class="kc-name">Active Hours</div><div class="kc-desc">Available for dialling / talking</div></div></div>
+        <div class="kc-meters">
+          <div class="kc-meter"><div class="kc-meter-label"><span>Minimum</span><span>25 hrs/wk</span></div><div class="kc-bar-bg"><div class="kc-bar-fill" style="width:55%;background:#6B4FBB;"></div></div></div>
+          <div class="kc-meter"><div class="kc-meter-label"><span>Target</span><span>30+ hrs/wk</span></div><div class="kc-bar-bg"><div class="kc-bar-fill" style="width:80%;background:#6B4FBB;"></div></div></div>
+        </div>
+        <div class="kc-tap">Foundation metric · tap to explore</div>
+      </div>
+
+      <!-- 3: Pick-Ups -->
+      <div class="kpi-card has-bonus" style="--kpi-color:var(--green);" onclick="showKPI('pickups')" id="kcard-pickups">
+        <div class="kc-top"><div class="kc-icon">🤝</div><div><div class="kc-name">Pick-Ups</div><div class="kc-desc">Customers who answer</div></div></div>
+        <div class="kc-meters">
+          <div class="kc-meter"><div class="kc-meter-label"><span>Minimum</span><span>15/day</span></div><div class="kc-bar-bg"><div class="kc-bar-fill" style="width:50%;background:var(--green);"></div></div></div>
+          <div class="kc-meter"><div class="kc-meter-label"><span>Target</span><span>20+/day</span></div><div class="kc-bar-bg"><div class="kc-bar-fill" style="width:75%;background:var(--green);"></div></div></div>
+        </div>
+        <div class="kc-tap">💰 Bonus available · tap to explore</div>
+      </div>
+
+      <!-- 4: Bookings -->
+      <div class="kpi-card" style="--kpi-color:var(--sky2);" onclick="showKPI('bookings')" id="kcard-bookings">
+        <div class="kc-top"><div class="kc-icon">📅</div><div><div class="kc-name">Bookings</div><div class="kc-desc">Appointments booked per week</div></div></div>
+        <div class="kc-meters">
+          <div class="kc-meter"><div class="kc-meter-label"><span>Minimum</span><span>15/wk</span></div><div class="kc-bar-bg"><div class="kc-bar-fill" style="width:55%;"></div></div></div>
+          <div class="kc-meter"><div class="kc-meter-label"><span>Target</span><span>20+/wk</span></div><div class="kc-bar-bg"><div class="kc-bar-fill" style="width:80%;"></div></div></div>
+        </div>
+        <div class="kc-tap">Core output metric · tap to explore</div>
+      </div>
+
+      <!-- 5: Confirmation Rate -->
+      <div class="kpi-card" style="--kpi-color:var(--orange);" onclick="showKPI('confirm')" id="kcard-confirm">
+        <div class="kc-top"><div class="kc-icon">✅</div><div><div class="kc-name">Confirmation Rate</div><div class="kc-desc">Booked appts that confirm</div></div></div>
+        <div class="kc-meters">
+          <div class="kc-meter"><div class="kc-meter-label"><span>Minimum</span><span>50%</span></div><div class="kc-bar-bg"><div class="kc-bar-fill" style="width:50%;background:var(--orange);"></div></div></div>
+          <div class="kc-meter"><div class="kc-meter-label"><span>Target</span><span>65%+</span></div><div class="kc-bar-bg"><div class="kc-bar-fill" style="width:80%;background:var(--orange);"></div></div></div>
+        </div>
+        <div class="kc-tap">Quality signal · tap to explore</div>
+      </div>
+
+      <!-- 6: Net Sit Rate -->
+      <div class="kpi-card has-bonus" style="--kpi-color:var(--gold);" onclick="showKPI('sit')" id="kcard-sit">
+        <div class="kc-top"><div class="kc-icon">🪑</div><div><div class="kc-name">Net Sit Rate</div><div class="kc-desc">Booked to sat</div></div></div>
+        <div class="kc-meters">
+          <div class="kc-meter"><div class="kc-meter-label"><span>Minimum</span><span>33%</span></div><div class="kc-bar-bg"><div class="kc-bar-fill" style="width:50%;background:var(--gold);"></div></div></div>
+          <div class="kc-meter"><div class="kc-meter-label"><span>Target</span><span>40%+</span></div><div class="kc-bar-bg"><div class="kc-bar-fill" style="width:65%;background:var(--gold);"></div></div></div>
+        </div>
+        <div class="kc-tap">💰 Bonus available · tap to explore</div>
+      </div>
+
+      <!-- 7: Pick-Up to Close Rate -->
+      <div class="kpi-card has-bonus" style="--kpi-color:var(--red);" onclick="showKPI('close')" id="kcard-close">
+        <div class="kc-top"><div class="kc-icon">🎯</div><div><div class="kc-name">Pick-Up to Close</div><div class="kc-desc">From qualified opportunities</div></div></div>
+        <div class="kc-meters">
+          <div class="kc-meter"><div class="kc-meter-label"><span>Minimum</span><span>10%</span></div><div class="kc-bar-bg"><div class="kc-bar-fill" style="width:30%;background:var(--red);"></div></div></div>
+          <div class="kc-meter"><div class="kc-meter-label"><span>Target</span><span>20%+</span></div><div class="kc-bar-bg"><div class="kc-bar-fill" style="width:60%;background:var(--red);"></div></div></div>
+        </div>
+        <div class="kc-tap">💰 Bonus available · tap to explore</div>
+      </div>
+
+      <!-- 8: Sales Contribution -->
+      <div class="kpi-card" style="--kpi-color:var(--green2);" onclick="showKPI('sales')" id="kcard-sales">
+        <div class="kc-top"><div class="kc-icon">💸</div><div><div class="kc-name">Sales Contribution</div><div class="kc-desc">Deals closed from your appts</div></div></div>
+        <div class="kc-meters">
+          <div class="kc-meter"><div class="kc-meter-label"><span>Minimum</span><span>1 sale/wk</span></div><div class="kc-bar-bg"><div class="kc-bar-fill" style="width:35%;background:var(--green2);"></div></div></div>
+          <div class="kc-meter"><div class="kc-meter-label"><span>Target</span><span>2 sales/wk</span></div><div class="kc-bar-bg"><div class="kc-bar-fill" style="width:70%;background:var(--green2);"></div></div></div>
+        </div>
+        <div class="kc-tap">Ultimate outcome · tap to explore</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- PERFORMANCE CHAIN -->
+<div class="section" style="background:#fff;">
+  <div class="inner">
+    <div class="s-label">HOW IT ALL CONNECTS</div>
+    <div class="s-title">The Performance Chain</div>
+    <div class="s-bar"></div>
+    <div class="chain">
+      <div class="chain-item"><div class="chain-emoji">📞</div><div class="chain-title">200+ calls per week</div><div class="chain-sub">Volume creates contact opportunities</div></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-item"><div class="chain-emoji">✅</div><div class="chain-title">Higher confirm rate</div><div class="chain-sub">More appointments locked in</div></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-item"><div class="chain-emoji">👥</div><div class="chain-title">Dual attendance</div><div class="chain-sub">Both decision-makers present</div></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-item"><div class="chain-emoji">🪑</div><div class="chain-title">Specialist sits</div><div class="chain-sub">Appointment actually happens</div></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-item"><div class="chain-emoji">💸</div><div class="chain-title">More sales</div><div class="chain-sub">The specialist closes — you made it happen</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- WEEKLY SCORECARD -->
+<div class="section">
+  <div class="inner">
+    <div class="s-label">WEEKLY SCORECARD</div>
+    <div class="s-title">Where Do You Stand This Week?</div>
+    <div class="s-bar"></div>
+    <div style="background:var(--navy);border-radius:16px;padding:28px 26px;border:1.5px solid rgba(0,174,239,.15);">
+      <div style="font-family:var(--serif);font-size:20px;color:#fff;margin-bottom:6px;">Weekly <em style="color:var(--sky);">Performance Check</em></div>
+      <div style="font-size:12.5px;color:rgba(255,255,255,.5);margin-bottom:24px;">Use this to check where you stand against each KPI. Click any row to mark it as hit.</div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;" id="scorecard">
+
+        <div class="sc-row" onclick="toggleRow(this)">
+          <div class="sc-left">
+            <div class="sc-check"></div>
+            <div>
+              <div class="sc-name">✅ Confirm Rate</div>
+              <div class="sc-tiers"><span class="sc-tier min">Min 50%</span><span class="sc-tier tgt">Target 65%</span><span class="sc-tier goal">Goal 75%</span></div>
+            </div>
+          </div>
+          <div class="sc-status"></div>
+        </div>
+
+        <div class="sc-row" onclick="toggleRow(this)">
+          <div class="sc-left">
+            <div class="sc-check"></div>
+            <div>
+              <div class="sc-name">❌ Cancellation Rate</div>
+              <div class="sc-tiers"><span class="sc-tier min">Max 10%</span><span class="sc-tier tgt">Target &lt;7%</span><span class="sc-tier goal">Goal &lt;5%</span></div>
+            </div>
+          </div>
+          <div class="sc-status"></div>
+        </div>
+
+        <div class="sc-row" onclick="toggleRow(this)">
+          <div class="sc-left">
+            <div class="sc-check"></div>
+            <div>
+              <div class="sc-name">👥 Dual Attendance</div>
+              <div class="sc-tiers"><span class="sc-tier min">Min 70%</span><span class="sc-tier goal">Goal 80%+</span></div>
+            </div>
+          </div>
+          <div class="sc-status"></div>
+        </div>
+
+        <div class="sc-row" onclick="toggleRow(this)">
+          <div class="sc-left">
+            <div class="sc-check"></div>
+            <div>
+              <div class="sc-name">📋 Script Adherence</div>
+              <div class="sc-tiers"><span class="sc-tier min">Min 7/10</span><span class="sc-tier goal">Goal 9+/10</span></div>
+            </div>
+          </div>
+          <div class="sc-status"></div>
+        </div>
+
+        <div class="sc-row" onclick="toggleRow(this)">
+          <div class="sc-left">
+            <div class="sc-check"></div>
+            <div>
+              <div class="sc-name">🔄 5 Runs Completed Daily</div>
+              <div class="sc-tiers"><span class="sc-tier min">Non-negotiable</span></div>
+            </div>
+          </div>
+          <div class="sc-status"></div>
+        </div>
+
+        <div class="sc-row" onclick="toggleRow(this)">
+          <div class="sc-left">
+            <div class="sc-check"></div>
+            <div>
+              <div class="sc-name">📞 Outbound Calls</div>
+              <div class="sc-tiers"><span class="sc-tier min">Min 200</span><span class="sc-tier goal">Goal 300+</span></div>
+            </div>
+          </div>
+          <div class="sc-status"></div>
+        </div>
+
+      </div>
+
+      <div style="margin-top:20px;background:rgba(0,174,239,.08);border:1.5px solid rgba(0,174,239,.2);border-radius:12px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+        <div>
+          <div style="font-size:10px;font-weight:700;color:var(--sky);letter-spacing:.12em;">WEEKLY KPIs HIT</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:3px;">Click each row when you hit it</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-family:var(--serif);font-size:42px;font-weight:700;color:var(--sky);line-height:1;" id="sc-count">0/6</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:3px;">this week</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- ACE FRAMEWORK -->
+<div class="section" style="background:#fff;">
+  <div class="inner">
+    <div class="s-label">FINAL NOTE — FOCUS ON WHAT YOU CONTROL</div>
+    <div class="s-title">The ACE Framework</div>
+    <div class="s-bar"></div>
+    <div class="ace-grid">
+      <div class="ace-card a">
+        <div class="ace-letter">A</div>
+        <div class="ace-badge">A — ACTIVITY</div>
+        <div class="ace-title"><em>Dial more.</em> Talk more. Book more.</div>
+        <div class="ace-text">Volume is the foundation of everything. <strong>You can't control who picks up. You can control how many times you dial.</strong> More dials = more opportunities = more results.</div>
+      </div>
+      <div class="ace-card c">
+        <div class="ace-letter">C</div>
+        <div class="ace-badge">C — CONVICTION</div>
+        <div class="ace-title">Every call deserves your <em>best energy.</em></div>
+        <div class="ace-text">Customers feel energy through the phone. <strong>A flat voice kills warm leads.</strong> Show up with the same conviction on call 40 as you did on call 1. They can hear it — and they respond to it.</div>
+      </div>
+      <div class="ace-card e">
+        <div class="ace-letter">E</div>
+        <div class="ace-badge">E — EXECUTE THE SYSTEM</div>
+        <div class="ace-title">Don't reinvent the <em>wheel.</em></div>
+        <div class="ace-text">Follow the process. Work the frameworks. Trust the results. <strong>The system exists because it works.</strong> Your job is to execute it consistently — not to improvise your way to a different outcome.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- NARRATION -->
+<div class="section">
+  <div class="inner">
+    <div class="narration">
+      <div class="narration-q">"</div>
+      <div class="narration-text">Do the right things, in the right way, every single day — <strong>and the results will take care of themselves.</strong></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('prog-fill').style.width=Math.min(p,100)+'%';
+});
+
+const KPI_DATA={
+  efficiency:{
+    icon:'📞',name:'Call Efficiency',badge:'ACTIVITY METRIC',color:'var(--sky)',
+    min:'30%',target:'40%+',
+    bonus:'50%+ weekly average',bonusAmt:'$50',bonusCond:'No additional conditions required.',
+    why:'Call efficiency measures how much of your available time is spent actually talking to customers — not sitting idle. A low efficiency number means you\'re letting time slip through without dialling. This is one of the most controllable metrics on the board.',
+    hasBonus:true
+  },
+  hours:{
+    icon:'⏱️',name:'Active Hours',badge:'FOUNDATION METRIC',color:'#6B4FBB',
+    min:'25 hrs/wk',target:'30+ hrs/wk',
+    bonus:null,
+    why:'Active hours is the foundation that every other metric sits on. You can\'t hit pick-up targets if you\'re not on the phone. You can\'t build a task list if you\'re not dialling. Time in seat, available and dialling — this is where it all starts.',
+    hasBonus:false
+  },
+  pickups:{
+    icon:'🤝',name:'Pick-Ups',badge:'VOLUME METRIC',color:'var(--green)',
+    min:'15/day',target:'20+/day',
+    bonus:'125+ per week',bonusAmt:'$50',bonusCond:'Minimum 15% close rate required to qualify.',
+    why:'Pick-ups are the raw material of your job. Every booking starts with someone answering the phone. 15/day is the floor — at 20+ you\'re generating enough opportunities to consistently hit booking targets. The close rate condition keeps the focus on quality, not just volume.',
+    hasBonus:true
+  },
+  bookings:{
+    icon:'📅',name:'Bookings',badge:'CORE OUTPUT',color:'var(--sky2)',
+    min:'15/wk',target:'20+/wk',
+    bonus:null,
+    why:'Bookings are your primary deliverable. Everything you do — dialling, follow-up, objection handling — exists to produce qualified appointments in the calendar. 15 is the minimum viable week. 20+ means you\'re consistently contributing to the pipeline.',
+    hasBonus:false
+  },
+  confirm:{
+    icon:'✅',name:'Confirmation Rate',badge:'QUALITY SIGNAL',color:'var(--orange)',
+    min:'50%',target:'65%+',
+    bonus:null,
+    why:'If your booked appointments aren\'t confirming, something is wrong upstream — either the appointment wasn\'t genuinely qualified, the CRM notes were lacking, or the customer wasn\'t sold on the value of showing up. A strong confirmation rate is a quality signal. It means the appointments you\'re booking are real.',
+    hasBonus:false
+  },
+  sit:{
+    icon:'🪑',name:'Net Sit Rate',badge:'QUALITY METRIC',color:'var(--gold)',
+    min:'33%',target:'40%+',
+    bonus:'50%+ weekly average',bonusAmt:'$50',bonusCond:'Minimum 15 appointments in calendar required.',
+    why:'Booked to sat — meaning the specialist actually walked in the door. A 33% floor means at least 1 in 3 of your bookings result in a real consultation. At 50% you\'re qualifying well, setting expectations correctly, and booking people who genuinely want to be there.',
+    hasBonus:true
+  },
+  close:{
+    icon:'🎯',name:'Pick-Up to Close Rate',badge:'CONVERSION METRIC',color:'var(--red)',
+    min:'10%',target:'20%+',
+    bonus:'33%+ weekly average',bonusAmt:'$50',bonusCond:'Minimum 15 bookings for the week required.',
+    why:'Of all the qualified conversations you have, what percentage result in a booked appointment? 10% is the minimum — that\'s 1 in 10 pick-ups. At 20% you\'re converting 1 in 5. At 33%+ — the bonus threshold — you\'re converting 1 in 3 qualified conversations. That\'s elite performance.',
+    hasBonus:true
+  },
+  sales:{
+    icon:'💸',name:'Sales Contribution',badge:'ULTIMATE OUTCOME',color:'var(--green2)',
+    min:'1 sale/wk',target:'2 sales/wk',
+    bonus:null,
+    why:'You don\'t close the sale — the specialist does. But you produce the appointment that makes it possible. 1 sale per week means your appointments are resulting in signed deals. 2+ means you\'re consistently sending qualified, ready-to-buy customers. This is the number that proves your appointments have real value.',
+    hasBonus:false
+  }
+};
+
+let activeKPI=null;
+
+function showKPI(id){
+  if(activeKPI===id){closeKPI();return;}
+  activeKPI=id;
+  const d=KPI_DATA[id];
+  document.querySelectorAll('.kpi-card').forEach(c=>c.classList.remove('active'));
+  document.getElementById('kcard-'+id).classList.add('active');
+
+  const panel=document.getElementById('kpi-detail');
+  panel.style.setProperty('--detail-color',d.color);
+
+  panel.innerHTML=`
+    <div class="kd-top">
+      <div class="kd-icon">${d.icon}</div>
+      <div>
+        <div class="kd-badge" style="background:color-mix(in srgb,${d.color} 12%,transparent);border-color:color-mix(in srgb,${d.color} 25%,transparent);color:${d.color};">${d.badge}</div>
+        <div class="kd-title">${d.name}</div>
+      </div>
+    </div>
+    <div class="kd-thresholds">
+      <div class="kd-thresh min">
+        <div class="kd-thresh-label">MINIMUM</div>
+        <div class="kd-thresh-val">${d.min}</div>
+        <div class="kd-thresh-sub">Floor — below this needs attention</div>
+      </div>
+      <div class="kd-thresh target">
+        <div class="kd-thresh-label">TARGET</div>
+        <div class="kd-thresh-val">${d.target}</div>
+        <div class="kd-thresh-sub">This is what good looks like</div>
+      </div>
+      ${d.hasBonus?`<div class="kd-thresh bonus"><div class="kd-thresh-label">BONUS THRESHOLD</div><div class="kd-thresh-val">${d.bonus}</div><div class="kd-thresh-sub">${d.bonusAmt} per week</div></div>`:`<div class="kd-thresh" style="background:rgba(255,255,255,.03);"><div class="kd-thresh-label" style="color:rgba(255,255,255,.2);">BONUS</div><div class="kd-thresh-val" style="font-size:14px;color:rgba(255,255,255,.25);">No bonus for<br>this metric</div></div>`}
+    </div>
+    <div class="kd-why">
+      <div class="kd-why-label">WHY THIS METRIC MATTERS</div>
+      <div class="kd-why-text">${d.why}</div>
+    </div>
+    ${d.hasBonus?`<div class="kd-bonus-callout"><div class="kd-bonus-callout-icon">💰</div><div><div class="kd-bonus-label">BONUS CONDITION</div><div class="kd-bonus-text">${d.bonusCond}</div></div></div>`:''}
+    <span class="kd-close" onclick="closeKPI()">CLOSE ✕</span>
+  `;
+
+  panel.classList.add('visible');
+  setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'nearest'}),80);
+}
+
+function closeKPI(){
+  document.getElementById('kpi-detail').classList.remove('visible');
+  document.querySelectorAll('.kpi-card').forEach(c=>c.classList.remove('active'));
+  activeKPI=null;
+}
+
+// ── WEEKLY SCORECARD ──
+function toggleRow(el){
+  el.classList.toggle('hit');
+  const status=el.querySelector('.sc-status');
+  status.textContent=el.classList.contains('hit')?'Hit ✓':'';
+  const hit=document.querySelectorAll('.sc-row.hit').length;
+  const total=document.querySelectorAll('.sc-row').length;
+  document.getElementById('sc-count').textContent=hit+'/'+total;
+}
+</script>
+</body>
+</html>
