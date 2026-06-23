@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Breaker 1 — Company Knowledge Check</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0A3542;--navy2:#071F28;
+  --sky:#00AEEF;--sky2:#0090C4;--sky-lt:#EAF6FD;--sky-bg:#F2FAFF;
+  --green:#0B7A4E;--green-lt:#E3F5EC;
+  --red:#B5251B;--red-lt:#FDECEB;
+  --body:#1A2A32;--muted:#5A6E78;--light:#F4F8FB;
+  --border:#C8DDE8;--line:#E2EEF4;
+  --font:'DM Sans',system-ui,sans-serif;
+  --serif:'DM Serif Display',Georgia,serif;
+  --shadow:0 1px 3px rgba(10,53,66,.06),0 4px 12px rgba(10,53,66,.08);
+  --shadow-lg:0 4px 16px rgba(10,53,66,.1),0 12px 32px rgba(10,53,66,.1);
+}
+html,body{
+  height:100%;font-family:var(--font);
+  background:var(--navy2);color:var(--body);
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;padding:24px;
+}
+
+/* CARD */
+.card{
+  background:#fff;border-radius:20px;
+  width:100%;max-width:660px;
+  box-shadow:0 8px 40px rgba(0,0,0,.25);
+  overflow:hidden;
+}
+
+/* CARD HEADER */
+.card-header{
+  background:var(--navy);padding:22px 28px 18px;
+  position:relative;overflow:hidden;
+}
+.card-header::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--sky);}
+.ch-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.ch-eyebrow{color:var(--sky);font-size:8px;letter-spacing:.24em;font-weight:600;opacity:.85;}
+.ch-badge{
+  background:rgba(0,174,239,.15);border:1px solid rgba(0,174,239,.3);
+  border-radius:20px;padding:3px 11px;
+  color:var(--sky);font-size:8px;font-weight:600;letter-spacing:.12em;
+}
+.ch-title{color:#fff;font-size:22px;font-weight:700;font-family:var(--serif);}
+.ch-sub{color:rgba(255,255,255,.55);font-size:12px;margin-top:4px;line-height:1.5;}
+
+/* PROGRESS DOTS */
+.progress-dots{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:16px 28px 0;
+}
+.pdot{
+  height:5px;border-radius:3px;
+  background:var(--line);transition:all .4s ease;
+}
+.pdot.active{background:var(--sky);flex:2;}
+.pdot.done{background:var(--sky);opacity:.4;}
+.pdot{flex:1;}
+
+/* CARD BODY */
+.card-body{padding:22px 28px 24px;}
+
+/* QUESTION */
+.q-num{
+  font-size:9px;color:var(--sky);font-weight:600;letter-spacing:.16em;
+  margin-bottom:10px;display:flex;align-items:center;gap:6px;
+}
+.q-num::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--sky);flex-shrink:0;}
+.q-text{font-size:17px;font-weight:700;color:var(--navy);line-height:1.45;margin-bottom:18px;}
+.q-opts{display:flex;flex-direction:column;gap:9px;}
+.q-opt{
+  display:flex;align-items:center;gap:13px;
+  padding:13px 16px;border-radius:10px;
+  border:1.5px solid var(--line);background:#fff;
+  cursor:pointer;transition:all .18s;user-select:none;
+}
+.q-opt:hover:not(.correct):not(.wrong):not(.disabled){
+  border-color:var(--sky);background:var(--sky-lt);transform:translateX(3px);
+}
+.q-opt.correct{border-color:var(--green);background:var(--green-lt);pointer-events:none;}
+.q-opt.wrong{border-color:var(--red);background:var(--red-lt);pointer-events:none;}
+.q-opt.disabled{pointer-events:none;opacity:.4;}
+.q-dot{
+  width:22px;height:22px;border-radius:50%;
+  border:2px solid var(--border);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:#fff;transition:all .18s;
+}
+.q-opt.correct .q-dot{background:var(--green);border-color:var(--green);}
+.q-opt.wrong .q-dot{background:var(--red);border-color:var(--red);}
+.q-opt-text{font-size:13px;color:var(--body);line-height:1.4;flex:1;}
+.q-opt.correct .q-opt-text{color:#0A4425;font-weight:600;}
+.q-opt.wrong .q-opt-text{color:#7A1010;}
+
+/* FEEDBACK */
+.q-feedback{border-radius:10px;padding:13px 16px;font-size:13px;line-height:1.65;margin-top:12px;display:none;}
+.q-feedback.show{display:block;}
+.q-feedback.ok{background:var(--green-lt);border-left:4px solid var(--green);color:#0A4425;}
+.q-feedback.bad{background:var(--red-lt);border-left:4px solid var(--red);color:#7A1010;}
+.q-retry{font-size:12px;color:var(--red);font-weight:600;margin-top:7px;display:none;}
+.q-retry.show{display:block;}
+
+/* COMPLETE STATE */
+.complete-state{display:none;text-align:center;padding:14px 0 8px;}
+.complete-state.show{display:block;animation:fadeUp .4s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.cpl-icon{font-size:48px;margin-bottom:12px;}
+.cpl-title{font-size:24px;font-weight:700;color:var(--navy);margin-bottom:6px;font-family:var(--serif);}
+.cpl-sub{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6;}
+.cpl-score{
+  display:inline-block;
+  background:var(--sky-bg);border:1.5px solid var(--border);
+  border-radius:12px;padding:12px 28px;margin-bottom:20px;
+}
+.cpl-score-n{font-size:36px;font-weight:700;color:var(--sky);font-family:var(--serif);}
+.cpl-score-lbl{font-size:9.5px;color:var(--muted);letter-spacing:.12em;}
+.cpl-next{
+  background:var(--sky);color:#fff;border:none;
+  border-radius:10px;padding:12px 26px;
+  font-family:var(--font);font-size:13.5px;font-weight:600;
+  cursor:pointer;letter-spacing:.02em;
+  box-shadow:0 4px 14px rgba(0,174,239,.35);
+  transition:all .18s;display:inline-flex;align-items:center;gap:8px;
+}
+.cpl-next:hover{background:var(--sky2);transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,174,239,.4);}
+.cpl-rows{display:flex;flex-direction:column;gap:7px;max-width:420px;margin:0 auto 18px;}
+.cpl-row{display:flex;align-items:center;gap:10px;padding:9px 13px;border-radius:9px;font-size:12px;font-weight:600;text-align:left;}
+.cpl-row.ok{background:var(--green-lt);border:1.5px solid rgba(11,122,78,.2);color:#0A4425;}
+.cpl-row.bad{background:var(--red-lt);border:1.5px solid rgba(181,37,27,.2);color:#7A1010;}
+
+/* NEXT MODULE TEASER */
+.next-teaser{
+  background:var(--navy);margin:0;padding:16px 28px;
+  display:flex;align-items:center;justify-content:space-between;
+  display:none;
+}
+.next-teaser.show{display:flex;}
+.nt-label{font-size:8px;color:rgba(0,174,239,.6);letter-spacing:.2em;font-weight:600;margin-bottom:3px;}
+.nt-text{font-size:13px;color:#fff;font-weight:500;}
+.nt-arrow{color:var(--sky);font-size:18px;}
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- HEADER -->
+  <div class="card-header">
+    <div class="ch-top">
+      <span class="ch-eyebrow">CONFIRMATIONS TEAM · DAY 1</span>
+      <span class="ch-badge">BREAKER</span>
+    </div>
+    <div class="ch-title">Company Knowledge Check</div>
+    <div class="ch-sub">3 quick questions before moving to solar content — confirm you've got the foundations.</div>
+  </div>
+
+  <!-- PROGRESS DOTS -->
+  <div class="progress-dots" id="progress-dots">
+    <div class="pdot active" id="pd0"></div>
+    <div class="pdot" id="pd1"></div>
+    <div class="pdot" id="pd2"></div>
+  </div>
+
+  <!-- BODY -->
+  <div class="card-body">
+    <div id="quiz-body"></div>
+    <div class="complete-state" id="complete-state">
+      <div class="cpl-icon">⚡</div>
+      <div class="cpl-title">Breaker cleared.</div>
+      <div class="cpl-sub">Company knowledge confirmed — you're ready to move into product content.</div>
+      <div class="cpl-score">
+        <div class="cpl-score-n" id="cpl-score">3/3</div>
+        <div class="cpl-score-lbl">CORRECT</div>
+      </div>
+      <div class="cpl-rows" id="cpl-rows"></div>
+    </div>
+  </div>
+
+  <!-- NEXT TEASER -->
+  <div class="next-teaser" id="next-teaser">
+    <div>
+      <div class="nt-label">NEXT UP</div>
+      <div class="nt-text">How Solar Works</div>
+    </div>
+    <div class="nt-arrow">→</div>
+  </div>
+
+</div>
+
+<script>
+const QUIZ=[
+  {
+    q:"RESINC's mission is to become the most _______ solar company in the industry.",
+    opts:["Profitable","Reputable","Popular","Affordable"],
+    c:1,
+    fb:"Not cheapest, not loudest, not biggest — most reputable. That word drives every decision from how leads are qualified to how systems are designed."
+  },
+  {
+    q:"You're speaking with a customer who qualifies on every criteria except their bill is $320/quarter. What do you do?",
+    opts:["Book it — they're a good fit on everything else","Ask them to call back when their bill is higher","Disqualify — minimum bill is $400 per quarter","Refer to a senior setter to decide"],
+    c:2,
+    fb:"Ethical selling protects everyone. Below $400/quarter, the ROI case is too weak to send a consultant. That's not rejection — it's doing right by the customer."
+  },
+  {
+    q:"Which core value is most directly linked to how you handle a customer pushing back on the phone?",
+    opts:["Personal Responsibility — own the outcome","Follow The System — trust the script","Present With Conviction — and Stay Coachable for how you respond to feedback after","Spread Positivity — keep the energy high"],
+    c:2,
+    fb:"Conviction keeps you steady when a customer challenges you. Coachability means you learn from every call that doesn't go to plan."
+  },
+];
+
+let qIdx=0;
+const qOk=[false,false,false];
+const qAns=[false,false,false];
+const qSel=[-1,-1,-1];
+
+function updateDots(){
+  [0,1,2].forEach(i=>{
+    const d=document.getElementById('pd'+i);
+    d.classList.remove('active','done');
+    if(i===qIdx) d.classList.add('active');
+    else if(i<qIdx) d.classList.add('done');
+  });
+}
+
+function render(){
+  const body=document.getElementById('quiz-body');
+  if(qIdx>=QUIZ.length){showComplete();return;}
+  const q=QUIZ[qIdx];const a=qAns[qIdx];
+  body.innerHTML=`
+    <div class="q-num">QUESTION ${qIdx+1} OF ${QUIZ.length}</div>
+    <div class="q-text">${q.q}</div>
+    <div class="q-opts">
+      ${q.opts.map((o,i)=>{
+        let cls='';
+        if(a){if(i===q.c)cls='correct';else if(i===qSel[qIdx]&&!qOk[qIdx])cls='wrong';else cls='disabled';}
+        const dot=a&&i===q.c?'✓':a&&i===qSel[qIdx]&&i!==q.c?'✗':'';
+        return `<div class="q-opt ${cls}" onclick="pick(${i})">
+          <div class="q-dot">${dot}</div>
+          <div class="q-opt-text">${o}</div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="q-feedback ${a?'show':''} ${a?(qOk[qIdx]?'ok':'bad'):''}">
+      ${a?(qOk[qIdx]?'✅  ':'❌  ')+q.fb:''}
+    </div>
+    ${a&&!qOk[qIdx]?'<div class="q-retry show">Select the correct answer to continue.</div>':''}
+  `;
+  updateDots();
+}
+
+function pick(i){
+  if(qAns[qIdx]&&qOk[qIdx])return;
+  const q=QUIZ[qIdx];qSel[qIdx]=i;
+  const ok=i===q.c;
+  if(ok){
+    qAns[qIdx]=true;qOk[qIdx]=true;render();
+    setTimeout(()=>{
+      if(qIdx<QUIZ.length-1){qIdx++;render();}
+      else showComplete();
+    },1400);
+  } else {
+    qAns[qIdx]=true;render();
+    setTimeout(()=>{qAns[qIdx]=false;render();},2000);
+  }
+}
+
+function showComplete(){
+  document.getElementById('quiz-body').innerHTML='';
+  const sc=qOk.filter(Boolean).length;
+  document.getElementById('cpl-score').textContent=sc+'/'+QUIZ.length;
+  document.getElementById('cpl-rows').innerHTML=QUIZ.map((q,i)=>`
+    <div class="cpl-row ${qOk[i]?'ok':'bad'}">
+      <span style="font-size:16px">${qOk[i]?'✅':'❌'}</span>
+      <span>${q.q.substring(0,58)}…</span>
+    </div>`).join('');
+  document.getElementById('complete-state').classList.add('show');
+  document.getElementById('next-teaser').classList.add('show');
+  // All dots done
+  [0,1,2].forEach(i=>document.getElementById('pd'+i).classList.replace('active','done')||document.getElementById('pd'+i).classList.add('done'));
+}
+
+render();
+</script>
+</body>
+</html>
