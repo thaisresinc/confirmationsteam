@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Who's in Your Team | Confirmations Team</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0A3542;--navy2:#071F28;--navy3:#0D4A5E;
+  --sky:#00AEEF;--sky2:#0090C4;--sky3:#C8ECFA;
+  --sky-lt:#EAF6FD;--sky-bg:#F2FAFF;
+  --green:#0B7A4E;--green-lt:#E3F5EC;
+  --gold:#D4940A;--gold-lt:#FEF8E6;
+  --purple:#6B4FBB;--purple-lt:#F0ECFC;
+  --orange:#D4620A;--orange-lt:#FEF3EB;
+  --red-flag:#B5251B;
+  --body:#1A2A32;--muted:#5A6E78;--light:#F4F8FB;
+  --border:#C8DDE8;--line:#E2EEF4;
+  --font:'DM Sans',system-ui,sans-serif;
+  --serif:'DM Serif Display',Georgia,serif;
+  --shadow:0 1px 4px rgba(10,53,66,.07),0 4px 14px rgba(10,53,66,.09);
+  --shadow-lg:0 6px 24px rgba(10,53,66,.13),0 16px 48px rgba(10,53,66,.10);
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--light);color:var(--body);overflow-x:hidden;}
+
+/* ── PROGRESS ── */
+#prog{position:fixed;top:0;left:0;right:0;height:3px;background:rgba(0,174,239,.15);z-index:200;}
+#prog-fill{height:100%;background:linear-gradient(90deg,var(--sky),#00D4FF);width:0%;transition:width .4s;}
+
+/* ── HERO ── */
+#hero{
+  background:var(--navy);padding:0;
+  position:relative;overflow:hidden;min-height:300px;
+  display:flex;flex-direction:column;justify-content:flex-end;
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(0,174,239,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,174,239,.05) 1px,transparent 1px);
+  background-size:52px 52px;
+}
+.hero-glow{position:absolute;top:-100px;right:-60px;width:480px;height:480px;border-radius:50%;background:radial-gradient(circle,rgba(0,174,239,.16) 0%,transparent 70%);pointer-events:none;}
+.hero-stripe{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--sky);}
+.hero-inner{max-width:940px;margin:0 auto;padding:56px 28px 40px;position:relative;z-index:1;width:100%;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(0,174,239,.12);border:1px solid rgba(0,174,239,.28);border-radius:20px;padding:5px 14px;font-size:9px;font-weight:700;color:var(--sky);letter-spacing:.22em;margin-bottom:16px;}
+.hero-eyebrow span{width:5px;height:5px;border-radius:50%;background:var(--sky);display:inline-block;}
+.hero-title{font-family:var(--serif);color:#fff;font-size:clamp(28px,4.5vw,48px);line-height:1.06;margin-bottom:10px;}
+.hero-title em{color:var(--sky);font-style:italic;}
+.hero-sub{color:rgba(255,255,255,.55);font-size:14px;line-height:1.7;max-width:520px;margin-bottom:22px;}
+.hero-pills{display:flex;flex-wrap:wrap;gap:8px;}
+.hero-pill{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:600;color:rgba(255,255,255,.7);}
+
+/* ── SECTION ── */
+.section{padding:36px 28px;}
+.inner{max-width:940px;margin:0 auto;}
+.s-label{font-size:9px;letter-spacing:.26em;font-weight:700;color:var(--sky);margin-bottom:8px;}
+.s-title{font-family:var(--serif);font-size:26px;color:var(--navy);line-height:1.2;margin-bottom:4px;}
+.s-bar{width:36px;height:3px;background:var(--sky);border-radius:2px;margin-bottom:20px;}
+.s-sub{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:24px;}
+.sep{height:1px;background:var(--line);max-width:940px;margin:0 auto;}
+
+/* ── INTRO CALLOUT ── */
+.intro-card{background:var(--navy);border-radius:16px;padding:22px 26px;border-left:4px solid var(--sky);display:flex;align-items:flex-start;gap:14px;margin-bottom:0;}
+.intro-icon{width:38px;height:38px;border-radius:10px;background:rgba(0,174,239,.15);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.intro-title{font-size:12px;font-weight:700;color:var(--sky);margin-bottom:4px;letter-spacing:.06em;}
+.intro-text{font-size:13px;color:rgba(255,255,255,.65);line-height:1.7;}
+.intro-text strong{color:#fff;}
+
+/* ── ORG CHART WRAPPER ── */
+.org-wrap{position:relative;}
+
+/* ── TL node (top centre) ── */
+.org-tl-row{display:flex;justify-content:center;margin-bottom:0;position:relative;z-index:2;}
+
+/* Connector lines */
+.org-connectors{position:relative;height:52px;max-width:800px;margin:0 auto;}
+.org-v-line{
+  position:absolute;left:50%;top:0;width:2px;height:24px;
+  background:var(--border);transform:translateX(-50%);
+}
+.org-h-line{
+  position:absolute;top:24px;height:2px;background:var(--border);
+}
+.org-drop-left{position:absolute;top:24px;width:2px;height:28px;background:var(--border);}
+.org-drop-right{position:absolute;top:24px;width:2px;height:28px;background:var(--border);}
+
+/* ── TEAM ROWS ── */
+.org-row{display:flex;justify-content:center;flex-wrap:wrap;gap:14px;margin-bottom:14px;}
+.org-row.cols-2{display:grid;grid-template-columns:1fr 1fr;max-width:700px;margin:0 auto 14px;}
+.org-row.cols-3{display:grid;grid-template-columns:1fr 1fr 1fr;max-width:940px;margin:0 auto 14px;}
+.org-row.cols-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;max-width:940px;margin:0 auto 14px;}
+@media(max-width:680px){
+  .org-row.cols-2,.org-row.cols-3,.org-row.cols-4{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:440px){
+  .org-row.cols-2,.org-row.cols-3,.org-row.cols-4{grid-template-columns:1fr;}
+}
+
+/* ── ROLE CARD ── */
+.role-card{
+  background:#fff;border-radius:14px;
+  border:1.5px solid var(--line);
+  box-shadow:var(--shadow);
+  cursor:pointer;
+  transition:all .22s cubic-bezier(.4,0,.2,1);
+  overflow:hidden;
+  position:relative;
+}
+.role-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--card-color,var(--sky));
+  transition:height .2s;
+}
+.role-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--card-color,var(--sky));}
+.role-card.active{border-color:var(--card-color,var(--sky));box-shadow:0 0 0 3px rgba(0,174,239,.15),var(--shadow-lg);}
+.role-card.active::before{height:4px;}
+
+.rc-top{padding:16px 16px 12px;display:flex;align-items:center;gap:12px;}
+.rc-avatar{
+  width:44px;height:44px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+  background:var(--card-bg,var(--sky-lt));
+}
+.rc-name{font-size:13px;font-weight:700;color:var(--navy);line-height:1.2;margin-bottom:2px;}
+.rc-role{font-size:10.5px;color:var(--muted);font-weight:500;}
+.rc-location{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:9px;font-weight:700;letter-spacing:.1em;
+  color:var(--card-color,var(--sky));
+  background:color-mix(in srgb,var(--card-color,var(--sky)) 10%,transparent);
+  border-radius:4px;padding:2px 7px;margin-top:4px;
+}
+.rc-tap{
+  padding:0 16px 12px;font-size:10px;color:var(--muted);
+  display:flex;align-items:center;gap:4px;font-weight:500;
+}
+.rc-tap::before{content:'↓';font-size:9px;opacity:.5;}
+
+/* ── DETAIL PANEL ── */
+.detail-wrap{
+  max-width:940px;margin:0 auto;
+  display:none;
+  animation:slideIn .28s ease;
+}
+.detail-wrap.visible{display:block;}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+.detail-panel{
+  background:var(--navy);border-radius:16px;
+  padding:24px 26px;
+  border:1.5px solid rgba(0,174,239,.15);
+  margin-bottom:14px;
+  position:relative;
+}
+.detail-panel::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  border-radius:16px 16px 0 0;
+  background:var(--panel-color,var(--sky));
+}
+.dp-top{display:flex;align-items:flex-start;gap:16px;margin-bottom:18px;}
+.dp-avatar{
+  width:56px;height:56px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;flex-shrink:0;
+  background:rgba(255,255,255,.07);
+}
+.dp-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(0,174,239,.12);border:1px solid rgba(0,174,239,.22);
+  border-radius:6px;padding:3px 10px;
+  font-size:9px;font-weight:700;color:var(--sky);letter-spacing:.1em;
+  margin-bottom:6px;
+}
+.dp-name{font-family:var(--serif);font-size:22px;color:#fff;line-height:1.15;}
+.dp-name em{color:var(--sky);font-style:italic;}
+.dp-role{font-size:12px;color:rgba(255,255,255,.5);margin-top:2px;font-weight:500;}
+
+.dp-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:560px){.dp-grid{grid-template-columns:1fr;}}
+
+.dp-card{background:rgba(255,255,255,.05);border-radius:10px;padding:14px 16px;border:1px solid rgba(255,255,255,.07);}
+.dp-card-label{font-size:8.5px;font-weight:700;letter-spacing:.2em;color:var(--sky);margin-bottom:7px;opacity:.8;}
+.dp-card-text{font-size:12.5px;color:rgba(255,255,255,.78);line-height:1.65;}
+.dp-card-text strong{color:#fff;font-weight:600;}
+.dp-card-text ul{padding-left:14px;margin-top:5px;}
+.dp-card-text li{margin-bottom:3px;}
+
+.dp-contact{
+  margin-top:14px;
+  display:flex;align-items:center;gap:10px;
+  background:rgba(0,174,239,.1);border:1px solid rgba(0,174,239,.2);
+  border-radius:10px;padding:12px 16px;
+}
+.dp-contact-icon{font-size:20px;flex-shrink:0;}
+.dp-contact-label{font-size:9px;font-weight:700;color:var(--sky);letter-spacing:.14em;margin-bottom:3px;}
+.dp-contact-text{font-size:12.5px;color:rgba(255,255,255,.75);}
+
+.dp-flag{
+  margin-top:12px;
+  background:rgba(212,148,10,.1);border-left:3px solid var(--gold);
+  border-radius:0 8px 8px 0;padding:10px 14px;
+}
+.dp-flag-text{font-size:12px;color:rgba(255,255,255,.65);line-height:1.6;font-style:italic;}
+.dp-flag strong{color:var(--gold);font-style:normal;}
+
+.dp-close{
+  display:block;margin-top:14px;text-align:right;
+  font-size:11px;color:rgba(255,255,255,.3);cursor:pointer;
+  font-weight:600;letter-spacing:.06em;transition:color .2s;
+}
+.dp-close:hover{color:var(--sky);}
+
+/* ── SECTION DIVIDER LABEL ── */
+.org-section-label{
+  text-align:center;margin:10px auto 14px;
+  display:flex;align-items:center;gap:12px;max-width:600px;
+}
+.org-section-label span{
+  font-size:9px;font-weight:700;letter-spacing:.2em;color:var(--muted);
+  white-space:nowrap;
+}
+.org-section-label::before,.org-section-label::after{
+  content:'';flex:1;height:1px;background:var(--line);
+}
+
+/* ── TL SPECIAL CARD (larger) ── */
+.role-card.tl-card{max-width:300px;margin:0 auto;}
+
+/* ── NARRATION ── */
+.narration{background:var(--navy);border-radius:14px;padding:22px 26px;display:flex;gap:14px;align-items:flex-start;border-left:4px solid var(--sky);}
+.narration-q{font-size:24px;color:var(--sky);line-height:1;flex-shrink:0;margin-top:-4px;}
+.narration-text{font-size:14px;color:rgba(255,255,255,.78);line-height:1.75;font-style:italic;}
+.narration-text strong{color:#fff;font-style:normal;}
+
+/* ── RED FLAG CARD ── */
+.flag-card{
+  background:#fff;border-radius:14px;padding:18px 20px;
+  border:1.5px solid #F5D0CD;border-top:3px solid var(--red-flag);
+  box-shadow:var(--shadow);
+  display:flex;gap:12px;align-items:flex-start;
+}
+.flag-card-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
+.flag-card-title{font-size:12px;font-weight:700;color:var(--red-flag);margin-bottom:4px;letter-spacing:.04em;}
+.rules-3col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+@media(max-width:640px){.rules-3col{grid-template-columns:1fr;}}
+@media(max-width:800px) and (min-width:641px){.rules-3col{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+<div id="prog"><div id="prog-fill"></div></div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-stripe"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow"><span></span>CONFIRMATIONS TEAM · DAY 2</div>
+    <h1 class="hero-title">Who's in Your Team &<br><em>Who to Go to for What</em></h1>
+    <p class="hero-sub">Before your first call, know your people. The worst time to figure out who to contact is when you're already mid-problem.</p>
+    <div class="hero-pills">
+      <div class="hero-pill">👥 Click any card to learn more</div>
+      <div class="hero-pill">🇦🇺 Confirmations Team</div>
+      <div class="hero-pill">📋 No blocker — explore freely</div>
+    </div>
+  </div>
+</section>
+
+<!-- INTRO -->
+<div class="section" style="padding-bottom:20px;">
+  <div class="inner">
+    <div class="intro-card">
+      <div class="intro-icon">🧭</div>
+      <div>
+        <div class="intro-title">HOW THIS WORKS</div>
+        <div class="intro-text">Click on any role card to see what that person does and exactly when — and how — to contact them. Some roles are pending confirmation from your TL — those are flagged clearly. <strong>Use this as your go-to reference in your first week.</strong></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ORG CHART SECTION -->
+<div class="section" style="padding-top:20px;">
+  <div class="inner">
+    <div class="s-label">YOUR TEAM STRUCTURE</div>
+    <div class="s-title">The Confirmations Team</div>
+    <div class="s-bar"></div>
+
+    <!-- Stacey — Manager above Kaysie -->
+    <div class="org-section-label"><span>MANAGEMENT</span></div>
+    <div class="org-tl-row">
+      <div class="role-card tl-card" style="--card-color:var(--green);--card-bg:var(--green-lt);" onclick="showCard('stacey')" id="card-stacey">
+        <div class="rc-top">
+          <div class="rc-avatar">💬</div>
+          <div>
+            <div class="rc-name">Stacey Thornton</div>
+            <div class="rc-role">Customer Experience Manager</div>
+          </div>
+        </div>
+        <div class="rc-tap">Tap to see responsibilities</div>
+      </div>
+    </div>
+
+    <!-- Kaysie — TL -->
+    <div class="org-section-label" style="margin-top:16px;"><span>TEAM LEADERSHIP</span></div>
+    <div class="org-tl-row">
+      <div class="role-card tl-card" style="--card-color:var(--sky);--card-bg:var(--sky-lt);" onclick="showCard('tl')" id="card-tl">
+        <div class="rc-top">
+          <div class="rc-avatar">👑</div>
+          <div>
+            <div class="rc-name">Kaysie Campbell</div>
+            <div class="rc-role">Confirmations Team Leader</div>
+          </div>
+        </div>
+        <div class="rc-tap">Tap to see responsibilities</div>
+      </div>
+    </div>
+
+    <!-- Full team grid — Specialists + CQAs together -->
+    <div class="org-section-label" style="margin-top:16px;"><span>THE TEAM</span></div>
+    <div class="org-row cols-2">
+      <div class="role-card" style="--card-color:var(--sky);--card-bg:var(--sky-lt);" onclick="showCard('aniwa')" id="card-aniwa">
+        <div class="rc-top"><div class="rc-avatar">📞</div><div><div class="rc-name">Aniwa Heke</div><div class="rc-role">Confirmations Specialist</div></div></div>
+        <div class="rc-tap">Tap to see role</div>
+      </div>
+      <div class="role-card" style="--card-color:var(--sky);--card-bg:var(--sky-lt);" onclick="showCard('shannen')" id="card-shannen">
+        <div class="rc-top"><div class="rc-avatar">📞</div><div><div class="rc-name">Shannen Gallagher</div><div class="rc-role">Confirmations Specialist</div></div></div>
+        <div class="rc-tap">Tap to see role</div>
+      </div>
+      <div class="role-card" style="--card-color:var(--sky);--card-bg:var(--sky-lt);" onclick="showCard('horizon')" id="card-horizon">
+        <div class="rc-top"><div class="rc-avatar">📞</div><div><div class="rc-name">Horizon Luafutu-Gonzalez</div><div class="rc-role">Confirmations Specialist</div></div></div>
+        <div class="rc-tap">Tap to see role</div>
+      </div>
+      <div class="role-card" style="--card-color:var(--sky);--card-bg:var(--sky-lt);" onclick="showCard('grant')" id="card-grant">
+        <div class="rc-top"><div class="rc-avatar">📞</div><div><div class="rc-name">Grant Grove</div><div class="rc-role">Confirmations Specialist</div></div></div>
+        <div class="rc-tap">Tap to see role</div>
+      </div>
+      <div class="role-card" style="--card-color:var(--sky);--card-bg:var(--sky-lt);" onclick="showCard('blade')" id="card-blade">
+        <div class="rc-top"><div class="rc-avatar">📞</div><div><div class="rc-name">Blade Waalkes</div><div class="rc-role">Confirmations Specialist</div></div></div>
+        <div class="rc-tap">Tap to see role</div>
+      </div>
+      <div class="role-card" style="--card-color:var(--sky);--card-bg:var(--sky-lt);" onclick="showCard('joely')" id="card-joely">
+        <div class="rc-top"><div class="rc-avatar">📞</div><div><div class="rc-name">Joely Chapple</div><div class="rc-role">Confirmations Specialist</div></div></div>
+        <div class="rc-tap">Tap to see role</div>
+      </div>
+      <div class="role-card" style="--card-color:var(--sky);--card-bg:var(--sky-lt);" onclick="showCard('luisa')" id="card-luisa">
+        <div class="rc-top"><div class="rc-avatar">📞</div><div><div class="rc-name">Luisa Buakula</div><div class="rc-role">Confirmations Specialist</div></div></div>
+        <div class="rc-tap">Tap to see role</div>
+      </div>
+      <div class="role-card" style="--card-color:var(--sky);--card-bg:var(--sky-lt);" onclick="showCard('jude')" id="card-jude">
+        <div class="rc-top"><div class="rc-avatar">📞</div><div><div class="rc-name">Jude Goodman</div><div class="rc-role">Confirmations Specialist</div></div></div>
+        <div class="rc-tap">Tap to see role</div>
+      </div>
+      <div class="role-card" style="--card-color:#D4620A;--card-bg:var(--orange-lt);" onclick="showCard('brendon')" id="card-brendon">
+        <div class="rc-top"><div class="rc-avatar">📅</div><div><div class="rc-name">Brendon Lale-Seinafo</div><div class="rc-role">Calendar Quality Administrator (RESINC)</div></div></div>
+        <div class="rc-tap">Tap to see role</div>
+      </div>
+      <div class="role-card" style="--card-color:#D4620A;--card-bg:var(--orange-lt);" onclick="showCard('olivia')" id="card-olivia">
+        <div class="rc-top"><div class="rc-avatar">📅</div><div><div class="rc-name">Olivia Belither</div><div class="rc-role">Calendar Quality Administrator (Alpha Hippo)</div></div></div>
+        <div class="rc-tap">Tap to see role</div>
+      </div>
+    </div>
+
+    <!-- They feed our pipeline -->
+    <div style="margin-top:28px;border-top:2px dashed var(--border);padding-top:24px;">
+      <div class="org-section-label"><span>THEY BOOK THE APPOINTMENTS WE CONFIRM</span></div>
+      <div style="text-align:center;font-size:12.5px;color:var(--muted);margin-bottom:16px;line-height:1.6;">These teams are not part of your team — but their work feeds directly into yours.<br>Every appointment you confirm was booked by one of them.</div>
+      <div class="org-row cols-2" style="max-width:700px;">
+        <div class="role-card" style="--card-color:#0B7A4E;--card-bg:var(--green-lt);cursor:default;" onclick="showCard('jordan_team')" id="card-jordan_team">
+          <div class="rc-top"><div class="rc-avatar">📋</div><div><div class="rc-name">Jordan's Team</div><div class="rc-role">RESINC Appointment Setters</div></div></div>
+          <div class="rc-tap">Tap to learn more</div>
+        </div>
+        <div class="role-card" style="--card-color:#6B4FBB;--card-bg:var(--purple-lt);cursor:default;" onclick="showCard('luke_team')" id="card-luke_team">
+          <div class="rc-top"><div class="rc-avatar">🔗</div><div><div class="rc-name">Luke's Team</div><div class="rc-role">Alpha Hippo Connectors</div></div></div>
+          <div class="rc-tap">Tap to learn more</div>
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- GOLDEN RULE SECTION -->
+<div class="section" style="background:#fff;">
+  <div class="inner">
+    <div class="s-label">THE GOLDEN RULE</div>
+    <div class="s-title">One Rule. No Exceptions.</div>
+    <div class="s-bar"></div>
+    <div class="rules-3col">
+      <div style="background:var(--sky-bg);border-radius:14px;padding:20px 18px;border:1.5px solid var(--border);">
+        <div style="font-size:26px;margin-bottom:10px;">❓</div>
+        <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px;">Have a question about a lead?</div>
+        <div style="font-size:12.5px;color:var(--muted);line-height:1.6;">Go to your <strong style="color:var(--navy);">TL (Kaysie)</strong> first. Not your teammate. Not another team. Kaysie.</div>
+      </div>
+      <div style="background:var(--sky-bg);border-radius:14px;padding:20px 18px;border:1.5px solid var(--border);">
+        <div style="font-size:26px;margin-bottom:10px;">📅</div>
+        <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px;">Issue with a booked appointment?</div>
+        <div style="font-size:12.5px;color:var(--muted);line-height:1.6;">Contact <strong style="color:var(--navy);">Kaysie (Confirmation)</strong>. Wrong time, wrong rep, incorrect details — she handles it.</div>
+      </div>
+      <div style="background:var(--sky-bg);border-radius:14px;padding:20px 18px;border:1.5px solid var(--border);">
+        <div style="font-size:26px;margin-bottom:10px;">🚫</div>
+        <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px;">Contact RESINC Specialists?</div>
+        <div style="font-size:12.5px;color:var(--muted);line-height:1.6;"><strong style="color:var(--navy);">You don't.</strong> Your job ends at the booking. The specialist takes it from there.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- COMMS PROTOCOL SECTION -->
+<div class="section" style="background:#fff;">
+  <div class="inner">
+    <div class="s-label">COMMUNICATION PROTOCOL</div>
+    <div class="s-title">How to Get Help — In Order</div>
+    <div class="s-bar"></div>
+    <div class="s-sub">Follow this escalation path every time. Don't skip steps.</div>
+    <div style="display:flex;flex-direction:column;gap:10px;max-width:680px;">
+
+      <div style="display:flex;align-items:center;gap:16px;background:var(--sky-bg);border-radius:12px;padding:16px 20px;border:1.5px solid var(--border);">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--sky);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;">1</div>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px;">💬 Google Chat — DM Kaysie directly</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.5;">For most questions, a DM to Kaysie is all you need. Use this first.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:16px;background:var(--sky-bg);border-radius:12px;padding:16px 20px;border:1.5px solid var(--border);">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--navy3);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;">2</div>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px;">👥 Post in the <em>Confirmations Team</em> group chat</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.5;">If your question is relevant to the whole team or you need group input. This is your main team space.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:16px;background:#FEF8E6;border-radius:12px;padding:16px 20px;border:1.5px solid #F0D97A;">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--gold);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;">3</div>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px;">📲 WhatsApp — call Kaysie directly</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.5;">Urgent only. If you need an immediate answer and can't wait for a chat reply — call.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- WELCOME NOTE -->
+<div class="section">
+  <div class="inner">
+    <div style="background:var(--navy);border-radius:16px;padding:24px 26px;display:flex;gap:16px;align-items:flex-start;border:1.5px solid rgba(0,174,239,.15);">
+      <div style="font-size:32px;flex-shrink:0;">🎉</div>
+      <div>
+        <div style="font-size:10px;font-weight:700;color:var(--sky);letter-spacing:.18em;margin-bottom:6px;">YOUR FIRST DAY</div>
+        <div style="font-family:var(--serif);font-size:20px;color:#fff;margin-bottom:8px;">You'll be welcomed on <em style="color:var(--sky);">Zoom</em></div>
+        <div style="font-size:13px;color:rgba(255,255,255,.65);line-height:1.7;">New starters join training together and are welcomed in a team meeting on Zoom. You're not thrown in cold — your first shift starts with the team around you. Your TL will confirm the exact time and Zoom link before Day 1.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="section">
+  <div class="inner">
+    <div class="narration">
+      <div class="narration-q">"</div>
+      <div class="narration-text">Know who does what before your first call. <strong>The worst time to figure out who to contact is when you're mid-problem.</strong> Bookmark this page in your first week — it'll save you the awkward "who do I ask?" moment every new starter hits.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('prog-fill').style.width=Math.min(p,100)+'%';
+});
+
+const CARDS={
+  tl:{
+    emoji:'👑',
+    name:'Kaysie Campbell',
+    role:'Confirmations Team Leader',
+    color:'var(--sky)',
+    what:'Manages the Confirmations Team end-to-end. Responsible for coaching, performance reviews, CRM quality, roster management, and team escalations. Kaysie is your first point of contact for anything work-related.',
+    when:'Any question about an appointment, a script, your performance, a CRM issue, or anything you\'re unsure about. If in doubt — go to Kaysie first.',
+    contact:'<strong>Step 1 — Google Chat DM Kaysie directly.</strong> For most questions this is all you need.<br><br><strong>Step 2 — Post in the</strong> <em>Confirmations Team group</em> if it\'s relevant to the whole team.<br><br><strong>Step 3 — WhatsApp call</strong> if it\'s urgent and you need an immediate answer.',
+    flag:null
+  },
+  aniwa:{
+    emoji:'📞',
+    name:'Aniwa Heke',
+    role:'Confirmations Specialist',
+    color:'var(--sky)',
+    what:'Runs all 5 daily confirmation runs, manages the CX inbox, updates CRM statuses and notes after every call, and ensures every appointment is correctly confirmed, rescheduled or cancelled before the Solar Specialist arrives.',
+    when:'Your teammate. Support each other — share what\'s working, flag what\'s not. If you\'re unsure about a scenario, check with Kaysie, not a teammate.',
+    contact:'<strong>Google Chat — post in the Confirmations Team group</strong> for team questions. DM teammates directly for one-on-one.',
+    flag:null
+  },
+  shannen:{
+    emoji:'📞',
+    name:'Shannen Gallagher',
+    role:'Confirmations Specialist',
+    color:'var(--sky)',
+    what:'Runs all 5 daily confirmation runs, manages the CX inbox, updates CRM statuses and notes after every call, and ensures every appointment is correctly confirmed, rescheduled or cancelled before the Solar Specialist arrives.',
+    when:'Your teammate. Support each other — share what\'s working, flag what\'s not. If you\'re unsure about a scenario, check with Kaysie, not a teammate.',
+    contact:'<strong>Google Chat — post in the Confirmations Team group</strong> for team questions. DM teammates directly for one-on-one.',
+    flag:null
+  },
+  horizon:{
+    emoji:'📞',
+    name:'Horizon Luafutu-Gonzalez',
+    role:'Confirmations Specialist',
+    color:'var(--sky)',
+    what:'Runs all 5 daily confirmation runs, manages the CX inbox, updates CRM statuses and notes after every call, and ensures every appointment is correctly confirmed, rescheduled or cancelled before the Solar Specialist arrives.',
+    when:'Your teammate. Support each other — share what\'s working, flag what\'s not. If you\'re unsure about a scenario, check with Kaysie, not a teammate.',
+    contact:'<strong>Google Chat — post in the Confirmations Team group</strong> for team questions. DM teammates directly for one-on-one.',
+    flag:null
+  },
+  grant:{
+    emoji:'📞',
+    name:'Grant Grove',
+    role:'Confirmations Specialist',
+    color:'var(--sky)',
+    what:'Runs all 5 daily confirmation runs, manages the CX inbox, updates CRM statuses and notes after every call, and ensures every appointment is correctly confirmed, rescheduled or cancelled before the Solar Specialist arrives.',
+    when:'Your teammate. Support each other — share what\'s working, flag what\'s not. If you\'re unsure about a scenario, check with Kaysie, not a teammate.',
+    contact:'<strong>Google Chat — post in the Confirmations Team group</strong> for team questions. DM teammates directly for one-on-one.',
+    flag:null
+  },
+  blade:{
+    emoji:'📞',
+    name:'Blade Waalkes',
+    role:'Confirmations Specialist',
+    color:'var(--sky)',
+    what:'Runs all 5 daily confirmation runs, manages the CX inbox, updates CRM statuses and notes after every call, and ensures every appointment is correctly confirmed, rescheduled or cancelled before the Solar Specialist arrives.',
+    when:'Your teammate. Support each other — share what\'s working, flag what\'s not. If you\'re unsure about a scenario, check with Kaysie, not a teammate.',
+    contact:'<strong>Google Chat — post in the Confirmations Team group</strong> for team questions. DM teammates directly for one-on-one.',
+    flag:null
+  },
+  joely:{
+    emoji:'📞',
+    name:'Joely Chapple',
+    role:'Confirmations Specialist',
+    color:'var(--sky)',
+    what:'Runs all 5 daily confirmation runs, manages the CX inbox, updates CRM statuses and notes after every call, and ensures every appointment is correctly confirmed, rescheduled or cancelled before the Solar Specialist arrives.',
+    when:'Your teammate. Support each other — share what\'s working, flag what\'s not. If you\'re unsure about a scenario, check with Kaysie, not a teammate.',
+    contact:'<strong>Google Chat — post in the Confirmations Team group</strong> for team questions. DM teammates directly for one-on-one.',
+    flag:null
+  },
+  luisa:{
+    emoji:'📞',
+    name:'Luisa Buakula',
+    role:'Confirmations Specialist',
+    color:'var(--sky)',
+    what:'Runs all 5 daily confirmation runs, manages the CX inbox, updates CRM statuses and notes after every call, and ensures every appointment is correctly confirmed, rescheduled or cancelled before the Solar Specialist arrives.',
+    when:'Your teammate. Support each other — share what\'s working, flag what\'s not. If you\'re unsure about a scenario, check with Kaysie, not a teammate.',
+    contact:'<strong>Google Chat — post in the Confirmations Team group</strong> for team questions. DM teammates directly for one-on-one.',
+    flag:null
+  },
+  jude:{
+    emoji:'📞',
+    name:'Jude Goodman',
+    role:'Confirmations Specialist',
+    color:'var(--sky)',
+    what:'Runs all 5 daily confirmation runs, manages the CX inbox, updates CRM statuses and notes after every call, and ensures every appointment is correctly confirmed, rescheduled or cancelled before the Solar Specialist arrives.',
+    when:'Your teammate. Support each other — share what\'s working, flag what\'s not. If you\'re unsure about a scenario, check with Kaysie, not a teammate.',
+    contact:'<strong>Google Chat — post in the Confirmations Team group</strong> for team questions. DM teammates directly for one-on-one.',
+    flag:null
+  },
+  stacey:{
+    emoji:'💬',
+    name:'Stacey Thornton',
+    role:'Customer Experience Manager',
+    color:'var(--green)',
+    what:'Kaysie\'s manager and the Customer Experience Manager across the pipeline. Stacey oversees the broader CX function and is the escalation point above Kaysie.',
+    when:'You don\'t go to Stacey directly for day-to-day questions — go to Kaysie first. Stacey is involved in CX escalations and broader team management.',
+    contact:'<strong>Go to Kaysie first.</strong> If Kaysie escalates to Stacey, she\'ll handle it from there.',
+    flag:null
+  },
+  jordan_team:{
+    emoji:'📋',
+    name:'Jordan\'s Team — RESINC Appointment Setters',
+    role:'They book the appointments we confirm',
+    color:'#0B7A4E',
+    what:'The RESINC Appointment Setters book inbound and outbound appointments directly into the CRM calendar. These bookings come through to our team for confirmation the day before.',
+    when:'You don\'t contact Jordan\'s team directly. If there\'s an issue with a booking they created — wrong details, missing info — update the CRM and flag to Kaysie.',
+    contact:'No direct contact. All booking issues go through Kaysie.',
+    flag:null
+  },
+  luke_team:{
+    emoji:'🔗',
+    name:'Luke\'s Team — Alpha Hippo Connectors',
+    role:'They book the appointments we confirm',
+    color:'#6B4FBB',
+    what:'The Alpha Hippo Connectors work the D2D reschedule lead queue and book appointments for RESINC Solar Specialists. These also land in our confirmation queue the day before.',
+    when:'You don\'t contact Luke\'s team directly. If there\'s an issue with an Alpha Hippo booking — flag to Kaysie or the relevant CQA (Olivia for Alpha Hippo).',
+    contact:'No direct contact. Alpha Hippo booking issues go through Olivia (CQA) or Kaysie.',
+    flag:null
+  },
+  brendon:{
+    emoji:'📅',
+    name:'Brendon Lale-Seinafo',
+    role:'Calendar Quality Administrator (RESINC)',
+    color:'#D4620A',
+    what:'Reviews RESINC calendar accuracy, audits CRM entries, and flags quality issues across RESINC bookings. Go to Brendon for RESINC calendar disputes or CRM audit questions.',
+    when:'Any RESINC calendar discrepancy — wrong time, double-booking, incorrect specialist assigned, missing appointment details.',
+    contact:'<strong>Google Chat — DM Brendon directly</strong> for RESINC calendar or CRM quality questions.',
+    flag:null
+  },
+  olivia:{
+    emoji:'📅',
+    name:'Olivia Belither',
+    role:'Calendar Quality Administrator (Alpha Hippo)',
+    color:'#D4620A',
+    what:'Reviews Alpha Hippo calendar accuracy, audits CRM entries, and flags quality issues across Alpha Hippo bookings. Go to Olivia for Alpha Hippo calendar disputes or CRM audit questions.',
+    when:'Any Alpha Hippo calendar discrepancy — wrong time, double-booking, incorrect specialist assigned, missing appointment details.',
+    contact:'<strong>Google Chat — DM Olivia directly</strong> for Alpha Hippo calendar or CRM quality questions.',
+    flag:null
+  },
+  specialist:{
+    emoji:'☀️',
+    name:'RESINC Solar Specialists',
+    role:'Solar Consultants — RESINC',
+    color:'var(--gold)',
+    what:'Sit the in-home or virtual consultations. They rely entirely on your CRM notes and appointment accuracy to do their job well.',
+    when:'You don\'t contact them directly. Your job is to confirm the appointment and leave accurate CRM notes. The specialist takes it from there.',
+    contact:'No direct contact. If there\'s a specialist-related issue, escalate to Kaysie.',
+    flag:null
+  }
+};
+
+let activeCard=null;
+
+function panelHTML(data,id){
+  return `<div class="detail-panel" style="--panel-color:${data.color};margin-top:10px;margin-bottom:4px;grid-column:1/-1;">
+    <div class="dp-top">
+      <div class="dp-avatar">${data.emoji}</div>
+      <div>
+        <div class="dp-name">${data.name}</div>
+        <div class="dp-role">${data.role}</div>
+      </div>
+    </div>
+    <div class="dp-grid">
+      <div class="dp-card">
+        <div class="dp-card-label">WHAT THEY DO</div>
+        <div class="dp-card-text">${data.what}</div>
+      </div>
+      <div class="dp-card">
+        <div class="dp-card-label">WHEN TO CONTACT THEM</div>
+        <div class="dp-card-text">${data.when}</div>
+      </div>
+    </div>
+    <div class="dp-contact">
+      <div class="dp-contact-icon">💬</div>
+      <div>
+        <div class="dp-contact-label">HOW TO REACH THEM</div>
+        <div class="dp-contact-text">${data.contact}</div>
+      </div>
+    </div>
+    ${data.flag?`<div class="dp-flag"><div class="dp-flag-text"><strong>FLAG:</strong> ${data.flag}</div></div>`:''}
+    <span class="dp-close" onclick="closeDetail()">CLOSE ✕</span>
+  </div>`;
+}
+
+function showCard(id){
+  const data=CARDS[id];
+  if(!data) return;
+
+  // Toggle off if same card clicked
+  if(activeCard===id){ closeDetail(); return; }
+
+  // Remove any existing inline panel
+  closeDetail(false);
+
+  activeCard=id;
+
+  // Mark card active
+  document.querySelectorAll('.role-card').forEach(c=>c.classList.remove('active'));
+  const clickedCard=document.getElementById('card-'+id);
+  if(clickedCard) clickedCard.classList.add('active');
+
+  // Find the parent grid row (.org-row or .org-tl-row) of the clicked card
+  // and insert the panel as the last child so it appears below all cards in that row
+  const parentRow = clickedCard ? clickedCard.closest('.org-row, .org-tl-row, .sort-cols, div[style*="display:flex"]') : null;
+
+  // Create panel element
+  const wrap = document.createElement('div');
+  wrap.id = 'inline-detail';
+  wrap.style.cssText = 'grid-column:1/-1;animation:slideIn .28s ease;';
+  wrap.innerHTML = panelHTML(data, id);
+
+  if(parentRow){
+    parentRow.appendChild(wrap);
+  } else if(clickedCard){
+    clickedCard.insertAdjacentElement('afterend', wrap);
+  }
+
+  setTimeout(()=>{ wrap.scrollIntoView({behavior:'smooth',block:'nearest'}); }, 80);
+}
+
+function closeDetail(resetActive=true){
+  const existing = document.getElementById('inline-detail');
+  if(existing) existing.remove();
+  document.querySelectorAll('.role-card').forEach(c=>c.classList.remove('active'));
+  if(resetActive) activeCard=null;
+}
+</script>
+</body>
+</html>
