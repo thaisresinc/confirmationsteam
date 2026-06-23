@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>The Customer Journey</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0A3542;--navy2:#071F28;--sky:#00AEEF;--sky2:#0090C4;
+  --sky-lt:#EAF6FD;--sky-bg:#F2FAFF;--green:#0B7A4E;--green-lt:#E3F5EC;
+  --orange:#D4620A;--orange-lt:#FEF3EB;--red:#B5251B;--red-lt:#FDECEB;
+  --purple:#6B4FBB;--body:#1A2A32;--muted:#5A6E78;--light:#F4F8FB;
+  --border:#C8DDE8;--line:#E2EEF4;
+  --font:'DM Sans',system-ui,sans-serif;--serif:'DM Serif Display',Georgia,serif;
+  --shadow:0 1px 3px rgba(10,53,66,.06),0 4px 12px rgba(10,53,66,.08);
+  --shadow-lg:0 4px 16px rgba(10,53,66,.1),0 12px 32px rgba(10,53,66,.1);
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--light);color:var(--body);}
+#prog{position:fixed;top:0;left:0;right:0;height:3px;background:rgba(0,174,239,.15);z-index:100;}
+#prog-fill{height:100%;background:var(--sky);width:0%;transition:width .3s;}
+section{padding:52px 20px;}
+.inner{max-width:880px;margin:0 auto;}
+.eyebrow{font-size:8.5px;letter-spacing:.26em;font-weight:600;color:var(--sky);margin-bottom:8px;}
+.s-title{font-size:30px;font-weight:700;color:var(--navy);line-height:1.15;margin-bottom:6px;font-family:var(--serif);}
+.s-bar{width:44px;height:3px;background:var(--sky);border-radius:2px;margin-bottom:24px;}
+.sep{height:1px;background:var(--line);max-width:880px;margin:0 auto;}
+
+/* HERO */
+#hero{background:var(--navy);padding:60px 20px 52px;position:relative;overflow:hidden;}
+.hero-deco{position:absolute;border-radius:50%;border:1px solid rgba(0,174,239,.07);pointer-events:none;}
+.hero-stripe{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--sky);}
+.hero-inner{max-width:880px;margin:0 auto;position:relative;z-index:1;}
+.hero-ey{color:var(--sky);font-size:9px;letter-spacing:.28em;font-weight:600;margin-bottom:16px;}
+.hero-title{color:#fff;font-size:44px;font-weight:700;line-height:1.08;margin-bottom:12px;font-family:var(--serif);}
+.hero-title strong{color:var(--sky);font-family:var(--font);font-size:17px;font-weight:600;display:block;margin-top:6px;letter-spacing:.04em;}
+.hero-sub{color:rgba(255,255,255,.6);font-size:14px;line-height:1.7;max-width:560px;margin-bottom:12px;}
+.hero-intro{background:rgba(0,174,239,.1);border-left:4px solid var(--sky);border-radius:0 12px 12px 0;padding:14px 18px;max-width:600px;}
+.hi-txt{color:rgba(255,255,255,.8);font-size:13px;line-height:1.7;font-style:italic;}
+
+/* JOURNEY STAGES */
+#journey{background:#fff;}
+.stages-intro{font-size:13px;color:var(--muted);margin-bottom:22px;font-style:italic;}
+.journey-grid{display:flex;flex-direction:column;gap:10px;}
+.stage-card{
+  border-radius:14px;border:1.5px solid var(--line);background:#fff;
+  overflow:hidden;box-shadow:var(--shadow);transition:box-shadow .2s;
+  cursor:pointer;
+}
+.stage-card:hover{box-shadow:var(--shadow-lg);}
+.stage-header{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 18px;transition:background .2s;
+}
+.stage-card.open .stage-header{background:var(--navy);}
+.stage-num{
+  width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;transition:all .2s;
+}
+.stage-card:not(.cx) .stage-num{background:var(--light);color:var(--muted);}
+.stage-card.cx .stage-num{background:var(--sky);color:#fff;}
+.stage-card.open .stage-num{background:var(--sky);color:#fff;}
+.stage-header-content{flex:1;}
+.stage-title{font-size:14px;font-weight:700;color:var(--navy);transition:color .2s;}
+.stage-card.open .stage-title{color:#fff;}
+.stage-meta{font-size:11px;color:var(--muted);margin-top:2px;transition:color .2s;}
+.stage-card.open .stage-meta{color:rgba(255,255,255,.55);}
+.stage-badge{
+  font-size:9px;font-weight:700;letter-spacing:.12em;
+  padding:4px 10px;border-radius:20px;flex-shrink:0;white-space:nowrap;
+}
+.stage-badge.us{background:var(--sky-lt);color:var(--sky2);}
+.stage-badge.them{background:var(--light);color:var(--muted);}
+.stage-card.open .stage-badge.us{background:rgba(0,174,239,.2);color:var(--sky);}
+.stage-card.open .stage-badge.them{background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);}
+.stage-chevron{font-size:16px;color:var(--border);transition:transform .3s;flex-shrink:0;}
+.stage-card.open .stage-chevron{transform:rotate(180deg);color:rgba(255,255,255,.5);}
+.stage-body{display:none;padding:16px 18px;border-top:1px solid var(--line);animation:fadeDown .25s ease;}
+.stage-card.open .stage-body{display:block;}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+.stage-items{display:flex;flex-direction:column;gap:7px;margin-bottom:0;}
+.si{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--body);line-height:1.55;}
+.si-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:6px;}
+.si-dot.sky{background:var(--sky);}
+.si-dot.green{background:var(--green);}
+.si-dot.orange{background:var(--orange);}
+.si-dot.muted{background:var(--border);}
+.stage-cx-note{
+  background:var(--sky-bg);border-left:4px solid var(--sky);
+  border-radius:0 8px 8px 0;padding:10px 14px;margin-top:12px;
+  font-size:12.5px;color:var(--sky2);font-weight:500;line-height:1.5;
+}
+.stage-progress{
+  text-align:center;font-size:12.5px;color:var(--muted);
+  padding:12px;transition:all .3s;margin-top:8px;
+}
+.stage-progress.done{color:var(--green);font-weight:600;}
+
+/* LOCKED */
+.locked{display:none;}
+.locked.show{display:block;animation:fadeUp .4s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+
+/* QUIZ */
+.quiz-intro{background:var(--navy);border-radius:14px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow);}
+.qi-ico{font-size:28px;flex-shrink:0;}
+.qi-txt{color:rgba(255,255,255,.75);font-size:13px;line-height:1.6;}
+.qi-txt strong{color:#fff;}
+.q-num{font-size:9px;color:var(--sky);font-weight:600;letter-spacing:.16em;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.q-num::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--sky);flex-shrink:0;}
+.q-text{font-size:16px;font-weight:700;color:var(--navy);line-height:1.45;margin-bottom:14px;}
+.q-opts{display:flex;flex-direction:column;gap:8px;}
+.q-opt{display:flex;align-items:center;gap:12px;padding:12px 15px;border-radius:10px;border:1.5px solid var(--line);background:#fff;cursor:pointer;transition:all .18s;user-select:none;}
+.q-opt:hover:not(.correct):not(.wrong):not(.disabled){border-color:var(--sky);background:var(--sky-lt);transform:translateX(3px);}
+.q-opt.correct{border-color:var(--green);background:var(--green-lt);pointer-events:none;}
+.q-opt.wrong{border-color:var(--red);background:var(--red-lt);pointer-events:none;}
+.q-opt.disabled{pointer-events:none;opacity:.4;}
+.q-dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;transition:all .18s;}
+.q-opt.correct .q-dot{background:var(--green);border-color:var(--green);}
+.q-opt.wrong .q-dot{background:var(--red);border-color:var(--red);}
+.q-opt-text{font-size:12.5px;color:var(--body);line-height:1.4;flex:1;}
+.q-opt.correct .q-opt-text{color:#0A4425;font-weight:600;}
+.q-opt.wrong .q-opt-text{color:#7A1010;}
+.q-feedback{border-radius:10px;padding:12px 15px;font-size:13px;line-height:1.65;margin-top:10px;display:none;}
+.q-feedback.show{display:block;}
+.q-feedback.ok{background:var(--green-lt);border-left:4px solid var(--green);color:#0A4425;}
+.q-feedback.bad{background:var(--red-lt);border-left:4px solid var(--red);color:#7A1010;}
+.q-retry{font-size:12px;color:var(--red);font-weight:600;margin-top:6px;display:none;}
+.q-retry.show{display:block;}
+.quiz-done{text-align:center;padding:24px;background:#fff;border-radius:16px;box-shadow:var(--shadow-lg);}
+.qd-icon{font-size:44px;margin-bottom:12px;}
+.qd-score{font-size:24px;font-weight:700;color:var(--navy);margin-bottom:5px;font-family:var(--serif);}
+.qd-sub{font-size:13px;color:var(--muted);margin-bottom:16px;}
+.qd-rows{display:flex;flex-direction:column;gap:7px;max-width:500px;margin:0 auto 18px;}
+.qd-row{display:flex;align-items:center;gap:10px;padding:9px 13px;border-radius:9px;font-size:12px;font-weight:600;}
+.qd-row.ok{background:var(--green-lt);border:1.5px solid rgba(11,122,78,.2);color:#0A4425;}
+.qd-row.bad{background:var(--red-lt);border:1.5px solid rgba(181,37,27,.2);color:#7A1010;}
+
+/* COMPLETE */
+#complete{display:none;background:var(--navy2);padding:52px 20px;text-align:center;}
+.cpl-inner{max-width:480px;margin:0 auto;}
+.cpl-badge{display:inline-flex;align-items:center;gap:8px;background:var(--green);border-radius:30px;padding:7px 18px;margin-bottom:16px;font-size:11.5px;font-weight:700;color:#fff;letter-spacing:.06em;}
+.cpl-title{color:#fff;font-size:28px;font-weight:700;margin-bottom:8px;font-family:var(--serif);}
+.cpl-title span{color:var(--sky);font-style:italic;}
+.cpl-body{color:rgba(255,255,255,.6);font-size:13px;line-height:1.7;margin-bottom:18px;}
+.cpl-narr{background:rgba(0,174,239,.1);border-left:4px solid var(--sky);border-radius:0 10px 10px 0;padding:13px 16px;margin-bottom:18px;text-align:left;}
+.cpl-narr-txt{color:rgba(255,255,255,.75);font-size:12.5px;line-height:1.7;font-style:italic;}
+.cpl-next{background:rgba(0,174,239,.12);border:1.5px solid rgba(0,174,239,.25);border-radius:12px;padding:14px 22px;}
+.cpl-next-lbl{font-size:8px;color:rgba(0,174,239,.6);letter-spacing:.2em;font-weight:600;margin-bottom:4px;}
+.cpl-next-txt{color:#fff;font-size:13px;font-weight:500;}
+</style>
+</head>
+<body>
+<div id="prog"><div id="prog-fill"></div></div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-deco" style="width:400px;height:400px;right:-80px;top:-80px;"></div>
+  <div class="hero-stripe"></div>
+  <div class="hero-inner">
+    <div class="hero-ey">CONFIRMATIONS TEAM · DAY 1</div>
+    <div class="hero-title">The Customer Journey<strong>8 stages. You own Stage 1.</strong></div>
+    <div class="hero-sub">Before you make your first call, understand the full picture — what happens to a customer from first contact all the way through to 25 years of ongoing care.</div>
+    <div class="hero-intro"><div class="hi-txt">"Your role is Stage 1. But knowing what comes after is what makes you better at Stage 1."</div></div>
+  </div>
+</section>
+
+<!-- JOURNEY -->
+<section id="journey" style="background:#fff;">
+  <div class="inner">
+    <div class="eyebrow">THE FULL JOURNEY</div>
+    <div class="s-title">Click each stage to expand</div>
+    <div class="s-bar"></div>
+    <p class="stages-intro">Click each stage to see what happens, who's responsible, and why it matters to you.</p>
+    <div class="journey-grid" id="journey-grid"></div>
+    <div class="stage-progress" id="stage-progress">Click all 8 stages to unlock the knowledge check ↓</div>
+  </div>
+</section>
+
+<!-- QUIZ LOCKED -->
+<div id="quiz-locked" class="locked">
+<div class="sep"></div>
+<section style="background:var(--light);">
+  <div class="inner">
+    <div class="eyebrow">KNOWLEDGE CHECK</div>
+    <div class="s-title">3 questions — all must be correct</div>
+    <div class="s-bar"></div>
+    <div class="quiz-intro"><div class="qi-ico">🎯</div><div class="qi-txt"><strong>Three questions.</strong> Get each right to complete this module.</div></div>
+    <div id="quiz-body"></div>
+  </div>
+</section>
+</div>
+
+<!-- COMPLETE -->
+<div id="complete">
+  <div class="cpl-inner">
+    <div class="cpl-badge">✓ COMPLETE</div>
+    <div class="cpl-title">You see the <span>full picture.</span></div>
+    <div class="cpl-body">You know exactly where your role fits, what comes after it, and why doing Stage 1 well matters more than you might have realised.</div>
+    <div class="cpl-narr"><div class="cpl-narr-txt">"You are Stage 1. But the reason Stage 1 matters is everything that comes after it. A qualified booking is the start of a 25-year relationship between a customer and RESINC. That is what you are opening the door to."</div></div>
+    <div class="cpl-next"><div class="cpl-next-lbl">NEXT UP</div><div class="cpl-next-txt">RESINC vs Alpha Hippo</div></div>
+  </div>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;document.getElementById('prog-fill').style.width=Math.min(p,100)+'%';});
+
+const STAGES=[
+  {n:1,title:"Appointment Booking",meta:"D2D & Phone Setters & Connectors",badge:"⬆️ They hand off to us",cx:false,items:[
+    {dot:"sky",text:"D2D reps, phone-based Connectors and Appointment Setters book qualified appointments"},
+    {dot:"sky",text:"These bookings land in the CRM — and this is where the Confirmations Team picks them up"},
+    {dot:"green",text:"A well-qualified booking with complete CRM notes sets us up for a strong confirmation"},
+    {dot:"orange",text:"Incomplete bookings or unqualified leads make our job harder — and increase no-show risk"},
+  ],cx_note:"Alpha Hippo Connectors (Luke's team) · RESINC Appointment Setters (Jordan's team)"},
+  {n:2,title:"Appointment Management & Confirmation",meta:"Confirmations Team — Kaysie",badge:"✅ THIS IS US",cx:true,items:[
+    {dot:"sky",text:"We contact every booked customer the day before their appointment — this is our core job"},
+    {dot:"sky",text:"We run 5 confirmation runs throughout the day to maximise contact rate"},
+    {dot:"sky",text:"We update the CRM after every attempt — confirmed, unconfirmed, cancelled, rescheduled"},
+    {dot:"green",text:"A confirmed appointment means the specialist arrives prepared and the customer shows up"},
+    {dot:"orange",text:"Every unconfirmed appointment is a potential no-show — our job is to close that gap"},
+  ],cx_note:"Confirmations Team — led by Kaysie Campbell"},
+  {n:3,title:"Sales",meta:"RESINC Specialists",badge:"🤝 RESINC takes over",cx:false,items:[
+    {dot:"muted",text:"This is the Zoom or in-home assessment you've been booking"},
+    {dot:"sky",text:"The specialist uses your booking notes to prepare — the 4-section format matters"},
+    {dot:"green",text:"A well-qualified, well-prepared appointment = higher chance of sale"},
+    {dot:"orange",text:"Your job ends at Stage 2. Stage 3 is the specialist's responsibility."},
+  ]},
+  {n:4,title:"Welcome Calls & Finance",meta:"RESINC post-sales team",badge:"❌ Handoff",cx:false,items:[
+    {dot:"muted",text:"Customer has said yes — now part of the RESINC family"},
+    {dot:"muted",text:"A dedicated team handles the welcome call and finance paperwork"},
+    {dot:"orange",text:"Customers who felt pressured often pull out here — another reason ethical selling matters"},
+  ]},
+  {n:5,title:"Operations & Install",meta:"RESINC operations",badge:"❌ Handoff",cx:false,items:[
+    {dot:"muted",text:"Grid approvals, council sign-offs, installation scheduling — significant logistics"},
+    {dot:"muted",text:"The same rigour that goes into surf club installs applies to every home"},
+    {dot:"sky",text:"If customers ask about timelines: 'The specialist will walk you through that at the assessment.'"},
+  ]},
+  {n:6,title:"Momentum Session",meta:"RESINC specialist team",badge:"❌ Handoff",cx:false,items:[
+    {dot:"muted",text:"1 month post-install — specialist meets customer on Zoom"},
+    {dot:"muted",text:"Walks through how to monitor the system and maximise self-consumption"},
+    {dot:"sky",text:"This is the specific post-install commitment you can mention in your sub-scripts"},
+  ]},
+  {n:7,title:"Post Install Visit",meta:"RESINC field team",badge:"❌ Handoff",cx:false,items:[
+    {dot:"muted",text:"In-person visit — performance check, energy tips, personal thank you"},
+    {dot:"green",text:"This is where the 10,000+ five-star reviews come from — customers looked after long after the sale"},
+    {dot:"sky",text:"When you mention RESINC's reviews, this is how they're earned"},
+  ]},
+  {n:8,title:"10–25 Year On-Going Care & Coverage",meta:"RESINC support & monitoring",badge:"❌ Handoff",cx:false,items:[
+    {dot:"muted",text:"The 10-day SLA / downtime cover you mention on calls is real — remotely monitored for 10 years"},
+    {dot:"sky",text:"The 25-year commitment is why RESINC follows the qualification process you use"},
+    {dot:"green",text:"Every qualified booking is the beginning of a relationship longer than most mortgages"},
+    {dot:"orange",text:"Customers aren't buying panels — they're entering a 25-year partnership with a proven company"},
+  ]},
+];
+
+const opened=new Set();
+function buildJourney(){
+  const grid=document.getElementById('journey-grid');
+  STAGES.forEach(s=>{
+    const div=document.createElement('div');
+    div.className='stage-card'+(s.cx?' cx':'');
+    div.id='sc'+s.n;
+    div.innerHTML=`
+      <div class="stage-header" onclick="toggleStage(${s.n})">
+        <div class="stage-num">${s.n}</div>
+        <div class="stage-header-content">
+          <div class="stage-title">${s.title}</div>
+          <div class="stage-meta">${s.meta}</div>
+        </div>
+        <div class="stage-badge ${s.cx?'us':'them'}">${s.badge}</div>
+        <div class="stage-chevron">▾</div>
+      </div>
+      <div class="stage-body">
+        <div class="stage-items">${s.items.map(i=>`<div class="si"><div class="si-dot ${i.dot}"></div><span>${i.text}</span></div>`).join('')}</div>
+        ${s.cx_note?`<div class="stage-cx-note">👥 ${s.cx_note}</div>`:''}
+      </div>`;
+    grid.appendChild(div);
+  });
+}
+
+function toggleStage(n){
+  const card=document.getElementById('sc'+n);
+  const wasOpen=card.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.stage-card').forEach(c=>c.classList.remove('open'));
+  if(!wasOpen){
+    card.classList.add('open');
+    opened.add(n);
+    updateStageProgress();
+  }
+}
+
+function updateStageProgress(){
+  const prog=document.getElementById('stage-progress');
+  const count=opened.size;
+  prog.textContent=count+' of 8 opened'+(count<8?' — open all to unlock the knowledge check':'');
+  if(count===8){
+    prog.textContent='✅ All 8 stages explored — knowledge check unlocked!';
+    prog.classList.add('done');
+    setTimeout(()=>{
+      const ql=document.getElementById('quiz-locked');ql.classList.add('show');renderQuiz();
+      ql.scrollIntoView({behavior:'smooth',block:'start'});
+    },500);
+  }
+}
+
+buildJourney();
+
+// QUIZ
+const QUIZ=[
+  {q:"The CX team is directly responsible for which stages of the customer journey?",
+   opts:["Stage 1 only — Appointment Booking","Stages 1, 2, and 3 — through to the sale","Stage 1 (Appointment Booking) and Stage 2 (Appointment Management & Confirmation)","All stages until the customer signs the contract"],
+   c:2,fb:"Stages 3–8 belong to RESINC. Your job is to start the journey — and start it well."},
+  {q:"A customer asks about post-install support. What's a specific thing you can mention with confidence?",
+   opts:["'RESINC will look after you — don't worry'","'That's something the specialist will cover at the assessment'","The Momentum Session — 1 month after install, a specialist meets them on Zoom to walk through their system","'We have a great warranty — the specialist will explain it'"],
+   c:2,fb:"This is a real commitment, not a talking point. Specific details build trust far more than vague reassurances."},
+  {q:"Why does qualifying a lead properly matter beyond just getting the booking?",
+   opts:["It doesn't — more bookings is always better","It only affects your own KPIs, nothing else","It matters because the TL will notice","An unqualified booking affects the specialist's time, the customer's experience, and RESINC's reputation at every stage after yours"],
+   c:3,fb:"Your role is Stage 1 — but how well you do Stage 1 determines the quality of everything that follows."},
+];
+let qIdx=0;const qOk=[false,false,false];const qAns=[false,false,false];const qSel=[-1,-1,-1];
+function renderQuiz(){
+  const b=document.getElementById('quiz-body');if(!b)return;
+  if(qIdx>=QUIZ.length){b.innerHTML=qDone();return;}
+  const q=QUIZ[qIdx];const a=qAns[qIdx];
+  b.innerHTML=`<div class="q-num">QUESTION ${qIdx+1} OF ${QUIZ.length}</div>
+  <div class="q-text">${q.q}</div>
+  <div class="q-opts">${q.opts.map((o,i)=>{
+    let c='';if(a){if(i===q.c)c='correct';else if(i===qSel[qIdx]&&!qOk[qIdx])c='wrong';else c='disabled';}
+    return`<div class="q-opt ${c}" onclick="pick(${i})"><div class="q-dot">${a&&i===q.c?'✓':a&&i===qSel[qIdx]&&i!==q.c?'✗':''}</div><div class="q-opt-text">${o}</div></div>`;
+  }).join('')}</div>
+  <div class="q-feedback ${a?'show':''} ${a?(qOk[qIdx]?'ok':'bad'):''}">
+    ${a?(qOk[qIdx]?'✅  ':'❌  ')+q.fb:''}</div>
+  ${a&&!qOk[qIdx]?'<div class="q-retry show">Select the correct answer to continue.</div>':''}`;
+}
+function pick(i){
+  if(qAns[qIdx]&&qOk[qIdx])return;
+  qSel[qIdx]=i;const ok=i===QUIZ[qIdx].c;
+  if(ok){qAns[qIdx]=true;qOk[qIdx]=true;renderQuiz();setTimeout(()=>{if(qIdx<QUIZ.length-1){qIdx++;renderQuiz();}else{document.getElementById('quiz-body').innerHTML=qDone();}},1400);}
+  else{qAns[qIdx]=true;renderQuiz();setTimeout(()=>{qAns[qIdx]=false;renderQuiz();},2000);}
+}
+function qDone(){
+  const sc=qOk.filter(Boolean).length;
+  setTimeout(()=>{const c=document.getElementById('complete');c.style.display='block';c.scrollIntoView({behavior:'smooth',block:'start'});},800);
+  return`<div class="quiz-done"><div class="qd-icon">🎯</div><div class="qd-score">${sc}/${QUIZ.length} correct</div><div class="qd-sub">Module complete.</div><div class="qd-rows">${QUIZ.map((q,i)=>`<div class="qd-row ${qOk[i]?'ok':'bad'}"><span style="font-size:16px">${qOk[i]?'✅':'❌'}</span><span>${q.q.substring(0,58)}…</span></div>`).join('')}</div></div>`;
+}
+</script>
+</body>
+</html>
