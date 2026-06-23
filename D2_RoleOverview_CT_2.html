@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Role Overview — Confirmations Team</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0A3542;--navy2:#071F28;--sky:#00AEEF;--sky2:#0090C4;
+  --sky-lt:#EAF6FD;--sky-bg:#F2FAFF;
+  --green:#0B7A4E;--green-lt:#E3F5EC;
+  --orange:#D4620A;--orange-lt:#FEF3EB;
+  --red:#B5251B;--red-lt:#FDECEB;
+  --body:#1A2A32;--muted:#5A6E78;--light:#F4F8FB;
+  --border:#C8DDE8;--line:#E2EEF4;
+  --font:'DM Sans',system-ui,sans-serif;
+  --serif:'DM Serif Display',Georgia,serif;
+  --shadow:0 1px 3px rgba(10,53,66,.06),0 4px 12px rgba(10,53,66,.08);
+  --shadow-lg:0 4px 16px rgba(10,53,66,.1),0 12px 32px rgba(10,53,66,.1);
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--light);color:var(--body);}
+#prog{position:fixed;top:0;left:0;right:0;height:3px;background:rgba(0,174,239,.15);z-index:100;}
+#prog-fill{height:100%;background:var(--sky);width:0%;transition:width .3s;}
+section{padding:52px 20px;}
+.inner{max-width:860px;margin:0 auto;}
+.eyebrow{font-size:8.5px;letter-spacing:.26em;font-weight:600;color:var(--sky);margin-bottom:8px;}
+.s-title{font-size:28px;font-weight:700;color:var(--navy);line-height:1.15;margin-bottom:6px;font-family:var(--serif);}
+.s-bar{width:44px;height:3px;background:var(--sky);border-radius:2px;margin-bottom:22px;}
+.sep{height:1px;background:var(--line);max-width:860px;margin:0 auto;}
+
+/* HERO */
+#hero{background:var(--navy);padding:60px 20px 52px;position:relative;overflow:hidden;}
+.hero-deco{position:absolute;border-radius:50%;border:1px solid rgba(0,174,239,.07);pointer-events:none;}
+.hero-stripe{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--sky);}
+.hero-inner{max-width:860px;margin:0 auto;position:relative;z-index:1;}
+.hero-ey{color:var(--sky);font-size:9px;letter-spacing:.28em;font-weight:600;margin-bottom:14px;}
+.hero-title{color:#fff;font-size:42px;font-weight:700;line-height:1.08;margin-bottom:10px;font-family:var(--serif);}
+.hero-title span{color:var(--sky);}
+.hero-sub{color:rgba(255,255,255,.6);font-size:14px;line-height:1.7;max-width:580px;margin-bottom:10px;}
+.hero-goal{
+  background:rgba(0,174,239,.12);border-left:4px solid var(--sky);
+  border-radius:0 12px 12px 0;padding:14px 18px;max-width:600px;margin-top:18px;
+}
+.hero-goal-txt{color:rgba(255,255,255,.85);font-size:14px;line-height:1.65;font-style:italic;}
+.hero-goal-txt strong{color:#fff;font-style:normal;}
+.scroll-hint{display:flex;align-items:center;gap:8px;color:rgba(0,174,239,.5);font-size:11px;font-weight:500;letter-spacing:.08em;margin-top:22px;}
+.scroll-dot{width:26px;height:26px;border-radius:50%;border:1px solid rgba(0,174,239,.3);display:flex;align-items:center;justify-content:center;font-size:11px;animation:bob 2s infinite;}
+@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(4px);}}
+
+/* WHAT YOU DO */
+.day-grid{display:flex;flex-direction:column;gap:0;}
+.day-item{
+  display:flex;gap:16px;padding:14px 0;position:relative;
+  cursor:default;
+}
+.day-item:not(:last-child)::before{
+  content:'';position:absolute;left:15px;top:36px;bottom:0;
+  width:2px;background:var(--line);border-radius:1px;
+}
+.day-circle{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--navy);color:var(--sky);
+  font-size:14px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;z-index:1;
+  box-shadow:0 0 0 4px var(--light);
+  transition:all .2s;
+}
+.day-item:hover .day-circle{background:var(--sky);color:#fff;transform:scale(1.08);}
+.day-content{padding-top:5px;}
+.day-title{font-size:13.5px;font-weight:700;color:var(--navy);margin-bottom:3px;}
+.day-desc{font-size:12px;color:var(--muted);line-height:1.6;}
+
+/* WHAT GOOD LOOKS LIKE */
+.good-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.good-item{
+  display:flex;align-items:flex-start;gap:11px;
+  background:#fff;border-radius:11px;padding:13px 15px;
+  border:1.5px solid var(--line);box-shadow:var(--shadow);
+  transition:all .2s;cursor:default;
+}
+.good-item:hover{border-color:var(--green);transform:translateX(3px);}
+.good-icon{
+  width:28px;height:28px;border-radius:8px;
+  background:var(--green-lt);color:var(--green);
+  font-size:13px;font-weight:700;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.good-text{font-size:12.5px;color:var(--body);line-height:1.5;}
+
+/* EXPECTATIONS */
+.exp-grid{display:flex;flex-direction:column;gap:8px;}
+.exp-item{
+  display:flex;align-items:flex-start;gap:12px;
+  background:#fff;border-radius:10px;padding:12px 15px;
+  border-left:3px solid var(--sky);box-shadow:var(--shadow);
+  font-size:12.5px;color:var(--body);line-height:1.5;
+  transition:all .2s;cursor:default;
+}
+.exp-item:hover{transform:translateX(4px);box-shadow:var(--shadow-lg);}
+.exp-item:nth-child(3n+2){border-left-color:var(--orange);}
+.exp-item:nth-child(3n+3){border-left-color:var(--green);}
+
+/* GOAL CARD */
+.goal-card{
+  background:var(--navy);border-radius:16px;
+  padding:28px 28px;text-align:center;
+  box-shadow:var(--shadow-lg);
+}
+.goal-icon{font-size:40px;margin-bottom:12px;}
+.goal-title{color:#fff;font-size:20px;font-weight:700;margin-bottom:8px;font-family:var(--serif);}
+.goal-body{color:rgba(255,255,255,.65);font-size:13px;line-height:1.7;}
+.goal-body em{color:var(--sky);font-style:normal;font-weight:600;}
+
+/* CONSISTENCY BANNER */
+.consistency-banner{
+  background:linear-gradient(135deg,var(--sky),var(--sky2));
+  border-radius:14px;padding:20px 24px;
+  display:flex;align-items:center;gap:16px;
+  box-shadow:var(--shadow-lg);margin-top:16px;
+}
+.cb-icon{font-size:28px;flex-shrink:0;}
+.cb-text{color:#fff;font-size:14px;font-weight:700;line-height:1.4;}
+.cb-sub{color:rgba(255,255,255,.8);font-size:12px;margin-top:3px;font-style:italic;}
+
+/* COMPLETE */
+#complete{display:none;background:var(--navy2);padding:52px 20px;text-align:center;}
+.cpl-inner{max-width:460px;margin:0 auto;}
+.cpl-badge{display:inline-flex;align-items:center;gap:8px;background:var(--green);border-radius:30px;padding:7px 18px;margin-bottom:16px;font-size:11.5px;font-weight:700;color:#fff;letter-spacing:.06em;}
+.cpl-title{color:#fff;font-size:28px;font-weight:700;margin-bottom:8px;font-family:var(--serif);}
+.cpl-title span{color:var(--sky);font-style:italic;}
+.cpl-body{color:rgba(255,255,255,.6);font-size:13px;line-height:1.7;margin-bottom:18px;}
+.cpl-next{background:rgba(0,174,239,.12);border:1.5px solid rgba(0,174,239,.25);border-radius:12px;padding:14px 22px;}
+.cpl-next-lbl{font-size:8px;color:rgba(0,174,239,.6);letter-spacing:.2em;font-weight:600;margin-bottom:4px;}
+.cpl-next-txt{color:#fff;font-size:13px;font-weight:500;}
+
+/* QUIZ */
+.quiz-intro{background:var(--navy);border-radius:14px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow);}
+.qi-ico{font-size:28px;flex-shrink:0;}
+.qi-txt{color:rgba(255,255,255,.75);font-size:13px;line-height:1.6;}
+.qi-txt strong{color:#fff;}
+.q-num{font-size:9px;color:var(--sky);font-weight:600;letter-spacing:.16em;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.q-num::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--sky);flex-shrink:0;}
+.q-text{font-size:15.5px;font-weight:700;color:var(--navy);line-height:1.45;margin-bottom:14px;}
+.q-opts{display:flex;flex-direction:column;gap:8px;}
+.q-opt{display:flex;align-items:center;gap:12px;padding:12px 15px;border-radius:10px;border:1.5px solid var(--line);background:#fff;cursor:pointer;transition:all .18s;user-select:none;}
+.q-opt:hover:not(.correct):not(.wrong):not(.disabled){border-color:var(--sky);background:var(--sky-lt);transform:translateX(3px);}
+.q-opt.correct{border-color:var(--green);background:var(--green-lt);pointer-events:none;}
+.q-opt.wrong{border-color:var(--red);background:var(--red-lt);pointer-events:none;}
+.q-opt.disabled{pointer-events:none;opacity:.4;}
+.q-dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;transition:all .18s;}
+.q-opt.correct .q-dot{background:var(--green);border-color:var(--green);}
+.q-opt.wrong .q-dot{background:var(--red);border-color:var(--red);}
+.q-opt-text{font-size:12.5px;color:var(--body);line-height:1.4;flex:1;}
+.q-opt.correct .q-opt-text{color:#0A4425;font-weight:600;}
+.q-opt.wrong .q-opt-text{color:#7A1010;}
+.q-feedback{border-radius:10px;padding:12px 15px;font-size:13px;line-height:1.65;margin-top:10px;display:none;}
+.q-feedback.show{display:block;}
+.q-feedback.ok{background:var(--green-lt);border-left:4px solid var(--green);color:#0A4425;}
+.q-feedback.bad{background:var(--red-lt);border-left:4px solid var(--red);color:#7A1010;}
+.q-retry{font-size:12px;color:var(--red);font-weight:600;margin-top:6px;display:none;}
+.q-retry.show{display:block;}
+.quiz-done{text-align:center;padding:22px;background:#fff;border-radius:16px;box-shadow:var(--shadow-lg);}
+.qd-icon{font-size:44px;margin-bottom:12px;}
+.qd-score{font-size:24px;font-weight:700;color:var(--navy);margin-bottom:5px;font-family:var(--serif);}
+.qd-sub{font-size:13px;color:var(--muted);margin-bottom:16px;}
+.qd-rows{display:flex;flex-direction:column;gap:7px;max-width:480px;margin:0 auto 18px;}
+.qd-row{display:flex;align-items:center;gap:10px;padding:9px 13px;border-radius:9px;font-size:12px;font-weight:600;}
+.qd-row.ok{background:var(--green-lt);border:1.5px solid rgba(11,122,78,.2);color:#0A4425;}
+.qd-row.bad{background:var(--red-lt);border:1.5px solid rgba(181,37,27,.2);color:#7A1010;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+<div id="prog"><div id="prog-fill"></div></div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-deco" style="width:380px;height:380px;right:-80px;top:-80px;"></div>
+  <div class="hero-deco" style="width:220px;height:220px;right:20px;top:20px;"></div>
+  <div class="hero-stripe"></div>
+  <div class="hero-inner">
+    <div class="hero-ey">CONFIRMATIONS TEAM · YOUR ROLE</div>
+    <div class="hero-title">Confirmations <span>Specialist</span></div>
+    <div class="hero-sub">What you do, what good looks like, and what's expected of you every single shift.</div>
+    <div class="hero-goal">
+      <div class="hero-goal-txt"><strong>You are turning missed opportunities into real outcomes.</strong> The customers you speak with have already shown interest — your job is to reconnect, rebuild value, and get them back into the calendar.</div>
+    </div>
+    <div class="scroll-hint"><div class="scroll-dot">↓</div> Scroll to explore</div>
+  </div>
+</section>
+
+<!-- WHAT YOU DO -->
+<section style="background:#fff;">
+  <div class="inner">
+    <div class="eyebrow">WHAT YOU DO DAY TO DAY</div>
+    <div class="s-title">Your role on every shift</div>
+    <div class="s-bar"></div>
+    <div class="day-grid">
+      <div class="day-item">
+        <div class="day-circle">📞</div>
+        <div class="day-content">
+          <div class="day-title">Call through reschedules, cancellations and aged leads via the dialler</div>
+          <div class="day-desc">These are your leads — re-engage customers who have already shown interest in solar.</div>
+        </div>
+      </div>
+      <div class="day-item">
+        <div class="day-circle">🔍</div>
+        <div class="day-content">
+          <div class="day-title">Review the CRM before calling</div>
+          <div class="day-desc">Check previous notes, history and context. Rebuild rapport quickly using what's already there.</div>
+        </div>
+      </div>
+      <div class="day-item">
+        <div class="day-circle">⚡</div>
+        <div class="day-content">
+          <div class="day-title">Rebuild value around solar and battery solutions</div>
+          <div class="day-desc">Understand what's changed since the last interaction and position the assessment clearly and confidently.</div>
+        </div>
+      </div>
+      <div class="day-item">
+        <div class="day-circle">📅</div>
+        <div class="day-content">
+          <div class="day-title">Book customers into the calendar using correct availability and regions</div>
+          <div class="day-desc">Within 72 hours — ideally next day. Real availability. Right region. No shortcuts.</div>
+        </div>
+      </div>
+      <div class="day-item">
+        <div class="day-circle">✏️</div>
+        <div class="day-content">
+          <div class="day-title">Leave clear, concise notes in the CRM</div>
+          <div class="day-desc">The next person — whether that's the confirmation team or the specialist — picks up seamlessly because of your notes.</div>
+        </div>
+      </div>
+      <div class="day-item">
+        <div class="day-circle">🔄</div>
+        <div class="day-content">
+          <div class="day-title">Manage callbacks and follow-ups so no opportunities are missed</div>
+          <div class="day-desc">Own your pipeline. Use the dialler correctly — dispositions, call outcomes, campaign processes.</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--navy);border-radius:12px;padding:14px 18px;margin-top:18px;">
+      <div style="color:var(--sky);font-size:12.5px;font-weight:700;">Every call is an opportunity to either win the customer back — or lose it again.</div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- WHAT GOOD LOOKS LIKE -->
+<section style="background:var(--light);">
+  <div class="inner">
+    <div class="eyebrow">WHAT GOOD LOOKS LIKE</div>
+    <div class="s-title">The standard to aim for</div>
+    <div class="s-bar"></div>
+    <div class="good-grid">
+      <div class="good-item"><div class="good-icon">✓</div><div class="good-text">Book appointments within 72 hours — ideally next day</div></div>
+      <div class="good-item"><div class="good-icon">✓</div><div class="good-text">Rebuild rapport quickly using context from the CRM</div></div>
+      <div class="good-item"><div class="good-icon">✓</div><div class="good-text">Clearly explain the value of the assessment</div></div>
+      <div class="good-item"><div class="good-icon">✓</div><div class="good-text">Use urgency effectively — rebates, timing, availability</div></div>
+      <div class="good-item"><div class="good-icon">✓</div><div class="good-text">Keep calls efficient without dragging them out</div></div>
+      <div class="good-item"><div class="good-icon">✓</div><div class="good-text">Own your pipeline, callbacks and lead management</div></div>
+      <div class="good-item"><div class="good-icon">✓</div><div class="good-text">Move through the dialler and CRM without delays between calls</div></div>
+      <div class="good-item"><div class="good-icon">✓</div><div class="good-text">Leave notes that set the specialist and confirmers up for success</div></div>
+    </div>
+    <div class="consistency-banner">
+      <div class="cb-icon">🏆</div>
+      <div>
+        <div class="cb-text">Top performers don't just rebook.</div>
+        <div class="cb-sub">They set the appointment up to sit and convert.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- EXPECTATIONS -->
+<section style="background:#fff;">
+  <div class="inner">
+    <div class="eyebrow">EXPECTATIONS</div>
+    <div class="s-title">What's expected on every shift</div>
+    <div class="s-bar"></div>
+    <div class="exp-grid">
+      <div class="exp-item">Be active and efficient on the dialler at all times</div>
+      <div class="exp-item">Minimise downtime between calls, including after no answers</div>
+      <div class="exp-item">Take control of the conversation early and lead with purpose</div>
+      <div class="exp-item">Follow the system and proven frameworks</div>
+      <div class="exp-item">Use the CRM correctly — notes, dispositions and lead management</div>
+      <div class="exp-item">Keep information accurate and up to date across all systems</div>
+      <div class="exp-item">Respect calendar availability when booking</div>
+      <div class="exp-item">Stay coachable and apply feedback quickly</div>
+      <div class="exp-item">Show up with energy, professionalism and intent on every call</div>
+    </div>
+    <div style="background:var(--sky-bg);border-left:4px solid var(--sky);border-radius:0 10px 10px 0;padding:13px 16px;margin-top:16px;font-size:13px;color:var(--navy);font-style:italic;font-weight:500;">
+      Consistency is what separates average from top performers.
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- THE GOAL -->
+<section style="background:var(--light);">
+  <div class="inner">
+    <div class="eyebrow">THE GOAL</div>
+    <div class="s-title">Why this role exists</div>
+    <div class="s-bar"></div>
+    <div class="goal-card">
+      <div class="goal-icon">🎯</div>
+      <div class="goal-title">Turn missed opportunities into confirmed, sat appointments that convert into sales.</div>
+      <div class="goal-body">You are not just booking a time slot. You are <em>opening the door</em> to a 25-year relationship between a customer and RESINC. Every qualified appointment you book is the start of something that could genuinely change what that household pays for power — for years to come.</div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- QUIZ -->
+<section style="background:#fff;">
+  <div class="inner">
+    <div class="eyebrow">KNOWLEDGE CHECK</div>
+    <div class="s-title">3 questions — all must be correct</div>
+    <div class="s-bar"></div>
+    <div class="quiz-intro"><div class="qi-ico">🎯</div><div class="qi-txt"><strong>Three questions.</strong> Get each right to complete this module.</div></div>
+    <div id="quiz-body"></div>
+  </div>
+</section>
+
+<div id="complete">
+  <div class="cpl-inner">
+    <div class="cpl-badge">✓ MODULE COMPLETE</div>
+    <div class="cpl-title">You know <span>the role.</span></div>
+    <div class="cpl-body">Every call is an opportunity to either win the customer back — or lose it again. You know what good looks like. Now go show it.</div>
+    <div class="cpl-next"><div class="cpl-next-lbl">REMEMBER</div><div class="cpl-next-txt">Consistency is what separates average from top performers.</div></div>
+  </div>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;document.getElementById('prog-fill').style.width=Math.min(p,100)+'%';});
+
+const QUIZ=[
+  {q:"What is the primary goal of a Confirmations Specialist?",
+   opts:["Make as many calls as possible each shift","Turn missed opportunities into confirmed, sat appointments that convert into sales","Book the maximum number of appointments regardless of quality","Follow up on internet leads submitted through the RESINC website"],
+   c:1,fb:"The goal isn't volume — it's quality outcomes. Confirmed, sat appointments that actually convert. That's what the role is measured on."},
+  {q:"You finish a call and book an appointment. What should you do before moving to the next call?",
+   opts:["Move immediately — minimise downtime","Leave clear CRM notes so the confirmation team and specialist are set up for success","Send a follow-up text","Log the call outcome and that's it"],
+   c:1,fb:"Your CRM notes are what the next person — confirmers and specialist — use to prepare. Good notes directly impact sit rates and conversion."},
+  {q:"What does 'what good looks like' tell you about appointment timing?",
+   opts:["Any time in the next week is acceptable","Book based on what the customer prefers, even if it's two weeks away","Book within 72 hours — ideally next day","Timing doesn't matter as long as the appointment is booked"],
+   c:2,fb:"Within 72 hours — ideally next day. The closer the appointment to the booking call, the higher the sit rate. Time kills deals."},
+];
+let qIdx=0;const qOk=[false,false,false];const qAns=[false,false,false];const qSel=[-1,-1,-1];
+function renderQuiz(){
+  const b=document.getElementById('quiz-body');if(!b)return;
+  if(qIdx>=QUIZ.length){b.innerHTML=qDone();return;}
+  const q=QUIZ[qIdx];const a=qAns[qIdx];
+  b.innerHTML=`<div class="q-num">QUESTION ${qIdx+1} OF ${QUIZ.length}</div>
+  <div class="q-text">${q.q}</div>
+  <div class="q-opts">${q.opts.map((o,i)=>{
+    let c='';if(a){if(i===q.c)c='correct';else if(i===qSel[qIdx]&&!qOk[qIdx])c='wrong';else c='disabled';}
+    return`<div class="q-opt ${c}" onclick="pick(${i})"><div class="q-dot">${a&&i===q.c?'✓':a&&i===qSel[qIdx]&&i!==q.c?'✗':''}</div><div class="q-opt-text">${o}</div></div>`;
+  }).join('')}</div>
+  <div class="q-feedback ${a?'show':''} ${a?(qOk[qIdx]?'ok':'bad'):''}">
+    ${a?(qOk[qIdx]?'✅  ':'❌  ')+q.fb:''}</div>
+  ${a&&!qOk[qIdx]?'<div class="q-retry show">Select the correct answer to continue.</div>':''}`;
+}
+function pick(i){
+  if(qAns[qIdx]&&qOk[qIdx])return;
+  qSel[qIdx]=i;const ok=i===QUIZ[qIdx].c;
+  if(ok){qAns[qIdx]=true;qOk[qIdx]=true;renderQuiz();setTimeout(()=>{if(qIdx<QUIZ.length-1){qIdx++;renderQuiz();}else{document.getElementById('quiz-body').innerHTML=qDone();}},1400);}
+  else{qAns[qIdx]=true;renderQuiz();setTimeout(()=>{qAns[qIdx]=false;renderQuiz();},2000);}
+}
+function qDone(){
+  const sc=qOk.filter(Boolean).length;
+  setTimeout(()=>{const c=document.getElementById('complete');c.style.display='block';c.scrollIntoView({behavior:'smooth',block:'start'});},800);
+  return`<div class="quiz-done"><div class="qd-icon">🎯</div><div class="qd-score">${sc}/${QUIZ.length} correct</div><div class="qd-sub">Module complete.</div><div class="qd-rows">${QUIZ.map((q,i)=>`<div class="qd-row ${qOk[i]?'ok':'bad'}"><span style="font-size:16px">${qOk[i]?'✅':'❌'}</span><span>${q.q.substring(0,60)}…</span></div>`).join('')}</div></div>`;
+}
+renderQuiz();
+</script>
+</body>
+</html>
