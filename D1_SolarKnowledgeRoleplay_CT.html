@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Solar Knowledge Roleplay</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0A3542;--navy2:#071F28;--sky:#00AEEF;--sky2:#0090C4;
+  --sky-lt:#EAF6FD;--green:#0B7A4E;--green-lt:#E3F5EC;
+  --orange:#D4620A;--orange-lt:#FEF3EB;--red:#B5251B;--red-lt:#FDECEB;
+  --body:#1A2A32;--muted:#5A6E78;--light:#F4F8FB;--border:#C8DDE8;--line:#E2EEF4;
+  --font:'DM Sans',system-ui,sans-serif;--serif:'DM Serif Display',Georgia,serif;
+  --shadow:0 1px 3px rgba(10,53,66,.06),0 4px 12px rgba(10,53,66,.08);
+  --shadow-lg:0 4px 16px rgba(10,53,66,.1),0 12px 32px rgba(10,53,66,.1);
+}
+html,body{height:100%;font-family:var(--font);background:var(--light);color:var(--body);}
+#app{max-width:720px;margin:0 auto;padding:24px 20px;min-height:100vh;display:flex;flex-direction:column;}
+
+/* HEADER */
+.mod-header{background:var(--navy);border-radius:16px;padding:22px 24px;margin-bottom:20px;position:relative;overflow:hidden;}
+.mod-header::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--sky);}
+.mh-ey{color:var(--sky);font-size:8px;letter-spacing:.24em;font-weight:600;margin-bottom:6px;opacity:.85;}
+.mh-title{color:#fff;font-size:22px;font-weight:700;font-family:var(--serif);}
+.mh-sub{color:rgba(255,255,255,.55);font-size:12px;margin-top:4px;line-height:1.5;}
+
+/* DECISION COUNTER */
+.d-counter{display:flex;align-items:center;gap:8px;margin-bottom:18px;}
+.d-step{height:5px;border-radius:3px;flex:1;background:var(--line);transition:background .4s;}
+.d-step.active{background:var(--sky);}
+.d-step.done{background:var(--sky);opacity:.45;}
+.d-label{font-size:10px;color:var(--muted);font-weight:600;white-space:nowrap;}
+
+/* CHAT BUBBLES */
+.chat{display:flex;flex-direction:column;gap:12px;margin-bottom:20px;}
+.bubble-wrap{display:flex;gap:10px;align-items:flex-start;}
+.bubble-wrap.customer{flex-direction:row;}
+.bubble-wrap.you{flex-direction:row-reverse;}
+.avatar{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;}
+.avatar.cust{background:var(--navy);color:var(--sky);}
+.avatar.you{background:var(--sky);color:#fff;}
+.bubble{border-radius:14px;padding:12px 15px;max-width:82%;font-size:13.5px;line-height:1.6;}
+.bubble.customer{background:#fff;border:1.5px solid var(--line);color:var(--body);border-radius:4px 14px 14px 14px;box-shadow:var(--shadow);}
+.bubble.you{background:var(--navy);color:#fff;border-radius:14px 4px 14px 14px;box-shadow:var(--shadow);}
+.bubble.you.good{background:var(--sky);}
+.bubble.you.bad{background:#5A7080;}
+.bubble-name{font-size:10px;font-weight:700;letter-spacing:.08em;margin-bottom:4px;}
+.bubble.customer .bubble-name{color:var(--muted);}
+.bubble.you .bubble-name{color:rgba(255,255,255,.65);text-align:right;}
+
+/* OPTIONS */
+.options-label{font-size:9px;font-weight:700;color:var(--sky);letter-spacing:.18em;margin-bottom:10px;}
+.options{display:flex;flex-direction:column;gap:9px;margin-bottom:18px;}
+.option-btn{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:14px 16px;border-radius:12px;
+  border:1.5px solid var(--line);background:#fff;
+  cursor:pointer;transition:all .2s;text-align:left;
+  font-family:var(--font);box-shadow:var(--shadow);
+}
+.option-btn:hover:not(:disabled){border-color:var(--sky);background:var(--sky-lt);transform:translateX(3px);}
+.option-btn:disabled{pointer-events:none;}
+.opt-letter{
+  width:24px;height:24px;border-radius:6px;background:var(--line);
+  color:var(--muted);font-size:11px;font-weight:700;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;transition:all .2s;
+}
+.option-btn:hover:not(:disabled) .opt-letter{background:var(--sky);color:#fff;}
+.option-btn.selected-good{border-color:var(--green);background:var(--green-lt);}
+.option-btn.selected-good .opt-letter{background:var(--green);color:#fff;}
+.option-btn.selected-bad{border-color:var(--red);background:var(--red-lt);}
+.option-btn.selected-bad .opt-letter{background:var(--red);color:#fff;}
+.option-btn.dim{opacity:.35;}
+.opt-text{font-size:13px;color:var(--body);line-height:1.5;flex:1;}
+.option-btn.selected-good .opt-text{color:#0A4425;font-weight:500;}
+.option-btn.selected-bad .opt-text{color:#7A1010;}
+
+/* FEEDBACK */
+.feedback-card{border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:13px;line-height:1.65;display:none;animation:fadeUp .3s ease;}
+.feedback-card.show{display:block;}
+.feedback-card.good{background:var(--green-lt);border-left:4px solid var(--green);color:#0A4425;}
+.feedback-card.bad{background:var(--red-lt);border-left:4px solid var(--red);color:#7A1010;}
+.feedback-card.bad strong{color:var(--red);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* NEXT BTN */
+.next-btn{
+  background:var(--sky);color:#fff;border:none;border-radius:10px;
+  padding:12px 24px;font-family:var(--font);font-size:13px;font-weight:600;
+  cursor:pointer;display:none;transition:all .18s;
+  box-shadow:0 4px 14px rgba(0,174,239,.3);
+  align-self:flex-start;
+}
+.next-btn:hover{background:var(--sky2);transform:translateY(-1px);}
+.next-btn.show{display:inline-flex;align-items:center;gap:7px;}
+
+/* RETRY */
+.retry-btn{
+  background:transparent;color:var(--muted);border:1.5px solid var(--border);
+  border-radius:10px;padding:10px 20px;font-family:var(--font);font-size:12.5px;font-weight:600;
+  cursor:pointer;margin-top:8px;display:none;transition:all .18s;
+}
+.retry-btn:hover{border-color:var(--sky);color:var(--sky);}
+.retry-btn.show{display:block;}
+
+/* SUCCESS */
+.success-screen{display:none;animation:fadeUp .4s ease;}
+.success-screen.show{display:block;}
+.success-hero{background:var(--navy);border-radius:16px;padding:28px 28px;margin-bottom:18px;text-align:center;}
+.success-icon{font-size:48px;margin-bottom:12px;}
+.success-title{color:#fff;font-size:26px;font-weight:700;font-family:var(--serif);margin-bottom:6px;}
+.success-title span{color:var(--sky);font-style:italic;}
+.success-sub{color:rgba(255,255,255,.6);font-size:13px;line-height:1.6;}
+.success-checks{display:flex;flex-direction:column;gap:9px;margin-bottom:18px;}
+.sc-item{display:flex;align-items:flex-start;gap:12px;background:#fff;border-radius:10px;padding:12px 14px;border-left:4px solid var(--green);box-shadow:var(--shadow);}
+.sc-icon{font-size:16px;flex-shrink:0;}
+.sc-text{font-size:13px;color:#0A4425;font-weight:500;line-height:1.4;}
+.next-module{background:rgba(0,174,239,.12);border:1.5px solid rgba(0,174,239,.25);border-radius:12px;padding:14px 18px;}
+.nm-lbl{font-size:8px;color:rgba(0,174,239,.7);letter-spacing:.2em;font-weight:600;margin-bottom:4px;}
+.nm-txt{color:var(--navy);font-size:13px;font-weight:600;}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div class="mod-header">
+    <div class="mh-ey">CONFIRMATIONS TEAM · DAY 1</div>
+    <div class="mh-title">Solar Knowledge Roleplay</div>
+    <div class="mh-sub">Put it into practice — make the right call at each decision point.</div>
+  </div>
+
+  <!-- SCENARIO CONTENT -->
+  <div id="scenario-content">
+
+    <!-- INTRO -->
+    <div id="intro-screen">
+      <div style="background:#fff;border-radius:14px;padding:18px 20px;border-left:4px solid var(--sky);box-shadow:var(--shadow);margin-bottom:18px;font-size:13.5px;line-height:1.8;color:#2A3E48;">
+        You've just learned how solar works. Now let's see how you'd actually use that in a real conversation. Choose the best response at each decision point.
+      </div>
+      <!-- Opening customer line -->
+      <div class="chat">
+        <div class="bubble-wrap customer">
+          <div class="avatar cust">C</div>
+          <div>
+            <div class="bubble customer"><div class="bubble-name">CUSTOMER</div>"Look, I've heard a lot about solar lately — but honestly I don't really understand how it works. Is it even worth it?"</div>
+          </div>
+        </div>
+      </div>
+      <div class="options-label">DECISION 1 OF 5 — HOW DO YOU RESPOND?</div>
+      <div class="options" id="d1-opts">
+        <button class="option-btn" onclick="decide(1,'A')"><div class="opt-letter">A</div><div class="opt-text">Launch into a full technical explanation — DC current, silicon cells, inverter specs, how electrons work…</div></button>
+        <button class="option-btn" onclick="decide(1,'B')"><div class="opt-letter">B</div><div class="opt-text">"Honestly it's simpler than people think — your roof generates power, your home uses it first, and anything left over reduces your bill. The interesting part is what the government rebate does to the upfront cost."</div></button>
+        <button class="option-btn" onclick="decide(1,'C')"><div class="opt-letter">C</div><div class="opt-text">"That's really a question better suited for the specialist — they'll be able to walk you through everything."</div></button>
+      </div>
+      <div class="feedback-card" id="d1-feedback"></div>
+      <button class="retry-btn" id="d1-retry" onclick="retry(1)">← Try again</button>
+      <button class="next-btn" id="d1-next" onclick="showD2()">Next decision →</button>
+    </div>
+
+    <!-- DECISION 2 -->
+    <div id="d2-screen" style="display:none;">
+      <div class="d-counter"><div class="d-step done"></div><div class="d-step active"></div><div class="d-step"></div><div class="d-step"></div><div class="d-step"></div><div class="d-label">Decision 2 of 5</div></div>
+      <div class="chat" id="d2-chat"></div>
+      <div class="options-label">THEY ASK ABOUT COST — HOW DO YOU RESPOND?</div>
+      <div class="options" id="d2-opts">
+        <button class="option-btn" onclick="decide(2,'A')"><div class="opt-letter">A</div><div class="opt-text">"Systems usually run between $8,000 and $12,000 depending on size — though it varies."</div></button>
+        <button class="option-btn" onclick="decide(2,'B')"><div class="opt-letter">B</div><div class="opt-text">"The federal government has a rebate that takes $3,000 to $6,000 off automatically — straight off the invoice, no paperwork. Most people don't realise that until they get an assessment done."</div></button>
+        <button class="option-btn" onclick="decide(2,'C')"><div class="opt-letter">C</div><div class="opt-text">"I'd have to check on exact pricing — that's really a conversation for the specialist."</div></button>
+      </div>
+      <div class="feedback-card" id="d2-feedback"></div>
+      <button class="retry-btn" id="d2-retry" onclick="retry(2)">← Try again</button>
+      <button class="next-btn" id="d2-next" onclick="showD3()">Next decision →</button>
+    </div>
+
+    <!-- DECISION 3 -->
+    <div id="d3-screen" style="display:none;">
+      <div class="d-counter"><div class="d-step done"></div><div class="d-step done"></div><div class="d-step done"></div><div class="d-step active"></div><div class="d-step"></div><div class="d-label">Decision 3 of 5</div></div>
+      <div class="chat" id="d3-chat"></div>
+      <div class="options-label">THEY ASK ABOUT TIMING — HOW DO YOU RESPOND?</div>
+      <div class="options" id="d3-opts">
+        <button class="option-btn" onclick="decide(3,'A')"><div class="opt-letter">A</div><div class="opt-text">"The rebate is there whenever you're ready — no real rush on your end."</div></button>
+        <button class="option-btn" onclick="decide(3,'B')"><div class="opt-letter">B</div><div class="opt-text">"Actually — the battery rebate steps down every six months, and it can only ever be claimed once per property. So the longer you wait, the less you get, and you can never go back and claim the difference."</div></button>
+        <button class="option-btn" onclick="decide(3,'C')"><div class="opt-letter">C</div><div class="opt-text">"The specialist would be best placed to talk you through the timing side of things."</div></button>
+      </div>
+      <div class="feedback-card" id="d3-feedback"></div>
+      <button class="retry-btn" id="d3-retry" onclick="retry(3)">← Try again</button>
+      <button class="next-btn" id="d3-next" onclick="showD4()">Next decision →</button>
+    </div>
+
+    <!-- D4 SCREEN — SHADE/ROOF -->
+    <div id="d4-screen" style="display:none;">
+      <div class="d-counter"><div class="d-step done"></div><div class="d-step done"></div><div class="d-step done"></div><div class="d-step active"></div><div class="d-step"></div><div class="d-label">Decision 4 of 5</div></div>
+      <div class="chat" id="d4-chat"></div>
+      <div class="options-label">SHADE OBJECTION — HOW DO YOU RESPOND?</div>
+      <div class="options" id="d4-opts">
+        <button class="option-btn" onclick="decide(4,'A')"><div class="opt-letter">A</div><div class="opt-text">"Yeah, shade can definitely be a problem — it might reduce how effective the system is for you."</div></button>
+        <button class="option-btn" onclick="decide(4,'B')"><div class="opt-letter">B</div><div class="opt-text">"That's actually exactly what our specialist assesses on the day — they'll tell you whether your roof works and what you'd generate. Worth finding out for free, right?"</div></button>
+        <button class="option-btn" onclick="decide(4,'C')"><div class="opt-letter">C</div><div class="opt-text">"Most roofs work fine — shade usually isn't as big a problem as people think."</div></button>
+      </div>
+      <div class="feedback-card" id="d4-feedback"></div>
+      <button class="retry-btn" id="d4-retry" onclick="retry(4)">← Try again</button>
+      <button class="next-btn" id="d4-next" onclick="showD5()">Next decision →</button>
+    </div>
+
+    <!-- D5 SCREEN — EXISTING SOLAR -->
+    <div id="d5-screen" style="display:none;">
+      <div class="d-counter"><div class="d-step done"></div><div class="d-step done"></div><div class="d-step done"></div><div class="d-step done"></div><div class="d-step active"></div><div class="d-label">Decision 5 of 5</div></div>
+      <div class="chat" id="d5-chat"></div>
+      <div class="options-label">THEY ALREADY HAVE SOLAR — HOW DO YOU RESPOND?</div>
+      <div class="options" id="d5-opts">
+        <button class="option-btn" onclick="decide(5,'A')"><div class="opt-letter">A</div><div class="opt-text">"Oh, if you've already got solar then you're probably all set — not much more we can do for you."</div></button>
+        <button class="option-btn" onclick="decide(5,'B')"><div class="opt-letter">B</div><div class="opt-text">"Actually that's perfect timing — the state government battery rebate is specifically designed for homes that already have solar. Takes about 30% off the cost of adding storage. Worth finding out if your system qualifies?"</div></button>
+        <button class="option-btn" onclick="decide(5,'C')"><div class="opt-letter">C</div><div class="opt-text">"You could still look at a VPP — it's where you connect your battery to a virtual network and earn credits."</div></button>
+      </div>
+      <div class="feedback-card" id="d5-feedback"></div>
+      <button class="retry-btn" id="d5-retry" onclick="retry(5)">← Try again</button>
+      <button class="next-btn" id="d5-next" onclick="showSuccess()">See results →</button>
+    </div>
+
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="success-screen" id="success-screen">
+    <div class="success-hero">
+      <div class="success-icon">🎯</div>
+      <div class="success-title">Nice work. <span>That's how it's done.</span></div>
+      <div class="success-sub">You made the right call at every decision point. That's the conversation that gets bookings.</div>
+    </div>
+    <div class="success-checks">
+      <div class="sc-item"><div class="sc-icon">✅</div><div class="sc-text">Explained solar simply — one sentence, no jargon, opened the door</div></div>
+      <div class="sc-item"><div class="sc-icon">✅</div><div class="sc-text">Led with the rebate, not the gross price — removed the biggest objection</div></div>
+      <div class="sc-item"><div class="sc-icon">✅</div><div class="sc-text">Used real urgency — the step-down timing creates a reason to act now</div></div>
+      <div class="sc-item"><div class="sc-icon">✅</div><div class="sc-text">Handled the shade objection correctly — handed it to the specialist without dismissing or validating it</div></div>
+      <div class="sc-item"><div class="sc-icon">✅</div><div class="sc-text">Pivoted existing solar to a new opportunity — battery storage, new rebate, conversation still alive</div></div>
+    </div>
+    <div class="next-module"><div class="nm-lbl">NEXT UP</div><div class="nm-txt">Quick Check In from Kaysie ⚡</div></div>
+  </div>
+
+</div>
+
+<script>
+const DECISIONS={
+  1:{
+    A:{good:false,resp:"Oh… that's a lot to take in. I'll have to think about it.",fb:"<strong>Too technical.</strong> Technical detail kills curiosity at this stage. Keep it simple enough that they want to know more — not so complex they switch off."},
+    B:{good:true,resp:"Oh that's actually simpler than I thought. So how much could I actually save?",fb:"✅ Perfect. Simple, accurate, and it plants the seed about the rebate. They're now curious rather than overwhelmed."},
+    C:{good:false,resp:"If you can't even explain it, why would I book a meeting?",fb:"<strong>Too early to deflect.</strong> One simple sentence about solar is always better than a redirect. You don't need to be an expert — you just need to open the door."},
+  },
+  2:{
+    A:{good:false,resp:"That sounds expensive. I'll pass for now.",fb:"<strong>Never lead with the full price.</strong> The gross price is the objection. Always lead with what reduces it — the rebate removes the biggest barrier before it becomes one."},
+    B:{good:true,resp:"Wait — there's a government rebate? I had no idea. How much does it take off?",fb:"✅ That's the hook. Most people don't know about the STC rebate. Mentioning it before price creates curiosity, not sticker shock."},
+    C:{good:false,resp:"Right… I'll look it up online.",fb:"<strong>You need to mention the rebate.</strong> That's the hook — and it's your responsibility to use it. Redirecting at this point loses the lead."},
+  },
+  3:{
+    A:{good:false,resp:"Great, I'll look into it when I get a chance.",fb:"<strong>'Whenever you're ready' is the most expensive thing you can say.</strong> Without urgency, 'when I get a chance' means never. The step-down timing is real — use it."},
+    B:{good:true,resp:"OK, I hadn't thought about it that way. Yeah, it probably makes sense to at least find out.",fb:"✅ That's real urgency — and it's true. One claim per property, forever. The timing matters. And the customer just agreed to find out more."},
+    C:{good:false,resp:"Yeah… I'll probably just wait and see.",fb:"<strong>Timing is one of your most powerful tools.</strong> The battery rebate step-down is real and specific. Use it — don't save it for the specialist."},
+  },
+  4:{
+    A:{good:false,resp:"Yeah… you're right, that does sound like it could be a problem. Maybe solar isn't for us.",fb:"<strong>Don't validate the objection.</strong> You've agreed with a concern the specialist hasn't even assessed yet. Shade is real — but it's a technical question, not a disqualifier at your stage."},
+    B:{good:true,resp:"Oh — I didn't realise the specialist would actually look at that. Yeah, it'd be good to know either way.",fb:"✅ Exactly right. You don't assess shade — the specialist does. Your job is to get the appointment. Framing it as 'worth finding out' removes the objection without dismissing it."},
+    C:{good:false,resp:"I guess. But I still think it's probably not worth it for us.",fb:"<strong>Too vague.</strong> 'Most roofs work fine' doesn't address their specific concern. The correct answer acknowledges the question and hands it to the specialist — that's where the real answer lives."},
+  },
+  5:{
+    A:{good:false,resp:"Oh right — yeah, if you've already got solar I suppose there's nothing more to look at.",fb:"<strong>Existing solar doesn't close the door.</strong> Batteries, system upgrades, and VPPs are all relevant. You've walked away from a warm lead unnecessarily."},
+    B:{good:true,resp:"A battery? I hadn't thought about that. Yeah — if there's a rebate involved that does change things.",fb:"✅ Perfect pivot. Existing solar opens the door to battery storage — which has its own rebate and its own urgency. You've kept the conversation alive and introduced something genuinely new."},
+    C:{good:false,resp:"I'm not really sure what that means to be honest.",fb:"<strong>Don't guess technical details.</strong> You don't need to explain VPPs in detail — you just need to flag that there's more to explore and hand it to the specialist. Keep it simple and curious."},
+  },
+};
+
+const CUSTOMER_LINES={
+  2:"Wait — there's a government rebate? I had no idea. How much could I actually save?",
+  3:"OK — so the rebate reduces the upfront cost. But is there any rush? I'm happy to wait a few months.",
+  4:"Hmm — actually I'm not sure it'll work. Our roof doesn't get much sun, and there are trees nearby.",
+  5:"Oh — we actually installed solar a few years ago. We've already got panels on the roof."
+};
+
+let d1Good=false,d2Good=false,d3Good=false,d4Good=false,d5Good=false;
+
+function decide(d,opt){
+  const data=DECISIONS[d][opt];
+  const opts=document.getElementById('d'+d+'-opts');
+  const fb=document.getElementById('d'+d+'-feedback');
+  const retry=document.getElementById('d'+d+'-retry');
+  const next=document.getElementById('d'+d+'-next');
+  // Disable all
+  opts.querySelectorAll('.option-btn').forEach((b,i)=>{
+    const letter=['A','B','C'][i];
+    b.disabled=true;
+    if(letter===opt) b.classList.add(data.good?'selected-good':'selected-bad');
+    else b.classList.add('dim');
+  });
+  // Show customer reaction
+  const chat=document.getElementById('d'+d+'-chat')||document.querySelector('#intro-screen .chat');
+  const reactionEl=document.createElement('div');
+  const optIndex={'A':1,'B':2,'C':3}[opt];
+  const agentText=document.querySelector('#d'+d+'-opts .option-btn:nth-child('+optIndex+') .opt-text').textContent;
+  reactionEl.innerHTML=`<div class="bubble-wrap you" style="margin-bottom:10px;">
+    <div class="avatar you">Y</div>
+    <div><div class="bubble you ${data.good?'good':'bad'}"><div class="bubble-name">YOU</div>${agentText}</div></div>
+  </div>
+  <div class="bubble-wrap customer" style="margin-bottom:0;">
+    <div class="avatar cust">C</div>
+    <div><div class="bubble customer"><div class="bubble-name">CUSTOMER</div>${data.resp}</div></div>
+  </div>`;
+  if(d===1) document.querySelector('#intro-screen .chat').appendChild(reactionEl);
+  else document.getElementById('d'+d+'-chat').appendChild(reactionEl);
+  // Feedback
+  fb.className='feedback-card show '+(data.good?'good':'bad');
+  fb.innerHTML=data.fb;
+  if(data.good){
+    if(d===1)d1Good=true;if(d===2)d2Good=true;if(d===3)d3Good=true;if(d===4)d4Good=true;if(d===5)d5Good=true;
+    next.classList.add('show');
+  } else {
+    retry.classList.add('show');
+  }
+}
+
+function retry(d){
+  const opts=document.getElementById('d'+d+'-opts');
+  const fb=document.getElementById('d'+d+'-feedback');
+  const retry=document.getElementById('d'+d+'-retry');
+  const next=document.getElementById('d'+d+'-next');
+  // Remove customer reaction
+  const chat=d===1?document.querySelector('#intro-screen .chat'):document.getElementById('d'+d+'-chat');
+  const added=chat.querySelectorAll('.bubble-wrap:nth-child(n+2)');
+  if(d>1){chat.innerHTML='<div class="bubble-wrap customer"><div class="avatar cust">C</div><div><div class="bubble customer"><div class="bubble-name">CUSTOMER</div>'+CUSTOMER_LINES[d]+'</div></div></div>';}
+  else{while(chat.children.length>1)chat.removeChild(chat.lastChild);}
+  opts.querySelectorAll('.option-btn').forEach(b=>{b.disabled=false;b.className='option-btn';});
+  fb.className='feedback-card';fb.innerHTML='';
+  retry.className='retry-btn';next.className='next-btn';
+}
+
+function showD2(){
+  document.getElementById('intro-screen').style.display='none';
+  const s=document.getElementById('d2-screen');s.style.display='block';
+  s.style.animation='fadeUp .35s ease';
+  document.getElementById('d2-chat').innerHTML=`<div class="bubble-wrap customer"><div class="avatar cust">C</div><div><div class="bubble customer"><div class="bubble-name">CUSTOMER</div>${CUSTOMER_LINES[2]}</div></div></div>`;
+  s.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function showD3(){
+  document.getElementById('d2-screen').style.display='none';
+  const s=document.getElementById('d3-screen');s.style.display='block';
+  s.style.animation='fadeUp .35s ease';
+  document.getElementById('d3-chat').innerHTML=`<div class="bubble-wrap customer"><div class="avatar cust">C</div><div><div class="bubble customer"><div class="bubble-name">CUSTOMER</div>${CUSTOMER_LINES[3]}</div></div></div>`;
+  s.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function showD4(){
+  document.getElementById('d3-screen').style.display='none';
+  const s=document.getElementById('d4-screen');s.style.display='block';
+  s.style.animation='fadeUp .35s ease';
+  document.getElementById('d4-chat').innerHTML=`<div class="bubble-wrap customer"><div class="avatar cust">C</div><div><div class="bubble customer"><div class="bubble-name">CUSTOMER</div>${CUSTOMER_LINES[4]}</div></div></div>`;
+  s.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function showD5(){
+  document.getElementById('d4-screen').style.display='none';
+  const s=document.getElementById('d5-screen');s.style.display='block';
+  s.style.animation='fadeUp .35s ease';
+  document.getElementById('d5-chat').innerHTML=`<div class="bubble-wrap customer"><div class="avatar cust">C</div><div><div class="bubble customer"><div class="bubble-name">CUSTOMER</div>${CUSTOMER_LINES[5]}</div></div></div>`;
+  s.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function showSuccess(){
+  document.getElementById('d5-screen').style.display='none';
+  document.getElementById('scenario-content').style.display='none';
+  const s=document.getElementById('success-screen');s.classList.add('show');
+  s.scrollIntoView({behavior:'smooth',block:'start'});
+}
+</script>
+</body>
+</html>
