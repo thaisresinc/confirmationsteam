@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>D2D Verification — Slot Not Available | Confirmations Team</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0A3542;--navy2:#071F28;--navy3:#0D4558;
+  --sky:#00AEEF;--sky2:#0090C4;--sky-lt:#EAF6FD;--sky-bg:#F2FAFF;
+  --green:#0B7A4E;--green-lt:#E3F5EC;
+  --red:#B5251B;--red-lt:#FDECEB;
+  --orange:#D4620A;--orange-lt:#FEF3EB;
+  --purple:#6B4FBB;--purple-lt:#F0EBFF;
+  --teal:#007A8A;--teal-lt:#E0F4F7;
+  --gold:#D4940A;--gold-lt:#FEF3CD;
+  --body:#1A2A32;--muted:#5A6E78;--light:#F4F8FB;
+  --border:#C8DDE8;--line:#E2EEF4;
+  --font:'DM Sans',system-ui,sans-serif;
+  --serif:'DM Serif Display',Georgia,serif;
+  --shadow:0 1px 3px rgba(10,53,66,.06),0 4px 12px rgba(10,53,66,.08);
+  --shadow-lg:0 4px 16px rgba(10,53,66,.1),0 12px 32px rgba(10,53,66,.1);
+  --max:860px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--light);color:var(--body);line-height:1.6;}
+#prog{position:fixed;top:0;left:0;right:0;height:3px;background:rgba(0,174,239,.15);z-index:100;}
+#prog-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--sky));width:0%;transition:width .4s ease;}
+
+/* HERO */
+.hero{background:var(--navy);padding:60px 20px 50px;position:relative;overflow:hidden;}
+.hero-stripe{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--teal);}
+.hero-deco{position:absolute;border-radius:50%;border:1px solid rgba(0,122,138,.12);pointer-events:none;}
+.hero-inner{max-width:var(--max);margin:0 auto;position:relative;z-index:1;}
+.hero-ey{color:var(--teal);font-size:9px;letter-spacing:.28em;font-weight:600;margin-bottom:16px;filter:brightness(1.4);}
+.hero-title{color:#fff;font-size:44px;font-weight:700;line-height:1.05;margin-bottom:12px;font-family:var(--serif);}
+.hero-title em{color:var(--sky);font-style:italic;}
+.hero-sub{color:rgba(255,255,255,.6);font-size:14px;line-height:1.7;max-width:520px;margin-bottom:28px;}
+.hero-pills{display:flex;flex-wrap:wrap;gap:8px;}
+.hero-pill{background:rgba(0,122,138,.15);border:1px solid rgba(0,122,138,.3);border-radius:20px;padding:4px 12px;color:#5CCFDB;font-size:11px;font-weight:600;}
+
+/* SECTION */
+.section{padding:40px 20px;}
+.inner{max-width:var(--max);margin:0 auto;}
+.s-label{font-size:8.5px;letter-spacing:.22em;font-weight:700;color:var(--teal);margin-bottom:6px;}
+.s-title{font-family:var(--serif);font-size:26px;color:var(--navy);margin-bottom:6px;}
+.s-bar{width:44px;height:3px;background:var(--teal);border-radius:2px;margin-bottom:20px;}
+.sep{height:1px;background:var(--line);max-width:var(--max);margin:0 auto;}
+
+/* SCENE */
+.scene-card{background:#fff;border-radius:16px;padding:24px 26px;box-shadow:var(--shadow);border:1.5px solid var(--line);margin-bottom:20px;}
+.scene-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.scene-item{background:var(--sky-bg);border-radius:10px;padding:12px 14px;border:1.5px solid var(--border);}
+.scene-item-label{font-size:9px;letter-spacing:.14em;font-weight:700;color:var(--muted);margin-bottom:4px;}
+.scene-item-val{font-size:13.5px;font-weight:600;color:var(--navy);}
+.alert-box{background:var(--red-lt);border:1.5px solid rgba(181,37,27,.2);border-radius:10px;padding:13px 16px;display:flex;gap:10px;align-items:flex-start;}
+.alert-box-txt{font-size:13px;color:var(--red);line-height:1.55;}
+.alert-box-txt strong{font-weight:700;}
+
+/* STAGE TRACKER */
+.stage-dots{display:flex;justify-content:center;gap:10px;margin-bottom:28px;}
+.stage-dot{width:10px;height:10px;border-radius:50%;background:var(--line);transition:all .3s;}
+.stage-dot.active{background:var(--teal);transform:scale(1.3);}
+.stage-dot.done{background:var(--green);}
+
+/* PHONE STRIP */
+.phone-strip{background:var(--navy);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:14px;margin-bottom:20px;border:1.5px solid rgba(0,122,138,.2);}
+.phone-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.phone-avatar.d2d{background:var(--purple);}
+.phone-avatar.cust{background:var(--navy3);border:2px solid rgba(0,174,239,.3);}
+.phone-name{font-size:12px;font-weight:700;color:#fff;}
+.phone-role{font-size:10px;color:rgba(255,255,255,.45);}
+.phone-bubble{background:rgba(255,255,255,.06);border-radius:10px;padding:12px 14px;flex:1;font-size:13px;color:rgba(255,255,255,.82);line-height:1.6;font-style:italic;}
+.phone-bubble strong{color:#fff;font-style:normal;}
+
+/* ═══ CALENDAR ═══ */
+.cal-wrap{background:#fff;border-radius:16px;border:1.5px solid var(--line);overflow:hidden;box-shadow:var(--shadow-lg);margin-bottom:24px;}
+.cal-header{background:var(--navy);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;}
+.cal-header-title{font-size:14px;font-weight:700;color:#fff;}
+.cal-header-sub{font-size:11px;color:rgba(255,255,255,.45);}
+.cal-legend{display:flex;gap:16px;padding:12px 20px;border-bottom:1px solid var(--line);background:var(--light);}
+.cal-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);font-weight:500;}
+.cal-legend-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+.cal-legend-dot.booked{background:var(--red);}
+.cal-legend-dot.available{background:var(--green);}
+.cal-legend-dot.requested{background:var(--orange);}
+.cal-legend-dot.selected{background:var(--sky);}
+.cal-grid{display:grid;grid-template-columns:80px 1fr 1fr 1fr;border-bottom:1px solid var(--line);}
+.cal-col-header{padding:10px 14px;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--muted);border-bottom:1px solid var(--line);background:var(--light);}
+.cal-col-header.spec{background:#fff;}
+.cal-time-label{padding:10px 12px;font-size:11.5px;color:var(--muted);font-weight:600;border-right:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;align-items:center;}
+.cal-slot{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px 10px;min-height:52px;transition:all .2s;position:relative;}
+.cal-slot.booked{background:var(--red-lt);}
+.cal-slot.available{background:var(--green-lt);cursor:pointer;}
+.cal-slot.available:hover{background:#C8F0DC;transform:scale(1.02);z-index:2;box-shadow:var(--shadow);}
+.cal-slot.requested{background:var(--orange-lt);}
+.cal-slot.selected{background:var(--sky-lt);border:2px solid var(--sky);cursor:pointer;}
+.cal-slot.selected:hover{background:#D0EEFA;}
+.cal-slot.locked{cursor:default;}
+.slot-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;display:inline-block;margin-bottom:4px;}
+.slot-badge.booked{background:rgba(181,37,27,.12);color:var(--red);}
+.slot-badge.available{background:rgba(11,122,78,.12);color:var(--green);}
+.slot-badge.requested{background:rgba(212,98,10,.15);color:var(--orange);}
+.slot-badge.selected{background:rgba(0,174,239,.15);color:var(--sky2);}
+.slot-name{font-size:11px;color:var(--body);line-height:1.3;}
+.slot-specialist{font-size:10px;color:var(--muted);}
+
+/* INSTRUCTION CARD */
+.instruction-card{background:var(--navy);border-radius:12px;padding:16px 20px;margin-bottom:20px;display:flex;gap:14px;align-items:flex-start;}
+.instruction-card-ico{font-size:24px;flex-shrink:0;}
+.instruction-card-title{font-size:12px;font-weight:700;color:var(--sky);margin-bottom:4px;letter-spacing:.06em;}
+.instruction-card-text{font-size:13px;color:rgba(255,255,255,.75);line-height:1.6;}
+.instruction-card-text em{color:#fff;font-style:normal;font-weight:600;}
+
+/* SELECTED SUMMARY */
+.selected-summary{background:var(--sky-bg);border:1.5px solid rgba(0,174,239,.25);border-radius:12px;padding:14px 18px;margin-bottom:20px;display:none;}
+.selected-summary.show{display:block;}
+.selected-summary-label{font-size:9px;letter-spacing:.14em;font-weight:700;color:var(--sky);margin-bottom:6px;}
+.selected-slots{display:flex;flex-wrap:wrap;gap:8px;}
+.selected-chip{background:var(--sky);color:#fff;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;}
+.selected-chip button{background:none;border:none;color:rgba(255,255,255,.7);cursor:pointer;font-size:14px;line-height:1;padding:0;}
+.selected-chip button:hover{color:#fff;}
+
+/* TYPING */
+.typing-wrap{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px;}
+.typing-label{font-size:9px;letter-spacing:.2em;font-weight:700;color:var(--teal);margin-bottom:6px;}
+.typing-prompt{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:6px;line-height:1.4;}
+.typing-hint{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5;}
+.typing-input{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;font-family:var(--font);font-size:13.5px;color:var(--body);resize:vertical;min-height:80px;transition:border-color .18s;outline:none;}
+.typing-input:focus{border-color:var(--teal);}
+.typing-input.ok{border-color:var(--green);background:var(--green-lt);}
+.typing-input.bad{border-color:var(--red);background:var(--red-lt);}
+.typing-check-btn{margin-top:10px;background:var(--navy);color:#fff;border:none;border-radius:8px;padding:10px 20px;font-family:var(--font);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .18s;}
+.typing-check-btn:hover{background:var(--navy3);}
+.typing-result{margin-top:10px;font-size:12.5px;line-height:1.65;display:none;border-radius:8px;padding:10px 14px;}
+.typing-result.show{display:block;}
+.typing-result.ok{background:var(--green-lt);color:#0A4425;}
+.typing-result.partial{background:var(--orange-lt);color:#7A2E00;}
+.typing-ref{background:rgba(0,122,138,.06);border:1px solid rgba(0,122,138,.2);border-radius:8px;padding:10px 14px;margin-top:8px;font-size:12.5px;color:var(--muted);line-height:1.6;}
+.typing-ref strong{color:var(--navy);}
+
+/* FILL IN BLANK */
+.blank-wrap{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px;}
+.blank-label{font-size:9px;letter-spacing:.2em;font-weight:700;color:var(--orange);margin-bottom:6px;}
+.blank-prompt{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:14px;line-height:1.4;}
+.blank-sentence{font-size:14px;line-height:2.2;color:var(--body);margin-bottom:14px;}
+.blank-input{border:none;border-bottom:2px solid var(--border);padding:2px 8px;font-family:var(--font);font-size:14px;color:var(--navy);font-weight:600;min-width:120px;outline:none;transition:border-color .18s;background:transparent;}
+.blank-input:focus{border-color:var(--teal);}
+.blank-input.ok{border-color:var(--green);color:var(--green);}
+.blank-input.bad{border-color:var(--red);color:var(--red);}
+.blank-check-btn{background:var(--navy);color:#fff;border:none;border-radius:8px;padding:10px 20px;font-family:var(--font);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .18s;}
+.blank-result{margin-top:12px;font-size:12.5px;line-height:1.65;display:none;border-radius:8px;padding:10px 14px;}
+.blank-result.show{display:block;}
+.blank-result.ok{background:var(--green-lt);color:#0A4425;}
+.blank-result.partial{background:var(--orange-lt);color:#7A2E00;}
+
+/* CONFIRM BUTTON */
+.confirm-btn{background:var(--green);color:#fff;border:none;border-radius:10px;padding:12px 24px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(11,122,78,.3);display:flex;align-items:center;gap:8px;}
+.confirm-btn:hover{background:#0A6940;transform:translateY(-1px);}
+.confirm-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+
+/* CRM ENTRY */
+.crm-wrap{background:#fff;border:1.5px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px;}
+.crm-header{background:var(--navy);padding:12px 18px;display:flex;align-items:center;gap:10px;}
+.crm-header-ico{font-size:16px;}
+.crm-header-title{font-size:12px;font-weight:700;color:#fff;}
+.crm-header-badge{background:rgba(0,174,239,.2);border:1px solid rgba(0,174,239,.3);border-radius:20px;padding:2px 10px;font-size:10px;font-weight:700;color:var(--sky);margin-left:auto;}
+.crm-body{padding:16px 18px;}
+.crm-field{margin-bottom:12px;}
+.crm-field-label{font-size:9px;letter-spacing:.12em;font-weight:700;color:var(--muted);margin-bottom:4px;}
+.crm-field-val{font-size:13px;color:var(--body);padding:8px 12px;background:var(--light);border-radius:8px;border:1.5px solid var(--border);}
+.crm-field-input{font-size:13px;color:var(--body);padding:8px 12px;background:#fff;border-radius:8px;border:1.5px solid var(--border);width:100%;font-family:var(--font);outline:none;resize:none;}
+.crm-field-input:focus{border-color:var(--teal);}
+.crm-field-input.ok{border-color:var(--green);}
+
+/* NEXT BTN */
+.next-btn{background:var(--teal);color:#fff;border:none;border-radius:10px;padding:12px 26px;font-family:var(--font);font-size:13.5px;font-weight:600;cursor:pointer;transition:all .18s;box-shadow:0 4px 14px rgba(0,122,138,.3);}
+.next-btn:hover{opacity:.9;transform:translateY(-1px);}
+
+/* FEEDBACK */
+.feedback{border-radius:12px;padding:14px 16px;font-size:13px;line-height:1.65;margin-bottom:16px;display:none;animation:fadeUp .3s ease;}
+.feedback.show{display:block;}
+.feedback.ok{background:var(--green-lt);border-left:4px solid var(--green);color:#0A4425;}
+.feedback.bad{background:var(--red-lt);border-left:4px solid var(--red);color:#7A1010;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* CHECKLIST */
+.final-checklist{background:#fff;border-radius:16px;padding:24px 26px;box-shadow:var(--shadow);border:1.5px solid var(--line);}
+.checklist-item{display:flex;align-items:flex-start;gap:12px;padding:11px 12px;border-radius:10px;margin-bottom:6px;border:1.5px solid var(--line);}
+.checklist-item.ok{background:var(--green-lt);border-color:rgba(11,122,78,.2);}
+.checklist-item.pending{background:var(--orange-lt);border-color:rgba(212,98,10,.2);}
+.checklist-ico{font-size:16px;flex-shrink:0;margin-top:1px;}
+.checklist-text{font-size:13px;line-height:1.45;}
+.checklist-text.ok{color:var(--green);}
+.checklist-text.pending{color:var(--orange);}
+
+/* SCORE */
+.score-panel{background:var(--navy);border-radius:16px;padding:32px 26px;text-align:center;margin-bottom:24px;}
+.score-icon{font-size:52px;margin-bottom:12px;}
+.score-title{font-family:var(--serif);font-size:28px;color:#fff;margin-bottom:6px;}
+.score-title em{color:var(--sky);font-style:italic;}
+.score-sub{color:rgba(255,255,255,.55);font-size:13px;margin-bottom:22px;line-height:1.6;}
+.score-nums{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;}
+.score-num{background:rgba(0,122,138,.15);border:1.5px solid rgba(0,122,138,.3);border-radius:12px;padding:14px 24px;}
+.score-n{font-family:var(--serif);font-size:36px;font-weight:700;color:#5CCFDB;}
+.score-l{font-size:9.5px;color:rgba(255,255,255,.45);letter-spacing:.12em;margin-top:2px;}
+.tip-box{background:rgba(0,122,138,.1);border:1px solid rgba(0,122,138,.25);border-radius:10px;padding:12px 16px;font-size:12.5px;color:rgba(255,255,255,.7);line-height:1.6;}
+.tip-box strong{color:#5CCFDB;}
+
+/* SCRIPT REF */
+.script-ref{background:var(--navy);border-radius:14px;padding:20px 22px;margin-bottom:14px;position:relative;overflow:hidden;}
+.script-ref::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--teal);}
+.script-ref-label{color:#5CCFDB;font-size:8px;letter-spacing:.2em;font-weight:700;margin-bottom:8px;padding-left:14px;}
+.script-ref-text{color:rgba(255,255,255,.82);font-size:13px;line-height:1.75;padding-left:14px;font-style:italic;}
+.script-ref-text strong{color:#fff;font-style:normal;}
+</style>
+</head>
+<body>
+<div id="prog"><div id="prog-fill"></div></div>
+
+<div class="hero">
+  <div class="hero-deco" style="width:380px;height:380px;right:-80px;top:-80px;"></div>
+  <div class="hero-stripe"></div>
+  <div class="hero-inner">
+    <div class="hero-ey">CONFIRMATIONS TEAM · DAY 2 · ROLEPLAY — SCENARIO 3</div>
+    <div class="hero-title">Slot Not Available —<br><em>Find the Alternative</em></div>
+    <div class="hero-sub">A D2D rep calls in. The requested slot is taken. You need to read the calendar, pick the best alternatives, offer them professionally, lock the booking, and hand off to the customer — all in one call.</div>
+    <div class="hero-pills">
+      <span class="hero-pill">🗓️ Live calendar</span>
+      <span class="hero-pill">🖱️ Click to select slots</span>
+      <span class="hero-pill">✍️ Type the offer line</span>
+      <span class="hero-pill">💾 CRM entry</span>
+      <span class="hero-pill">📋 Blanks to fill</span>
+    </div>
+  </div>
+</div>
+
+<!-- SCENE -->
+<div class="section" style="background:#fff;">
+  <div class="inner">
+    <div class="s-label">YOUR SCENARIO</div>
+    <div class="s-title">The Call Is Coming In</div>
+    <div class="s-bar"></div>
+    <div class="scene-card">
+      <div class="scene-grid">
+        <div class="scene-item"><div class="scene-item-label">CALL TYPE</div><div class="scene-item-val">Inbound — D2D Rep</div></div>
+        <div class="scene-item"><div class="scene-item-label">D2D REP</div><div class="scene-item-val">Priya (RESINC D2D)</div></div>
+        <div class="scene-item"><div class="scene-item-label">CUSTOMER</div><div class="scene-item-val">Tom & Rachel Holt</div></div>
+        <div class="scene-item"><div class="scene-item-label">REQUESTED SLOT</div><div class="scene-item-val">Tomorrow — 11:00 AM</div></div>
+        <div class="scene-item"><div class="scene-item-label">LOCATION</div><div class="scene-item-val">Penrith</div></div>
+        <div class="scene-item"><div class="scene-item-label">LINE</div><div class="scene-item-val">0489 910 768</div></div>
+      </div>
+      <div class="alert-box" style="margin-top:0;">
+        <div style="font-size:20px;flex-shrink:0;">⛔</div>
+        <div class="alert-box-txt"><strong>11:00 AM tomorrow is fully booked.</strong> You need to check the calendar and offer Priya alternatives — then lock the right one in.</div>
+      </div>
+    </div>
+    <div style="text-align:center;">
+      <button class="next-btn" style="font-size:14px;padding:14px 32px;" onclick="startScenario()">Answer the call ☎️</button>
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- MAIN STAGE -->
+<div id="main-stage" style="display:none;"></div>
+
+<!-- COMPLETE -->
+<div class="section" id="complete-section" style="display:none;">
+  <div class="inner">
+    <div class="score-panel">
+      <div class="score-icon">🏆</div>
+      <div class="score-title">Booking <em>Saved.</em></div>
+      <div class="score-sub">You turned a blocked slot into a locked booking. Score based on first attempts.</div>
+      <div class="score-nums">
+        <div class="score-num"><div class="score-n" id="final-correct">0</div><div class="score-l">FIRST-ATTEMPT CORRECT</div></div>
+        <div class="score-num"><div class="score-n" id="final-total">0</div><div class="score-l">TOTAL CHALLENGES</div></div>
+        <div class="score-num"><div class="score-n" id="final-pct">0%</div><div class="score-l">SCORE</div></div>
+      </div>
+      <div class="tip-box" id="final-tip"></div>
+    </div>
+
+    <div class="s-label" style="margin-top:32px;">CHECKLIST — WHAT YOU COVERED</div>
+    <div class="s-title">Call Quality Review</div>
+    <div class="s-bar"></div>
+    <div class="final-checklist" id="final-checklist"></div>
+
+    <div class="s-label" style="margin-top:32px;">SCRIPT REFERENCE</div>
+    <div class="s-title">Slot Not Available — Key Lines</div>
+    <div class="s-bar"></div>
+    <div class="script-ref">
+      <div class="script-ref-label">SLOT NOT AVAILABLE — OFFER ALTERNATIVES</div>
+      <div class="script-ref-text">"I'm sorry <strong>[Rep Name]</strong>, that timeslot isn't available. However, I can offer you these other options tomorrow at <strong>[Time 1]</strong> or <strong>[Time 2]</strong> — would any of these work? Would you like me to hold while you check with <strong>[Customer Name]</strong>, or would you prefer to select another day?"</div>
+    </div>
+    <div class="script-ref">
+      <div class="script-ref-label">TAKING OVER FROM CUSTOMER</div>
+      <div class="script-ref-text">"Hi <strong>[Customer Name]</strong>, it's <strong>[Your Name]</strong> here from the RESINC office. I'm just confirming that we have you and <strong>[Partner's Name]</strong> booked in with <strong>[Specialist Name]</strong> at <strong>[Time]</strong> tomorrow."</div>
+    </div>
+    <div class="script-ref">
+      <div class="script-ref-label">NEXT STEPS & CLOSE</div>
+      <div class="script-ref-text">"Once your details come through into our system, we'll lock that booking in. Your session will be via Zoom — you'll receive an email and SMS with all the details. About 15 minutes before, you'll get your Zoom link. Check your spam folder just in case, and jump on a few minutes early to test the link. We look forward to seeing yourself and <strong>[Partner]</strong> then — have a great rest of your day!"</div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('prog-fill').style.width=Math.min(p,100)+'%';
+});
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let correctFirst=0;
+let totalChallenges=0;
+let selectedSlots=[];
+let confirmedSlot=null;
+let checklist={
+  answeredProfessionally:false,
+  offeredAlternatives:false,
+  namedSpecialist:false,
+  customerIntroCorrect:false,
+  crmUpdated:false,
+  closedWarmly:false
+};
+
+// ═══════════════════════════════════════
+// CALENDAR DATA
+// ═══════════════════════════════════════
+const SPECIALISTS=['James Reeve','Mei Lin','Carlos Ortega'];
+const TOMORROW_SLOTS=[
+  {time:'9:00 AM', specs:['booked','booked','booked'], names:['J. Walsh','T. Patel','S. Kim']},
+  {time:'10:00 AM', specs:['booked','available','available'], names:['R. Ahmed',null,null]},
+  {time:'11:00 AM', specs:['booked','booked','booked'], names:['D. Nguyen','P. Brown','A. Singh']},
+  {time:'12:00 PM', specs:['available','booked','available'], names:[null,'M. Russo',null]},
+  {time:'1:00 PM', specs:['available','available','booked'], names:[null,null,'C. Zhang']},
+  {time:'2:00 PM', specs:['booked','available','available'], names:['L. Moore',null,null]},
+  {time:'3:00 PM', specs:['available','booked','available'], names:[null,'T. Holt — BOOKED',null]},
+  {time:'4:00 PM', specs:['available','available','available'], names:[null,null,null]},
+];
+// Best alternatives for tomorrow: 10AM (James free), 12PM (James free), 1PM (James or Mei)
+const GOOD_SLOTS=['10:00 AM','12:00 PM','1:00 PM','2:00 PM','4:00 PM'];
+
+function startScenario(){
+  document.getElementById('main-stage').style.display='block';
+  document.getElementById('main-stage').scrollIntoView({behavior:'smooth',block:'start'});
+  renderStage1();
+}
+
+// ═══════════════════════════════════════
+// STAGE 1 — Answer + hear the problem
+// ═══════════════════════════════════════
+function renderStage1(){
+  checklist.answeredProfessionally=false;
+  const html=`
+  <div class="section" id="stage1">
+    <div class="inner">
+      <div class="stage-dots">
+        <div class="stage-dot active"></div>
+        <div class="stage-dot"></div>
+        <div class="stage-dot"></div>
+        <div class="stage-dot"></div>
+        <div class="stage-dot"></div>
+      </div>
+      <div class="s-label">STAGE 1 OF 5</div>
+      <div class="s-title">The Call Comes In</div>
+      <div class="s-bar"></div>
+
+      <div class="phone-strip">
+        <div class="phone-avatar d2d">🚪</div>
+        <div>
+          <div class="phone-name">Priya — RESINC D2D Rep</div>
+          <div class="phone-role">Inbound on 0489 910 768</div>
+        </div>
+        <div class="phone-bubble">📞 <em>Ring ring... you pick up.</em></div>
+      </div>
+
+      <div class="instruction-card">
+        <div class="instruction-card-ico">☎️</div>
+        <div>
+          <div class="instruction-card-title">HOW DO YOU ANSWER?</div>
+          <div class="instruction-card-text">Select the correct response below.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:20px;" id="answer-choices">
+        ${['Hello, RESINC Solar, [Your Name] speaking.',
+           'Confirmations Team — what do you need?',
+           'Hi, RESINC, how can I help you today?',
+           'Hello?'].map((opt,i)=>`
+          <div style="background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:12px;transition:all .18s;" 
+            onclick="pickAnswer(${i})" id="ans-${i}">
+            <div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;" id="ans-dot-${i}"></div>
+            <span>"${opt}"</span>
+          </div>`).join('')}
+      </div>
+      <div class="feedback" id="fb-answer"></div>
+      <div id="stage1-next"></div>
+    </div>
+  </div>`;
+  document.getElementById('main-stage').innerHTML=html;
+}
+
+const answerFeedback=[
+  {ok:true, text:'Perfect. Name → company → you. Priya immediately knows she\'s reached the right team and the right person.'},
+  {ok:false, text:'"Confirmations Team" is internal language. D2D reps call into "RESINC Solar". Always lead with the brand. Try again.'},
+  {ok:false, text:'Close — but you didn\'t say your name. The rep needs to know who they\'re speaking with. Try again.'},
+  {ok:false, text:'This is a business line. Never answer with just "Hello?" — try again.'}
+];
+let answerFirstAttempt=true;
+
+function pickAnswer(i){
+  totalChallenges++;
+  const fb=document.getElementById('fb-answer');
+  const ans=answerFeedback[i];
+  if(ans.ok){
+    if(answerFirstAttempt) correctFirst++;
+    checklist.answeredProfessionally=true;
+    document.querySelectorAll('[id^="ans-"]').forEach((el,j)=>{
+      if(j===i){ el.style.borderColor='var(--green)'; el.style.background='var(--green-lt)'; document.getElementById('ans-dot-'+j).textContent='✓'; document.getElementById('ans-dot-'+j).style.background='var(--green)'; document.getElementById('ans-dot-'+j).style.color='#fff'; document.getElementById('ans-dot-'+j).style.borderColor='var(--green)'; }
+      else { el.style.opacity='.35'; el.style.pointerEvents='none'; }
+    });
+    fb.className='feedback show ok';
+    fb.innerHTML='✅  '+ans.text;
+    setTimeout(()=>{
+      document.getElementById('stage1-next').innerHTML=`
+        <div class="phone-strip" style="margin-top:16px;">
+          <div class="phone-avatar d2d">🚪</div>
+          <div>
+            <div class="phone-name">Priya (D2D Rep)</div>
+            <div class="phone-role">Inbound</div>
+          </div>
+          <div class="phone-bubble">"Hi [Your Name], it's Priya here on the Penrith. I've got Tom Holt with me — he's interested in a solar assessment. Can we get a slot at <strong>11 AM tomorrow</strong>?"</div>
+        </div>
+        <div class="feedback show bad" style="display:block;margin-top:12px;">⛔ <strong>11:00 AM tomorrow is fully booked across all specialists.</strong> You need to check the calendar and offer alternatives.</div>
+        <div style="text-align:center;margin-top:20px;">
+          <button class="next-btn" onclick="renderStage2()">Check the calendar →</button>
+        </div>`;
+      document.getElementById('stage1-next').scrollIntoView({behavior:'smooth',block:'nearest'});
+    },600);
+  } else {
+    answerFirstAttempt=false;
+    document.getElementById('ans-'+i).style.borderColor='var(--red)';
+    document.getElementById('ans-'+i).style.background='var(--red-lt)';
+    document.getElementById('ans-dot-'+i).textContent='✗';
+    document.getElementById('ans-dot-'+i).style.background='var(--red)';
+    document.getElementById('ans-dot-'+i).style.color='#fff';
+    document.getElementById('ans-dot-'+i).style.borderColor='var(--red)';
+    fb.className='feedback show bad';
+    fb.innerHTML='❌  '+ans.text+' <strong>Try again.</strong>';
+    setTimeout(()=>{
+      document.getElementById('ans-'+i).style.opacity='.4';
+      document.getElementById('ans-'+i).style.pointerEvents='none';
+      document.getElementById('ans-'+i).style.background='#fff';
+    },1500);
+  }
+}
+
+// ═══════════════════════════════════════
+// STAGE 2 — Calendar: pick alternatives
+// ═══════════════════════════════════════
+function renderStage2(){
+  selectedSlots=[];
+  const html=`
+  <div class="section" id="stage2" style="background:#fff;">
+    <div class="inner">
+      <div class="stage-dots">
+        <div class="stage-dot done"></div>
+        <div class="stage-dot active"></div>
+        <div class="stage-dot"></div>
+        <div class="stage-dot"></div>
+        <div class="stage-dot"></div>
+      </div>
+      <div class="s-label">STAGE 2 OF 5</div>
+      <div class="s-title">Read the Calendar</div>
+      <div class="s-bar"></div>
+
+      <div class="instruction-card">
+        <div class="instruction-card-ico">🗓️</div>
+        <div>
+          <div class="instruction-card-title">YOUR TASK</div>
+          <div class="instruction-card-text">11 AM is blocked. <em>Select 2 or 3 available slots</em> you'll offer Priya as alternatives. Click any green slot to select it. Avoid offering times that are fully booked — that would be embarrassing on a live call.</div>
+        </div>
+      </div>
+
+      <div class="cal-wrap">
+        <div class="cal-header">
+          <div>
+            <div class="cal-header-title">📅 Tomorrow's Calendar</div>
+            <div class="cal-header-sub">Click available (green) slots to select alternatives to offer</div>
+          </div>
+        </div>
+        <div class="cal-legend">
+          <div class="cal-legend-item"><div class="cal-legend-dot booked"></div>Booked</div>
+          <div class="cal-legend-item"><div class="cal-legend-dot available"></div>Available — click to select</div>
+          <div class="cal-legend-item"><div class="cal-legend-dot requested"></div>Requested (11AM — unavailable)</div>
+          <div class="cal-legend-item"><div class="cal-legend-dot selected"></div>Your selection</div>
+        </div>
+        <div class="cal-grid">
+          <div class="cal-col-header">Time</div>
+          <div class="cal-col-header spec">James Reeve</div>
+          <div class="cal-col-header spec">Mei Lin</div>
+          <div class="cal-col-header spec">Carlos Ortega</div>
+          ${TOMORROW_SLOTS.map((row,ri)=>row.specs.map((status,si)=>{
+            const isRequested=(row.time==='11:00 AM');
+            const slotClass=isRequested?'requested':(status==='booked'?'booked':'available');
+            const slotId=`slot-${ri}-${si}`;
+            const timeLabel=si===0?`<div class="cal-time-label">${row.time}</div>`:'';
+            const nameText=row.names[si]?`<div class="slot-name">${row.names[si]}</div>`:'<div class="slot-specialist" style="color:var(--green);font-weight:600;">Free</div>';
+            const badge=isRequested?'requested':status;
+            const badgeText=isRequested?'❌ Requested':status==='booked'?'Booked':'Available';
+            const clickFn=slotClass==='available'?`onclick="toggleSlot('${row.time}','${SPECIALISTS[si]}','${slotId}')"`: '';
+            return (si===0?timeLabel:'')+`<div class="cal-slot ${slotClass}" id="${slotId}" ${clickFn}>
+              <div class="slot-badge ${badge}">${badgeText}</div>
+              ${nameText}
+              <div class="slot-specialist">${SPECIALISTS[si]}</div>
+            </div>`;
+          }).join('')).join('')}
+        </div>
+      </div>
+
+      <div class="selected-summary" id="selected-summary">
+        <div class="selected-summary-label">YOUR SELECTED ALTERNATIVES</div>
+        <div class="selected-slots" id="selected-slots-display"></div>
+      </div>
+
+      <div style="text-align:center;">
+        <button class="confirm-btn" id="offer-btn" onclick="renderStage3()" disabled>
+          📞 Offer these alternatives →
+        </button>
+        <div style="font-size:11.5px;color:var(--muted);margin-top:8px;" id="offer-hint">Select at least 2 available slots to continue</div>
+      </div>
+    </div>
+  </div>`;
+  document.getElementById('main-stage').innerHTML+=html;
+  document.getElementById('stage2').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function toggleSlot(time, specialist, slotId){
+  const el=document.getElementById(slotId);
+  const existing=selectedSlots.findIndex(s=>s.id===slotId);
+  if(existing>=0){
+    selectedSlots.splice(existing,1);
+    el.classList.remove('selected');
+    el.classList.add('available');
+    el.querySelector('.slot-badge').className='slot-badge available';
+    el.querySelector('.slot-badge').textContent='Available';
+  } else {
+    if(selectedSlots.length>=3){ alert('Maximum 3 alternatives. Remove one first.'); return; }
+    selectedSlots.push({id:slotId,time,specialist});
+    el.classList.remove('available');
+    el.classList.add('selected');
+    el.querySelector('.slot-badge').className='slot-badge selected';
+    el.querySelector('.slot-badge').textContent='✓ Selected';
+  }
+  updateSelectedSummary();
+}
+
+function updateSelectedSummary(){
+  const summary=document.getElementById('selected-summary');
+  const display=document.getElementById('selected-slots-display');
+  const btn=document.getElementById('offer-btn');
+  const hint=document.getElementById('offer-hint');
+  if(selectedSlots.length===0){
+    summary.classList.remove('show');
+    btn.disabled=true;
+    hint.textContent='Select at least 2 available slots to continue';
+    return;
+  }
+  summary.classList.add('show');
+  display.innerHTML=selectedSlots.map(s=>`
+    <div class="selected-chip">
+      ${s.time} — ${s.specialist}
+      <button onclick="toggleSlot('${s.time}','${s.specialist}','${s.id}')">✕</button>
+    </div>`).join('');
+  if(selectedSlots.length>=2){
+    btn.disabled=false;
+    hint.textContent=`${selectedSlots.length} slot${selectedSlots.length>1?'s':''} selected — ready to offer`;
+  } else {
+    btn.disabled=true;
+    hint.textContent='Select at least 2 slots to give Priya a real choice';
+  }
+}
+
+// ═══════════════════════════════════════
+// STAGE 3 — Type the offer line
+// ═══════════════════════════════════════
+function renderStage3(){
+  totalChallenges++;
+  checklist.offeredAlternatives=true;
+  const slotTimes=selectedSlots.map(s=>s.time).join(' or ');
+  const html=`
+  <div class="section" id="stage3">
+    <div class="inner">
+      <div class="stage-dots">
+        <div class="stage-dot done"></div>
+        <div class="stage-dot done"></div>
+        <div class="stage-dot active"></div>
+        <div class="stage-dot"></div>
+        <div class="stage-dot"></div>
+      </div>
+      <div class="s-label">STAGE 3 OF 5</div>
+      <div class="s-title">Offer the Alternatives</div>
+      <div class="s-bar"></div>
+
+      <div class="phone-strip">
+        <div class="phone-avatar d2d">🚪</div>
+        <div><div class="phone-name">Priya (D2D Rep)</div></div>
+        <div class="phone-bubble">"Oh no — can you check if there's anything else available tomorrow?"</div>
+      </div>
+
+      <div class="typing-wrap">
+        <div class="typing-label">✍️ TYPE YOUR RESPONSE TO PRIYA</div>
+        <div class="typing-prompt">Tell Priya the 11AM slot is unavailable and offer your selected alternatives. Include her name, the alternative times, and ask if she'd like to hold while she checks with Tom.</div>
+        <div class="typing-hint">Key elements: Priya's name → apology → alternative times (${slotTimes}) → offer to hold</div>
+        <textarea class="typing-input" id="offer-input" placeholder="Type what you'd say to Priya..."></textarea>
+        <button class="typing-check-btn" onclick="checkOfferLine()">Check my response ✓</button>
+        <div class="typing-result" id="offer-result"></div>
+      </div>
+      <div id="stage3-next"></div>
+    </div>
+  </div>`;
+  document.getElementById('main-stage').innerHTML+=html;
+  document.getElementById('stage3').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+let offerFirstAttempt=true;
+function checkOfferLine(){
+  const val=document.getElementById('offer-input').value.toLowerCase();
+  const result=document.getElementById('offer-result');
+  if(!val.trim()){ result.className='typing-result show partial'; result.textContent='Please type something first.'; return; }
+  const keywords=['priya','sorry','available','hold','check'];
+  const hits=keywords.filter(k=>val.includes(k)).length;
+  const hasTime=selectedSlots.some(s=>val.includes(s.time.toLowerCase().replace(' am','').replace(' pm','')));
+  const isFirst=offerFirstAttempt;
+  offerFirstAttempt=false;
+  document.getElementById('offer-input').dataset.checked='1';
+
+  const exampleTimes=selectedSlots.map(s=>s.time).join(' or ');
+
+  if(hits>=3&&hasTime){
+    document.getElementById('offer-input').classList.add('ok');
+    result.className='typing-result show ok';
+    result.innerHTML=`✅ Great — you apologised, named Priya, offered specific times, and gave her the option to hold. Professional and helpful under pressure.
+      <div class="typing-ref"><strong>Model:</strong> "I'm sorry Priya, that timeslot isn't available. However, I can offer you these options tomorrow at <em>${exampleTimes}</em> — would any of these work? Would you like me to hold while you check with Tom?"</div>`;
+    if(isFirst){ correctFirst++; checklist.namedSpecialist=true; }
+    setTimeout(()=>{
+      document.getElementById('stage3-next').innerHTML=`
+        <div class="phone-strip">
+          <div class="phone-avatar d2d">🚪</div>
+          <div><div class="phone-name">Priya (D2D Rep)</div></div>
+          <div class="phone-bubble">"Perfect — give me a sec... <em>[muffled conversation]</em>... Tom's happy with <strong>${selectedSlots[0].time}</strong>. The appointment is for Tom Holt and his wife Rachel. I'll pass Tom over to you now."</div>
+        </div>
+        <div style="text-align:center;margin-top:16px;">
+          <button class="next-btn" onclick="renderStage4('${selectedSlots[0].time}','${selectedSlots[0].specialist}')">Tom is on the line →</button>
+        </div>`;
+      document.getElementById('stage3-next').scrollIntoView({behavior:'smooth',block:'nearest'});
+    },600);
+  } else {
+    result.className='typing-result show partial';
+    result.innerHTML=`⚠️ Missing some key elements. Make sure you: apologise, name Priya, mention at least one specific time, and offer to hold while she checks with the customer.
+      <div class="typing-ref"><strong>Keywords to include:</strong> Priya's name, "sorry", the alternative times, "hold", "check with Tom"</div>`;
+  }
+}
+
+// ═══════════════════════════════════════
+// STAGE 4 — Fill in the blank: customer intro + CRM entry
+// ═══════════════════════════════════════
+function renderStage4(bookedTime, specialist){
+  confirmedSlot={time:bookedTime,specialist};
+  const html=`
+  <div class="section" id="stage4" style="background:#fff;">
+    <div class="inner">
+      <div class="stage-dots">
+        <div class="stage-dot done"></div>
+        <div class="stage-dot done"></div>
+        <div class="stage-dot done"></div>
+        <div class="stage-dot active"></div>
+        <div class="stage-dot"></div>
+      </div>
+      <div class="s-label">STAGE 4 OF 5</div>
+      <div class="s-title">Take Over from Tom</div>
+      <div class="s-bar"></div>
+
+      <div class="phone-strip">
+        <div class="phone-avatar cust">👤</div>
+        <div><div class="phone-name">Tom Holt (Customer)</div><div class="phone-role">Just passed over from Priya</div></div>
+        <div class="phone-bubble"><em>Phone changes hands...</em> "Hello?"</div>
+      </div>
+
+      <div class="blank-wrap">
+        <div class="blank-label">📝 FILL IN THE BLANKS</div>
+        <div class="blank-prompt">Complete your opening line to Tom. Every blank must be correct.</div>
+        <div class="blank-sentence">
+          "Hi <input class="blank-input" id="b1" placeholder="customer name">, it's [Your Name] here from the 
+          <input class="blank-input" id="b2" placeholder="?"> office. I'm just confirming that we have you and 
+          <input class="blank-input" id="b3" placeholder="partner name"> booked in with 
+          <input class="blank-input" id="b4" placeholder="specialist name"> at 
+          <input class="blank-input" id="b5" style="min-width:80px;" placeholder="time"> tomorrow."
+        </div>
+        <button class="blank-check-btn" onclick="checkBlanks()">Check answers ✓</button>
+        <div class="blank-result" id="blank-result"></div>
+      </div>
+
+      <div class="crm-wrap" id="crm-section" style="display:none;">
+        <div class="crm-header">
+          <div class="crm-header-ico">💾</div>
+          <div class="crm-header-title">Zoho CRM — Update the Booking</div>
+          <div class="crm-header-badge">LIVE ENTRY</div>
+        </div>
+        <div class="crm-body">
+          <p style="font-size:12.5px;color:var(--muted);margin-bottom:16px;">You've confirmed the booking. Now update the CRM record. Fill in all fields before locking it in.</p>
+          <div class="crm-field"><div class="crm-field-label">CUSTOMER NAME</div><div class="crm-field-val">Tom & Rachel Holt</div></div>
+          <div class="crm-field"><div class="crm-field-label">APPOINTMENT TIME</div><div class="crm-field-val">${bookedTime} — Tomorrow</div></div>
+          <div class="crm-field"><div class="crm-field-label">SPECIALIST ASSIGNED</div><div class="crm-field-val">${specialist}</div></div>
+          <div class="crm-field">
+            <div class="crm-field-label">STATUS — SELECT CORRECT ONE</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;" id="status-choices">
+              ${['Unconfirmed','Confirmed','Rescheduled','Cancelled'].map(s=>`
+                <div style="padding:8px 14px;border-radius:8px;border:1.5px solid var(--border);font-size:12.5px;font-weight:600;cursor:pointer;background:#fff;transition:all .18s;" onclick="pickStatus(this,'${s}')">${s}</div>`).join('')}
+            </div>
+          </div>
+          <div class="crm-field">
+            <div class="crm-field-label">CALL NOTES (type a brief note)</div>
+            <textarea class="crm-field-input" id="crm-notes" rows="3" placeholder="e.g. Spoke with Tom — confirmed ${bookedTime} after 11AM was unavailable. Rachel will also attend. Zoom details to be sent."></textarea>
+          </div>
+          <button class="confirm-btn" id="crm-save-btn" onclick="saveCRM()" style="margin-top:8px;">
+            💾 Lock booking in CRM
+          </button>
+          <div class="feedback" id="crm-feedback"></div>
+        </div>
+      </div>
+      <div id="stage4-next"></div>
+    </div>
+  </div>`;
+  document.getElementById('main-stage').innerHTML+=html;
+  document.getElementById('stage4').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+let blanksFirstAttempt=true;
+function checkBlanks(){
+  totalChallenges++;
+  const answers=[
+    {id:'b1', correct:'tom', label:'Customer name'},
+    {id:'b2', correct:'resinc', label:'RESINC office'},
+    {id:'b3', correct:'rachel', label:'Partner name'},
+    {id:'b4', correct:confirmedSlot.specialist.toLowerCase().split(' ')[0], label:'Specialist first name'},
+    {id:'b5', correct:confirmedSlot.time.toLowerCase().replace(' ',''), label:'Time'},
+  ];
+  let allCorrect=true;
+  answers.forEach(a=>{
+    const el=document.getElementById(a.id);
+    const val=el.value.toLowerCase().trim().replace(' ','');
+    const ok=val.includes(a.correct);
+    el.classList.remove('ok','bad');
+    el.classList.add(ok?'ok':'bad');
+    if(!ok) allCorrect=false;
+  });
+  const result=document.getElementById('blank-result');
+  const isFirst=blanksFirstAttempt;
+  blanksFirstAttempt=false;
+  if(allCorrect){
+    if(isFirst){ correctFirst++; checklist.customerIntroCorrect=true; }
+    result.className='blank-result show ok';
+    result.innerHTML='✅ All correct. You named both Tom and Rachel, referenced the RESINC office, and locked in the specialist and time. Tom knows exactly what\'s happening.';
+    setTimeout(()=>{
+      document.getElementById('crm-section').style.display='block';
+      document.getElementById('crm-section').scrollIntoView({behavior:'smooth',block:'start'});
+    },600);
+  } else {
+    result.className='blank-result show partial';
+    result.innerHTML='⚠️ Some blanks are incorrect (shown in red). Remember: customer name → RESINC → partner name → specialist → time. Try again.';
+  }
+}
+
+let statusSelected=null;
+function pickStatus(el,status){
+  document.querySelectorAll('#status-choices > div').forEach(d=>{
+    d.style.background='#fff';d.style.borderColor='var(--border)';d.style.color='var(--body)';
+  });
+  el.style.background=status==='Confirmed'?'var(--green-lt)':'var(--red-lt)';
+  el.style.borderColor=status==='Confirmed'?'var(--green)':'var(--red)';
+  el.style.color=status==='Confirmed'?'var(--green)':'var(--red)';
+  statusSelected=status;
+}
+
+function saveCRM(){
+  totalChallenges++;
+  const notes=document.getElementById('crm-notes').value.trim();
+  const fb=document.getElementById('crm-feedback');
+  if(!statusSelected){ fb.className='feedback show bad'; fb.innerHTML='❌ Please select a status first.'; fb.style.display='block'; return; }
+  if(!notes){ fb.className='feedback show bad'; fb.innerHTML='❌ Please add call notes before saving.'; fb.style.display='block'; return; }
+  const isFirst=!document.getElementById('crm-save-btn').dataset.checked;
+  document.getElementById('crm-save-btn').dataset.checked='1';
+  if(statusSelected==='Confirmed'){
+    if(isFirst){ correctFirst++; checklist.crmUpdated=true; }
+    document.getElementById('crm-save-btn').disabled=true;
+    document.getElementById('crm-notes').classList.add('ok');
+    fb.className='feedback show ok';
+    fb.innerHTML='✅ CRM updated. Status: Confirmed. Notes saved. The booking is locked.';
+    fb.style.display='block';
+    setTimeout(()=>{
+      document.getElementById('stage4-next').innerHTML=`
+        <div class="phone-strip" style="margin-top:16px;">
+          <div class="phone-avatar cust">👤</div>
+          <div><div class="phone-name">Tom (Customer)</div></div>
+          <div class="phone-bubble">"That all sounds great — thanks for sorting that out so quickly!"</div>
+        </div>
+        <div style="text-align:center;margin-top:16px;">
+          <button class="next-btn" onclick="renderStage5()">Close the call →</button>
+        </div>`;
+      document.getElementById('stage4-next').scrollIntoView({behavior:'smooth',block:'nearest'});
+    },600);
+  } else {
+    fb.className='feedback show bad';
+    fb.innerHTML='❌ Wrong status. This appointment was just confirmed — it should be set to <strong>Confirmed</strong>. Try again.';
+    fb.style.display='block';
+    statusSelected=null;
+    document.querySelectorAll('#status-choices > div').forEach(d=>{
+      d.style.background='#fff';d.style.borderColor='var(--border)';d.style.color='var(--body)';
+    });
+  }
+}
+
+// ═══════════════════════════════════════
+// STAGE 5 — Type the close
+// ═══════════════════════════════════════
+function renderStage5(){
+  totalChallenges++;
+  const html=`
+  <div class="section" id="stage5">
+    <div class="inner">
+      <div class="stage-dots">
+        <div class="stage-dot done"></div>
+        <div class="stage-dot done"></div>
+        <div class="stage-dot done"></div>
+        <div class="stage-dot done"></div>
+        <div class="stage-dot active"></div>
+      </div>
+      <div class="s-label">STAGE 5 OF 5 — FINAL</div>
+      <div class="s-title">Close the Call</div>
+      <div class="s-bar"></div>
+
+      <div class="phone-strip">
+        <div class="phone-avatar cust">👤</div>
+        <div><div class="phone-name">Tom Holt</div></div>
+        <div class="phone-bubble">"That all sounds great — thanks for sorting that out so quickly!"</div>
+      </div>
+
+      <div class="typing-wrap">
+        <div class="typing-label">✍️ CLOSE THE CALL FROM MEMORY</div>
+        <div class="typing-prompt">Give Tom the Zoom instructions and close warmly. Don't copy the script — write it naturally. Make sure you mention: 15 minutes before, spam folder, testing early, Rachel's name, and a warm sign-off.</div>
+        <div class="typing-hint">Key elements: 15 min before · spam folder · test early · Rachel · have a great day</div>
+        <textarea class="typing-input" id="close-input" placeholder="Type your closing..."></textarea>
+        <button class="typing-check-btn" onclick="checkClose()">Check my close ✓</button>
+        <div class="typing-result" id="close-result"></div>
+      </div>
+      <div id="stage5-next"></div>
+    </div>
+  </div>`;
+  document.getElementById('main-stage').innerHTML+=html;
+  document.getElementById('stage5').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+let closeFirstAttempt=true;
+function checkClose(){
+  const val=document.getElementById('close-input').value.toLowerCase();
+  const result=document.getElementById('close-result');
+  if(!val.trim()){ result.className='typing-result show partial'; result.textContent='Please type something.'; return; }
+  const keywords=['15','spam','early','rachel','day'];
+  const hits=keywords.filter(k=>val.includes(k)).length;
+  const isFirst=closeFirstAttempt;
+  closeFirstAttempt=false;
+  if(hits>=4){
+    document.getElementById('close-input').classList.add('ok');
+    result.className='typing-result show ok';
+    result.innerHTML=`✅ Clean close. You covered Zoom timing, spam folder, early login, named Rachel, and signed off warmly. Booking is locked.
+      <div class="typing-ref"><strong>Model:</strong> "About 15 minutes before your session you'll receive your Zoom link. Keep an eye on your spam folder just in case, and jump on a few minutes early to test the link and audio. That's everything — we look forward to seeing yourself and Rachel then. Have a great rest of your day!"</div>`;
+    if(isFirst){ correctFirst++; checklist.closedWarmly=true; }
+    setTimeout(()=>{
+      document.getElementById('stage5-next').innerHTML=`
+        <div class="phone-strip" style="margin-top:16px;">
+          <div class="phone-avatar cust">👤</div>
+          <div><div class="phone-name">Tom</div></div>
+          <div class="phone-bubble">"Brilliant — thank you so much! See you tomorrow."</div>
+        </div>
+        <div style="text-align:center;margin-top:20px;">
+          <button class="next-btn" onclick="showComplete()">View your results 🏆</button>
+        </div>`;
+      document.getElementById('stage5-next').scrollIntoView({behavior:'smooth',block:'nearest'});
+    },600);
+  } else {
+    result.className='typing-result show partial';
+    result.innerHTML=`⚠️ You got ${hits}/5 key elements. Make sure you include: Zoom link 15 minutes before, spam folder, testing early, Rachel's name, and a warm farewell.`;
+  }
+}
+
+// ═══════════════════════════════════════
+// COMPLETE
+// ═══════════════════════════════════════
+function showComplete(){
+  document.getElementById('main-stage').style.display='none';
+  document.getElementById('complete-section').style.display='block';
+  const pct=totalChallenges>0?Math.round(correctFirst/totalChallenges*100):0;
+  document.getElementById('final-correct').textContent=correctFirst;
+  document.getElementById('final-total').textContent=totalChallenges;
+  document.getElementById('final-pct').textContent=pct+'%';
+  const tip=document.getElementById('final-tip');
+  if(pct===100) tip.innerHTML='<strong>Flawless.</strong> You read the calendar, offered smart alternatives, locked the booking, updated the CRM, and closed cleanly. That\'s the full D2D workflow done right.';
+  else if(pct>=75) tip.innerHTML='<strong>Strong run.</strong> You handled the complexity of a blocked slot well. Review the steps you missed — usually it\'s the CRM entry or the close.';
+  else if(pct>=50) tip.innerHTML='<strong>Getting there.</strong> The slot-not-available flow has more steps than the standard call. Study the script reference below and try again.';
+  else tip.innerHTML='<strong>More practice needed.</strong> This is the hardest scenario — a blocked slot, a live rep, a customer handover, and a CRM update all in one call. Run through it again.';
+
+  // Checklist
+  const items=[
+    {key:'answeredProfessionally',text:'Answered the call professionally (RESINC Solar + name)'},
+    {key:'offeredAlternatives',text:'Offered alternative time slots from the calendar'},
+    {key:'namedSpecialist',text:'Named the specialist in the offer to Priya'},
+    {key:'customerIntroCorrect',text:'Correctly introduced yourself to Tom with all details'},
+    {key:'crmUpdated',text:'Updated CRM with correct status (Confirmed) and call notes'},
+    {key:'closedWarmly',text:'Closed the call with Zoom instructions and Rachel\'s name'},
+  ];
+  document.getElementById('final-checklist').innerHTML=items.map(item=>`
+    <div class="checklist-item ${checklist[item.key]?'ok':'pending'}">
+      <div class="checklist-ico">${checklist[item.key]?'✅':'⏳'}</div>
+      <div class="checklist-text ${checklist[item.key]?'ok':'pending'}">${item.text}</div>
+    </div>`).join('');
+
+  document.getElementById('complete-section').scrollIntoView({behavior:'smooth',block:'start'});
+}
+</script>
+</body>
+</html>
