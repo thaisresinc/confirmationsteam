@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>How Solar Works — Interactive Dashboard</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0A3542;--navy2:#071F28;
+  --sky:#00AEEF;--sky2:#0090C4;--sky-lt:#EAF6FD;
+  --green:#0B7A4E;--green-lt:#E3F5EC;
+  --orange:#D4620A;--orange-lt:#FEF3EB;
+  --gold:#F5A623;
+  --body:#1A2A32;--muted:#5A6E78;--light:#F4F8FB;
+  --border:#C8DDE8;--line:#E2EEF4;
+  --font:'DM Sans',system-ui,sans-serif;
+  --serif:'DM Serif Display',Georgia,serif;
+  --shadow:0 1px 3px rgba(10,53,66,.06),0 4px 12px rgba(10,53,66,.08);
+  --shadow-lg:0 4px 16px rgba(10,53,66,.1),0 12px 32px rgba(10,53,66,.1);
+}
+html,body{font-family:var(--font);background:var(--light);color:var(--body);}
+
+/* PROGRESS */
+#prog{position:fixed;top:0;left:0;right:0;height:3px;background:rgba(0,174,239,.15);z-index:100;}
+#prog-fill{height:100%;background:var(--sky);width:0%;transition:width .3s;}
+
+section{padding:52px 20px;}
+.inner{max-width:860px;margin:0 auto;}
+.eyebrow{font-size:8.5px;letter-spacing:.26em;font-weight:600;color:var(--sky);margin-bottom:8px;opacity:.85;}
+.s-title{font-size:30px;font-weight:700;color:var(--navy);line-height:1.15;margin-bottom:6px;font-family:var(--serif);}
+.s-bar{width:44px;height:3px;background:var(--sky);border-radius:2px;margin-bottom:24px;}
+.sep{height:1px;background:var(--line);max-width:860px;margin:0 auto;}
+
+/* ══ HERO ══ */
+#hero{background:var(--navy);padding:60px 20px 52px;position:relative;overflow:hidden;}
+.hero-deco{position:absolute;border-radius:50%;border:1px solid rgba(0,174,239,.07);pointer-events:none;}
+.hero-stripe{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--sky);}
+.hero-inner{max-width:860px;margin:0 auto;position:relative;z-index:1;}
+.hero-eyebrow{color:var(--sky);font-size:9px;letter-spacing:.28em;font-weight:600;margin-bottom:16px;opacity:.9;}
+.hero-title{color:#fff;font-size:46px;font-weight:700;line-height:1.08;margin-bottom:12px;font-family:var(--serif);}
+.hero-title strong{color:var(--sky);font-family:var(--font);font-size:18px;font-weight:600;display:block;margin-top:6px;letter-spacing:.04em;}
+.hero-sub{color:rgba(255,255,255,.6);font-size:14px;line-height:1.7;max-width:520px;margin-bottom:28px;}
+.hero-scroll{display:flex;align-items:center;gap:8px;color:rgba(0,174,239,.5);font-size:11px;font-weight:500;letter-spacing:.08em;}
+.scroll-dot{width:26px;height:26px;border-radius:50%;border:1px solid rgba(0,174,239,.3);display:flex;align-items:center;justify-content:center;font-size:11px;animation:bob 2s infinite;}
+@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(4px);}}
+
+/* ══ HOW IT WORKS — FLOW DIAGRAM ══ */
+#howit{background:#fff;}
+.flow{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:24px;overflow-x:auto;padding:4px 0;}
+.flow-step{
+  display:flex;flex-direction:column;align-items:center;
+  gap:8px;min-width:120px;
+}
+.flow-icon{
+  width:64px;height:64px;border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;box-shadow:var(--shadow);
+  transition:transform .2s;cursor:default;
+}
+.flow-icon:hover{transform:translateY(-3px);}
+.flow-icon.n{background:var(--navy);}
+.flow-icon.s{background:var(--sky);}
+.flow-icon.g{background:var(--green-lt);border:1.5px solid rgba(11,122,78,.2);}
+.flow-icon.o{background:var(--orange-lt);border:1.5px solid rgba(212,98,10,.2);}
+.flow-label{font-size:12px;font-weight:700;color:var(--navy);text-align:center;}
+.flow-sub{font-size:10.5px;color:var(--muted);text-align:center;line-height:1.4;}
+.flow-arrow{font-size:20px;color:var(--border);margin:0 4px;flex-shrink:0;align-self:center;margin-bottom:28px;}
+.flow-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:0;}
+.flow-card{
+  background:var(--light);border-radius:12px;padding:16px 18px;
+  border-left:4px solid var(--sky);
+}
+.flow-card:nth-child(2){border-left-color:var(--green);}
+.fc-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:5px;}
+.fc-body{font-size:12px;color:var(--muted);line-height:1.65;}
+.fc-body em{color:var(--sky2);font-style:normal;font-weight:600;}
+
+/* ══ INTERACTIVE SOLAR SLIDER ══ */
+#interactive{background:var(--light);}
+.solar-viz{
+  background:#fff;border-radius:16px;
+  overflow:hidden;box-shadow:var(--shadow-lg);
+  margin-bottom:20px;
+}
+.solar-scene{
+  height:220px;position:relative;overflow:hidden;
+  transition:background .6s ease;
+}
+/* Sky gradient based on time */
+.solar-scene.dawn{background:linear-gradient(180deg,#FF6B35 0%,#FFB347 40%,#87CEEB 100%);}
+.solar-scene.morning{background:linear-gradient(180deg,#87CEEB 0%,#B0D8F0 60%,#E8F4FD 100%);}
+.solar-scene.midday{background:linear-gradient(180deg,#4FC3F7 0%,#81D4FA 50%,#B3E5FC 100%);}
+.solar-scene.afternoon{background:linear-gradient(180deg,#64B5F6 0%,#90CAF9 50%,#BBDEFB 100%);}
+.solar-scene.dusk{background:linear-gradient(180deg,#FF7043 0%,#FFA726 40%,#90A4AE 100%);}
+.solar-scene.night{background:linear-gradient(180deg,#1A237E 0%,#283593 50%,#3949AB 100%);}
+
+/* SUN */
+.sun{
+  position:absolute;
+  width:60px;height:60px;border-radius:50%;
+  background:radial-gradient(circle,#FFF176,#FFD600,#FFA000);
+  box-shadow:0 0 30px 10px rgba(255,214,0,.5);
+  transition:all .5s ease;
+  top:30px;
+}
+/* MOON */
+.moon{
+  position:absolute;width:40px;height:40px;border-radius:50%;
+  background:radial-gradient(circle,#F5F5F5,#B0BEC5);
+  box-shadow:0 0 15px 5px rgba(200,220,255,.3);
+  top:30px;left:50%;transform:translateX(-50%);
+  transition:all .5s ease;
+  display:none;
+}
+/* PANELS */
+.panels{
+  position:absolute;bottom:40px;
+  left:50%;transform:translateX(-50%);
+  display:flex;gap:8px;
+}
+.panel-svg{
+  width:52px;height:44px;border-radius:4px;
+  transition:all .5s;
+}
+/* GROUND */
+.ground{
+  position:absolute;bottom:0;left:0;right:0;height:40px;
+  background:linear-gradient(180deg,#4CAF50,#388E3C);
+}
+/* GLOW on panels */
+.panel-glow{
+  position:absolute;bottom:50px;left:50%;transform:translateX(-50%);
+  width:240px;height:30px;
+  border-radius:50%;
+  background:rgba(255,235,0,.0);
+  transition:background .5s;
+  pointer-events:none;
+}
+/* OUTPUT BARS */
+.output-bars{padding:18px 22px 16px;}
+.bar-row{display:grid;grid-template-columns:130px 1fr 80px;align-items:center;gap:12px;margin-bottom:12px;}
+.bar-label{font-size:12px;font-weight:600;color:var(--navy);}
+.bar-track{height:10px;background:var(--line);border-radius:5px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:5px;transition:width .5s cubic-bezier(.4,0,.2,1);}
+.bar-fill.solar{background:linear-gradient(90deg,var(--gold),#FFB300);}
+.bar-fill.grid{background:linear-gradient(90deg,var(--sky),var(--sky2));}
+.bar-fill.export{background:linear-gradient(90deg,var(--green),#15A85E);}
+.bar-value{font-size:13px;font-weight:700;text-align:right;}
+.bar-value.solar{color:#D4920A;}
+.bar-value.grid{color:var(--sky2);}
+.bar-value.export{color:var(--green);}
+
+/* SLIDER */
+.slider-section{padding:0 22px 18px;}
+.slider-label-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.slider-label-txt{font-size:12px;font-weight:600;color:var(--navy);}
+.time-display{
+  font-size:18px;font-weight:700;color:var(--sky);
+  font-family:var(--serif);
+}
+input[type=range].time-slider{
+  width:100%;appearance:none;height:6px;
+  background:linear-gradient(90deg,#1A237E,#4FC3F7,#FFD600,#FF7043,#1A237E);
+  border-radius:3px;outline:none;cursor:pointer;
+}
+input[type=range].time-slider::-webkit-slider-thumb{
+  appearance:none;width:24px;height:24px;border-radius:50%;
+  background:#fff;cursor:pointer;
+  box-shadow:0 2px 8px rgba(0,0,0,.2),0 0 0 3px var(--sky);
+  transition:transform .18s;
+}
+input[type=range].time-slider::-webkit-slider-thumb:hover{transform:scale(1.15);}
+.time-labels{display:flex;justify-content:space-between;margin-top:6px;}
+.time-labels span{font-size:10px;color:var(--muted);}
+
+/* STATUS CARD */
+.status-card{
+  display:flex;align-items:center;gap:12px;
+  background:var(--navy);border-radius:10px;padding:12px 16px;
+  margin:0 22px 18px;
+}
+.status-icon{font-size:22px;flex-shrink:0;}
+.status-text{font-size:12.5px;color:rgba(255,255,255,.8);line-height:1.5;}
+.status-text strong{color:#fff;}
+
+/* ══ METRICS ══ */
+#metrics{background:#fff;}
+.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
+.metric{
+  background:var(--light);border-radius:12px;padding:18px 18px;
+  text-align:center;border:1.5px solid var(--line);
+  transition:transform .2s,box-shadow .2s;cursor:default;
+}
+.metric:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);}
+.metric-val{font-size:28px;font-weight:700;color:var(--sky);font-family:var(--serif);line-height:1;margin-bottom:5px;}
+.metric-lbl{font-size:11px;color:var(--muted);line-height:1.4;}
+.metric-lbl strong{color:var(--navy);display:block;}
+
+/* LONGi panel */
+.longi-panel{display:grid;grid-template-columns:1fr 1.6fr;gap:0;margin-top:16px;border-radius:14px;overflow:hidden;border:1.5px solid var(--line);}
+.longi-left{background:var(--navy);padding:22px 24px;display:flex;flex-direction:column;justify-content:center;}
+.longi-eyebrow{font-size:8px;letter-spacing:.18em;font-weight:700;color:rgba(0,174,239,.7);text-transform:uppercase;margin-bottom:10px;}
+.longi-title{font-size:15px;font-weight:700;color:#fff;line-height:1.4;font-family:var(--serif);}
+.longi-right{background:var(--sky-lt);padding:22px 24px;font-size:12.5px;color:var(--body);line-height:1.7;display:flex;align-items:center;}
+.longi-right strong{color:var(--navy);}
+
+/* Internal note */
+.internal-note{display:flex;align-items:flex-start;gap:10px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:10px 12px;margin-top:12px;}
+.internal-note-icon{font-size:13px;flex-shrink:0;margin-top:1px;}
+.internal-note-text{font-size:11px;color:rgba(255,255,255,0.65);line-height:1.55;}
+.internal-note-text strong{color:rgba(255,255,255,0.9);display:block;margin-bottom:2px;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;}
+
+/* ══ STCs & REBATE ══ */
+#incentives{background:var(--light);}
+.incentive-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.inc-card{border-radius:14px;padding:22px 22px;box-shadow:var(--shadow);}
+.inc-card.stc{background:var(--navy);}
+.inc-card.rebate{background:#fff;border:1.5px solid var(--line);}
+.inc-eyebrow{font-size:7.5px;letter-spacing:.2em;font-weight:600;margin-bottom:8px;}
+.inc-card.stc .inc-eyebrow{color:rgba(0,174,239,.7);}
+.inc-card.rebate .inc-eyebrow{color:var(--orange);}
+.inc-amount{font-size:32px;font-weight:700;font-family:var(--serif);margin-bottom:6px;line-height:1;}
+.inc-card.stc .inc-amount{color:var(--sky);}
+.inc-card.rebate .inc-amount{color:var(--orange);}
+.inc-title{font-size:15px;font-weight:700;margin-bottom:8px;}
+.inc-card.stc .inc-title{color:#fff;}
+.inc-card.rebate .inc-title{color:var(--navy);}
+.inc-body{font-size:12px;line-height:1.7;}
+.inc-card.stc .inc-body{color:rgba(255,255,255,.6);}
+.inc-card.rebate .inc-body{color:var(--muted);}
+.urgency-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--orange-lt);border:1.5px solid rgba(212,98,10,.25);
+  border-radius:20px;padding:5px 12px;margin-top:10px;
+  font-size:11px;font-weight:700;color:var(--orange);
+}
+
+/* ══ KEY PHRASES ══ */
+#phrases{background:#fff;}
+.phrase-grid{display:flex;flex-direction:column;gap:10px;}
+.phrase-card{
+  background:var(--light);border-radius:12px;padding:16px 18px;
+  border-left:4px solid var(--sky);
+  display:flex;align-items:flex-start;gap:14px;
+  transition:all .2s;cursor:default;
+}
+.phrase-card:hover{transform:translateX(4px);box-shadow:var(--shadow);}
+.phrase-card:nth-child(2){border-left-color:var(--green);}
+.phrase-card:nth-child(3){border-left-color:var(--orange);}
+.pc-icon{font-size:20px;flex-shrink:0;margin-top:2px;}
+.pc-label{font-size:8.5px;font-weight:700;letter-spacing:.16em;color:var(--sky);margin-bottom:4px;}
+.phrase-card:nth-child(2) .pc-label{color:var(--green);}
+.phrase-card:nth-child(3) .pc-label{color:var(--orange);}
+.pc-phrase{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:3px;line-height:1.4;}
+.pc-note{font-size:11.5px;color:var(--muted);line-height:1.5;}
+
+/* ══ COMPLETE ══ */
+#complete{background:var(--navy2);padding:52px 20px;text-align:center;}
+.cpl-inner{max-width:480px;margin:0 auto;}
+.cpl-badge{display:inline-flex;align-items:center;gap:8px;background:var(--green);border-radius:30px;padding:7px 18px;margin-bottom:16px;font-size:11.5px;font-weight:700;color:#fff;letter-spacing:.06em;}
+.cpl-title{color:#fff;font-size:30px;font-weight:700;margin-bottom:8px;font-family:var(--serif);}
+.cpl-title span{color:var(--sky);font-style:italic;}
+.cpl-body{color:rgba(255,255,255,.6);font-size:13.5px;line-height:1.7;margin-bottom:22px;}
+.cpl-next{background:rgba(0,174,239,.12);border:1.5px solid rgba(0,174,239,.25);border-radius:12px;padding:14px 22px;}
+.cpl-next-label{font-size:8px;color:rgba(0,174,239,.6);letter-spacing:.2em;font-weight:600;margin-bottom:4px;}
+.cpl-next-text{color:#fff;font-size:13px;font-weight:500;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+
+<div id="prog"><div id="prog-fill"></div></div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-deco" style="width:400px;height:400px;right:-80px;top:-80px;"></div>
+  <div class="hero-deco" style="width:220px;height:220px;right:20px;top:20px;"></div>
+  <div class="hero-stripe"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">CONFIRMATIONS TEAM · DAY 1</div>
+    <div class="hero-title">
+      How Solar Works
+      <strong>The interactive dashboard — spend 2 minutes here.</strong>
+    </div>
+    <div class="hero-sub">You don't need to be an engineer. You need to understand it well enough to explain it simply, and confidently answer the questions customers actually ask.</div>
+    <div class="hero-scroll"><div class="scroll-dot">↓</div> Scroll to explore</div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="howit" style="background:#fff;">
+  <div class="inner">
+    <div class="eyebrow">THE BASICS</div>
+    <div class="s-title">Four steps. That's all.</div>
+    <div class="s-bar"></div>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-icon n">☀️</div>
+        <div class="flow-label">Solar Panels</div>
+        <div class="flow-sub">Capture sunlight on the roof</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-icon s">⚡</div>
+        <div class="flow-label">Inverter</div>
+        <div class="flow-sub">Converts DC → AC current</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-icon g">🏠</div>
+        <div class="flow-label">Your Home</div>
+        <div class="flow-sub">Uses solar power first</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-icon o">🔌</div>
+        <div class="flow-label">The Grid</div>
+        <div class="flow-sub">Excess exported for feed-in tariff</div>
+      </div>
+    </div>
+    <div class="flow-cards">
+      <div class="flow-card">
+        <div class="fc-title">🌙 At night</div>
+        <div class="fc-body">No solar generation. Home draws from the <em>grid as normal</em> — or from a battery if installed. This is why battery storage adds significant value.</div>
+      </div>
+      <div class="flow-card" style="border-left-color:var(--green);">
+        <div class="fc-title">💰 Feed-in tariff</div>
+        <div class="fc-body">When solar produces more than the home uses, the <em>excess is exported</em> to the grid. The energy retailer pays a small rate per kWh for that export.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- INTERACTIVE SLIDER -->
+<section id="interactive">
+  <div class="inner">
+    <div class="eyebrow">INTERACTIVE</div>
+    <div class="s-title">Solar output across the day</div>
+    <div class="s-bar"></div>
+    <div class="solar-viz">
+      <!-- SCENE -->
+      <div class="solar-scene midday" id="solar-scene">
+        <div class="sun" id="sun"></div>
+        <div class="moon" id="moon"></div>
+        <div class="panel-glow" id="panel-glow"></div>
+        <div class="panels">
+          <svg class="panel-svg" id="p1" viewBox="0 0 52 44" fill="none">
+            <rect width="52" height="44" rx="4" fill="#0A3542"/>
+            <line x1="17" y1="0" x2="17" y2="44" stroke="#00AEEF" stroke-width="1.5" opacity=".5"/>
+            <line x1="35" y1="0" x2="35" y2="44" stroke="#00AEEF" stroke-width="1.5" opacity=".5"/>
+            <line x1="0" y1="15" x2="52" y2="15" stroke="#00AEEF" stroke-width="1.5" opacity=".5"/>
+            <line x1="0" y1="29" x2="52" y2="29" stroke="#00AEEF" stroke-width="1.5" opacity=".5"/>
+          </svg>
+          <svg class="panel-svg" id="p2" viewBox="0 0 52 44" fill="none">
+            <rect width="52" height="44" rx="4" fill="#0A3542"/>
+            <line x1="17" y1="0" x2="17" y2="44" stroke="#00AEEF" stroke-width="1.5" opacity=".5"/>
+            <line x1="35" y1="0" x2="35" y2="44" stroke="#00AEEF" stroke-width="1.5" opacity=".5"/>
+            <line x1="0" y1="15" x2="52" y2="15" stroke="#00AEEF" stroke-width="1.5" opacity=".5"/>
+            <line x1="0" y1="29" x2="52" y2="29" stroke="#00AEEF" stroke-width="1.5" opacity=".5"/>
+          </svg>
+          <svg class="panel-svg" id="p3" viewBox="0 0 52 44" fill="none">
+            <rect width="52" height="44" rx="4" fill="#0A3542"/>
+            <line x1="17" y1="0" x2="17" y2="44" stroke="#00AEEF" stroke-width="1.5" opacity=".5"/>
+            <line x1="35" y1="0" x2="35" y2="44" stroke="#00AEEF" stroke-width="1.5" opacity=".5"/>
+            <line x1="0" y1="15" x2="52" y2="15" stroke="#00AEEF" stroke-width="1.5" opacity=".5"/>
+            <line x1="0" y1="29" x2="52" y2="29" stroke="#00AEEF" stroke-width="1.5" opacity=".5"/>
+          </svg>
+          <svg class="panel-svg" id="p4" viewBox="0 0 52 44" fill="none">
+            <rect width="52" height="44" rx="4" fill="#0A3542"/>
+            <line x1="17" y1="0" x2="17" y2="44" stroke="#00AEEF" stroke-width="1.5" opacity=".5"/>
+            <line x1="35" y1="0" x2="35" y2="44" stroke="#00AEEF" stroke-width="1.5" opacity=".5"/>
+            <line x1="0" y1="15" x2="52" y2="15" stroke="#00AEEF" stroke-width="1.5" opacity=".5"/>
+            <line x1="0" y1="29" x2="52" y2="29" stroke="#00AEEF" stroke-width="1.5" opacity=".5"/>
+          </svg>
+        </div>
+        <div class="ground"></div>
+      </div>
+
+      <!-- OUTPUT BARS -->
+      <div class="output-bars">
+        <div class="bar-row">
+          <div class="bar-label">☀️ Solar output</div>
+          <div class="bar-track"><div class="bar-fill solar" id="bar-solar" style="width:100%"></div></div>
+          <div class="bar-value solar" id="val-solar">6,600W</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">⚡ DC generated</div>
+          <div class="bar-track"><div class="bar-fill" id="bar-dc" style="width:100%;background:#F59E0B;"></div></div>
+          <div class="bar-value" id="val-dc" style="color:#F59E0B;">~400V DC</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">🔌 Grid draw</div>
+          <div class="bar-track"><div class="bar-fill grid" id="bar-grid" style="width:0%"></div></div>
+          <div class="bar-value grid" id="val-grid">0W</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">📤 Export</div>
+          <div class="bar-track"><div class="bar-fill export" id="bar-export" style="width:55%"></div></div>
+          <div class="bar-value export" id="val-export">3,800W</div>
+        </div>
+      </div>
+
+      <!-- STATUS -->
+      <div class="status-card" id="status-card">
+        <div class="status-icon" id="status-icon">⚡</div>
+        <div class="status-text" id="status-text"><strong>Peak solar generation.</strong> System running at full capacity. Home fully powered by solar — excess being exported to the grid.</div>
+      </div>
+
+      <!-- SLIDER -->
+      <div class="slider-section">
+        <div class="slider-label-row">
+          <div class="slider-label-txt">🕐 Time of day</div>
+          <div class="time-display" id="time-display">12:00pm</div>
+        </div>
+        <input type="range" class="time-slider" id="time-slider" min="0" max="23" value="12" oninput="updateSolar(this.value)">
+        <div class="time-labels">
+          <span>12am</span><span>6am</span><span>12pm</span><span>6pm</span><span>11pm</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- METRICS -->
+<section id="metrics" style="background:#fff;">
+  <div class="inner">
+    <div class="eyebrow">BY THE NUMBERS</div>
+    <div class="s-title">A typical 6.6kW system in QLD</div>
+    <div class="s-bar"></div>
+    <div class="metric-row">
+      <div class="metric">
+        <div class="metric-val">425W</div>
+        <div class="metric-lbl">Per LONGi Hi-MO 6 panel<strong>at peak output</strong></div>
+      </div>
+      <div class="metric">
+        <div class="metric-val">22.8%</div>
+        <div class="metric-lbl">Panel efficiency rating<strong>industry leading</strong></div>
+      </div>
+      <div class="metric">
+        <div class="metric-val">~26kWh</div>
+        <div class="metric-lbl">Daily generation in QLD<strong>6.6kW system</strong></div>
+      </div>
+    </div>
+    <div class="longi-panel">
+      <div class="longi-left">
+        <div class="longi-eyebrow">WHY RESINC USES LONGI EXCLUSIVELY</div>
+        <div class="longi-title">The world's most efficient panel — and it's what you recommend.</div>
+      </div>
+      <div class="longi-right">
+        LONGi is the world's largest solar panel manufacturer and a consistent leader in efficiency benchmarks. The Hi-MO 6 uses monocrystalline HPBC technology — a rear-contact cell design that improves efficiency to 22.8% by reducing shading losses from front-side contacts. When you're recommending panels to a customer, you're recommending the best available.
+      </div>
+    </div>
+  </div>
+</section>
+<section id="incentives">
+  <div class="inner">
+    <div class="eyebrow">WHY NOW</div>
+    <div class="s-title">The two things that make solar make sense financially</div>
+    <div class="s-bar"></div>
+    <div class="incentive-grid">
+      <div class="inc-card stc">
+        <div class="inc-eyebrow">FEDERAL GOVERNMENT · STCs</div>
+        <div class="inc-amount">$3K–$6K</div>
+        <div class="inc-title">Small-scale Technology Certificates</div>
+        <div class="inc-body">An automatic discount knocked straight off the invoice. No paperwork, no claiming — it just reduces the price. The exact amount depends on system size and location.</div>
+        <div class="internal-note">
+          <div class="internal-note-icon">📌</div>
+          <div class="internal-note-text"><strong>Team reference only</strong>Do not quote this figure directly to customers. The exact saving depends on location, system size and personal situation — that's exactly what the specialist assessment is there to maximise.</div>
+        </div>
+      </div>
+      <div class="inc-card rebate">
+        <div class="inc-eyebrow">STATE GOVERNMENT · BATTERY REBATE</div>
+        <div class="inc-amount">~30% off</div>
+        <div class="inc-title">$7.2 Billion Battery Program</div>
+        <div class="inc-body">Takes around 30% off the cost of a home battery. Steps down every six months — the longer someone waits, the less they get. Can only ever be claimed once per property.</div>
+        <div class="urgency-badge">⏱ Steps down every 6 months</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- KEY PHRASES -->
+<section id="phrases" style="background:#fff;">
+  <div class="inner">
+    <div class="eyebrow">ON THE PHONE</div>
+    <div class="s-title">How to explain this simply</div>
+    <div class="s-bar"></div>
+    <div class="phrase-grid">
+      <div class="phrase-card">
+        <div class="pc-icon">☀️</div>
+        <div>
+          <div class="pc-label">HOW IT WORKS</div>
+          <div class="pc-phrase">"Panels on the roof generate power, inverter converts it, your home uses it first — anything left over goes back to the grid."</div>
+          <div class="pc-note">Simple, accurate, easy to follow. Never go deeper than this unless they specifically ask.</div>
+        </div>
+      </div>
+      <div class="phrase-card">
+        <div class="pc-icon">💰</div>
+        <div>
+          <div class="pc-label">THE STC SUBSIDY</div>
+          <div class="pc-phrase">"The government subsidises it — most homeowners in your situation get a meaningful amount knocked straight off the price. No paperwork, it's automatic — the specialist will work out exactly what you're entitled to."</div>
+          <div class="pc-note">Lead with the benefit. The acronym STC means nothing to a customer — the dollar amount does.</div>
+        </div>
+      </div>
+      <div class="phrase-card">
+        <div class="pc-icon">⏱</div>
+        <div>
+          <div class="pc-label">THE BATTERY REBATE — URGENCY</div>
+          <div class="pc-phrase">"The battery rebate steps down every six months. It can only ever be claimed once per property — so the timing genuinely matters here."</div>
+          <div class="pc-note">This is real urgency, not manufactured pressure. Use it — but only because it's true.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPLETE -->
+<section id="complete" style="background:var(--navy2);padding:52px 20px;text-align:center;">
+  <div class="cpl-inner">
+    <div class="cpl-badge">✓ COMPLETE</div>
+    <div class="cpl-title">Foundation <span>locked in.</span></div>
+    <div class="cpl-body">You now know how solar works, what makes it financially compelling right now, and how to explain it simply and confidently on a call.</div>
+    <div class="cpl-next">
+      <div class="cpl-next-label">NEXT UP</div>
+      <div class="cpl-next-text">Solar Knowledge Check</div>
+    </div>
+  </div>
+</section>
+
+<script>
+// PROGRESS BAR
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('prog-fill').style.width=Math.min(p,100)+'%';
+});
+
+// SOLAR SLIDER DATA
+// hour: {solar%, grid%, export%, scene, sunLeft%, sunTop%, label, statusIcon, statusText}
+const HOURS=[
+  {h:0,sol:0,grid:60,exp:0,scene:'night',sl:-20,st:20,label:'12:00am',si:'🌙',st2:'<strong>Night time.</strong> No solar generation. Home drawing entirely from the grid. This is the case for battery — it covers night draw.'},
+  {h:1,sol:0,grid:55,exp:0,scene:'night',sl:-20,st:20,label:'1:00am',si:'🌙',st2:'<strong>Night time.</strong> Grid powering the home. A battery would be discharging now.'},
+  {h:2,sol:0,grid:52,exp:0,scene:'night',sl:-20,st:20,label:'2:00am',si:'🌙',st2:'<strong>Night time.</strong> Lowest household consumption. Grid draw minimal.'},
+  {h:3,sol:0,grid:50,exp:0,scene:'night',sl:-20,st:20,label:'3:00am',si:'🌙',st2:'<strong>Night time.</strong> Home drawing from grid. No solar output.'},
+  {h:4,sol:0,grid:50,exp:0,scene:'night',sl:-20,st:20,label:'4:00am',si:'🌙',st2:'<strong>Pre-dawn.</strong> Sun not yet above horizon. Grid still supplying all power.'},
+  {h:5,sol:2,grid:48,exp:0,scene:'dawn',sl:5,st:40,label:'5:00am',si:'🌅',st2:'<strong>Dawn.</strong> Very early light — panels generating a trickle. Not enough to offset grid draw yet.'},
+  {h:6,sol:15,grid:35,exp:0,scene:'dawn',sl:12,st:35,label:'6:00am',si:'🌅',st2:'<strong>Sunrise.</strong> Solar starting to contribute — reducing grid draw. System waking up.'},
+  {h:7,sol:35,grid:10,exp:0,scene:'morning',sl:22,st:28,label:'7:00am',si:'☀️',st2:'<strong>Morning.</strong> Solar output growing. Grid draw dropping significantly. Home mostly solar-powered.'},
+  {h:8,sol:55,grid:0,exp:15,scene:'morning',sl:32,st:22,label:'8:00am',si:'⚡',st2:'<strong>Good generation.</strong> Solar exceeding home use. Excess starting to export to the grid.'},
+  {h:9,sol:68,grid:0,exp:30,scene:'morning',sl:42,st:16,label:'9:00am',si:'⚡',st2:'<strong>Strong output.</strong> Solar well above home consumption. Export increasing. Feed-in tariff accumulating.'},
+  {h:10,sol:80,grid:0,exp:45,scene:'midday',sl:52,st:12,label:'10:00am',si:'⚡',st2:'<strong>High generation.</strong> System near peak. Home fully solar-powered with strong export.'},
+  {h:11,sol:90,grid:0,exp:55,scene:'midday',sl:62,st:10,label:'11:00am',si:'⚡',st2:'<strong>Near peak.</strong> Approaching maximum generation. Most power being exported.'},
+  {h:12,sol:95,grid:0,exp:60,scene:'midday',sl:72,st:8,label:'12:00pm',si:'⚡',st2:'<strong>Peak solar generation.</strong> System running at full capacity. Home fully powered by solar — excess being exported to the grid.'},
+  {h:13,sol:93,grid:0,exp:58,scene:'midday',sl:82,st:10,label:'1:00pm',si:'⚡',st2:'<strong>Peak period.</strong> Maximum generation window. Strong export continuing.'},
+  {h:14,sol:85,grid:0,exp:50,scene:'afternoon',sl:88,st:14,label:'2:00pm',si:'⚡',st2:'<strong>Afternoon generation.</strong> Still very strong output. Home powered by solar with good export.'},
+  {h:15,sol:72,grid:0,exp:35,scene:'afternoon',sl:88,st:20,label:'3:00pm',si:'☀️',st2:'<strong>Afternoon.</strong> Solar output starting to reduce as sun moves lower. Still exporting.'},
+  {h:16,sol:55,grid:0,exp:18,scene:'afternoon',sl:82,st:26,label:'4:00pm',si:'☀️',st2:'<strong>Late afternoon.</strong> Generation declining. Home still mostly solar — export reducing.'},
+  {h:17,sol:38,grid:5,exp:0,scene:'dusk',sl:75,st:32,label:'5:00pm',si:'🌇',st2:'<strong>Evening consumption peak.</strong> Solar declining as households use more power. Grid topping up.'},
+  {h:18,sol:18,grid:28,exp:0,scene:'dusk',sl:65,st:38,label:'6:00pm',si:'🌇',st2:'<strong>Dusk.</strong> Solar fading. Grid draw increasing as cooking and appliances peak.'},
+  {h:19,sol:5,grid:48,exp:0,scene:'dusk',sl:55,st:42,label:'7:00pm',si:'🌆',st2:'<strong>Sunset.</strong> Almost no solar. Grid taking over for evening demand.'},
+  {h:20,sol:0,grid:58,exp:0,scene:'night',sl:-20,st:20,label:'8:00pm',si:'🌙',st2:'<strong>Evening.</strong> Solar generation finished. Grid powering the home. Battery would be contributing now.'},
+  {h:21,sol:0,grid:55,exp:0,scene:'night',sl:-20,st:20,label:'9:00pm',si:'🌙',st2:'<strong>Night time.</strong> Grid-only. Battery discharge offsetting some of this.'},
+  {h:22,sol:0,grid:52,exp:0,scene:'night',sl:-20,st:20,label:'10:00pm',si:'🌙',st2:'<strong>Late evening.</strong> Household winding down. Grid draw reducing.'},
+  {h:23,sol:0,grid:50,exp:0,scene:'night',sl:-20,st:20,label:'11:00pm',si:'🌙',st2:'<strong>Late night.</strong> Minimal consumption. Grid powering essentials only.'},
+];
+
+const SOLAR_WATTS=[0,0,0,0,0,484,899,2100,3300,4200,5000,5800,6400,6600,6200,5100,3800,3279,1518,893,0,0,0,0];
+
+const DC_VOLTS=[0, 0, 0, 0, 0, 217, 227, 280, 320, 350, 375, 390, 398, 400, 395, 385, 370, 276, 246, 227, 200, 0, 0, 0];
+const GRID_WATTS=[1800,1600,1500,1500,1500,1400,1100,300,0,0,0,0,0,0,0,0,0,150,850,1500,1750,1650,1550,1500];
+const EXPORT_WATTS=[0,0,0,0,0,0,0,0,900,1800,2900,3300,3800,3600,3000,2100,1050,0,0,0,0,0,0,0];
+
+function updateSolar(h){
+  const d=HOURS[h];
+  // Scene
+  const scene=document.getElementById('solar-scene');
+  scene.className='solar-scene '+d.scene;
+  // Sun position
+  const sun=document.getElementById('sun');
+  const isNight=d.scene==='night';
+  sun.style.display=isNight?'none':'block';
+  // Arc: sun travels left to right across the sky
+  const pct=(h-5)/14; // 5am to 7pm
+  const x=Math.max(0,Math.min(100,pct*100));
+  const yArc=Math.sin(Math.PI*pct)*0.6; // arc
+  sun.style.left=(x*0.8+2)+'%';
+  sun.style.top=Math.max(8,30-yArc*120)+'px';
+  // Moon
+  const moon=document.getElementById('moon');
+  moon.style.display=isNight?'block':'none';
+  // Panel glow
+  const glow=document.getElementById('panel-glow');
+  glow.style.background=d.sol>0?`rgba(255,235,0,${d.sol/300})`:'rgba(255,235,0,0)';
+  // Panel colour based on output
+  const panelOpacity=d.sol>0?0.3+d.sol/140:0.15;
+  document.querySelectorAll('.panel-svg').forEach(p=>{
+    p.querySelector('rect').style.fill=d.sol>20?`rgba(0,174,239,${panelOpacity})`:'#0A3542';
+  });
+  // Bars
+  document.getElementById('bar-solar').style.width=Math.round(SOLAR_WATTS[h]/6600*100)+'%';
+  document.getElementById('bar-grid').style.width=d.grid+'%';
+  document.getElementById('bar-export').style.width=d.exp+'%';
+  document.getElementById('val-solar').textContent=SOLAR_WATTS[h].toLocaleString()+'W';
+  const dcV=DC_VOLTS[h];
+  document.getElementById('bar-dc').style.width=(dcV/400*100)+'%';
+  document.getElementById('val-dc').textContent=dcV>0?'~'+dcV+'V DC':'0V';
+  document.getElementById('val-grid').textContent=GRID_WATTS[h].toLocaleString()+'W';
+  document.getElementById('val-export').textContent=EXPORT_WATTS[h].toLocaleString()+'W';
+  // Time
+  const hNum=d.h%12||12;
+  const ampm=d.h<12?'am':'pm';
+  document.getElementById('time-display').textContent=hNum+':00'+ampm;
+  // Status
+  document.getElementById('status-icon').textContent=d.si;
+  document.getElementById('status-text').innerHTML=d.st2;
+}
+
+// Init at midday
+updateSolar(12);
+</script>
+</body>
+</html>
