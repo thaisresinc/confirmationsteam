@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>A Typical Day | Confirmations Team</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0A3542;--navy2:#071F28;--navy3:#0D4A5E;
+  --sky:#00AEEF;--sky2:#0090C4;--sky3:#00C4FF;
+  --sky-lt:#EAF6FD;--sky-bg:#F2FAFF;
+  --green:#0B7A4E;--green-lt:#E3F5EC;
+  --gold:#D4940A;--gold-lt:#FEF8E6;
+  --body:#1A2A32;--muted:#5A6E78;--light:#F4F8FB;
+  --border:#C8DDE8;--line:#E2EEF4;
+  --font:'DM Sans',system-ui,sans-serif;
+  --serif:'DM Serif Display',Georgia,serif;
+  --shadow:0 1px 3px rgba(10,53,66,.07),0 4px 14px rgba(10,53,66,.09);
+  --shadow-lg:0 6px 24px rgba(10,53,66,.13),0 16px 48px rgba(10,53,66,.10);
+}
+
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--light);color:var(--body);min-height:100vh;overflow-x:hidden;}
+
+/* ── PROGRESS BAR ── */
+#prog{position:fixed;top:0;left:0;right:0;height:3px;background:rgba(0,174,239,.15);z-index:200;}
+#prog-fill{height:100%;background:linear-gradient(90deg,var(--sky),var(--sky3));width:0%;transition:width .4s;}
+
+/* ── HERO ── */
+#hero{
+  background:var(--navy);
+  padding:0;
+  position:relative;
+  overflow:hidden;
+  min-height:340px;
+  display:flex;flex-direction:column;justify-content:flex-end;
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(0,174,239,.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,174,239,.06) 1px,transparent 1px);
+  background-size:48px 48px;
+}
+.hero-glow{
+  position:absolute;top:-120px;right:-80px;
+  width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,174,239,.18) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-glow2{
+  position:absolute;bottom:-60px;left:10%;
+  width:300px;height:300px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,174,239,.09) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-stripe{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--sky);}
+.hero-inner{
+  max-width:900px;margin:0 auto;padding:60px 28px 44px;
+  position:relative;z-index:1;width:100%;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(0,174,239,.12);border:1px solid rgba(0,174,239,.28);
+  border-radius:20px;padding:5px 14px;
+  font-size:9px;font-weight:700;color:var(--sky);letter-spacing:.22em;
+  margin-bottom:16px;
+}
+.hero-eyebrow span{width:5px;height:5px;border-radius:50%;background:var(--sky);display:inline-block;}
+.hero-title{
+  font-family:var(--serif);color:#fff;
+  font-size:clamp(32px,5vw,52px);line-height:1.05;
+  margin-bottom:10px;
+}
+.hero-title em{color:var(--sky);font-style:italic;}
+.hero-sub{color:rgba(255,255,255,.55);font-size:14px;line-height:1.7;max-width:520px;margin-bottom:24px;}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px;}
+.hero-pill{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;padding:6px 12px;font-size:11px;font-weight:600;color:rgba(255,255,255,.7);
+}
+.hero-pill svg{opacity:.6;}
+
+/* ── INTRO CARD ── */
+#intro-section{padding:40px 28px 20px;}
+.intro-card{
+  max-width:900px;margin:0 auto;
+  background:var(--navy);border-radius:16px;padding:24px 28px;
+  border-left:4px solid var(--sky);
+  display:flex;align-items:flex-start;gap:16px;
+}
+.intro-icon{
+  width:40px;height:40px;border-radius:10px;
+  background:rgba(0,174,239,.15);display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;margin-top:2px;
+}
+.intro-title{font-size:13px;font-weight:700;color:var(--sky);margin-bottom:4px;letter-spacing:.04em;}
+.intro-text{font-size:13px;color:rgba(255,255,255,.65);line-height:1.7;}
+.intro-text strong{color:#fff;font-weight:600;}
+
+/* ── SECTION WRAPPER ── */
+.section{padding:28px 28px;}
+.inner{max-width:900px;margin:0 auto;}
+.section-label{
+  font-size:9px;letter-spacing:.26em;font-weight:700;color:var(--sky);
+  margin-bottom:8px;text-transform:uppercase;
+}
+.section-title{
+  font-family:var(--serif);font-size:26px;color:var(--navy);
+  line-height:1.2;margin-bottom:4px;
+}
+.section-sub{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:24px;}
+.s-bar{width:36px;height:3px;background:var(--sky);border-radius:2px;margin-bottom:18px;}
+
+/* ── TIMELINE HEADER BAR ── */
+.tl-header{
+  background:var(--navy);border-radius:14px 14px 0 0;
+  padding:16px 24px;display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:10px;
+}
+.tl-header-left{display:flex;align-items:center;gap:10px;}
+.tl-dot{width:8px;height:8px;border-radius:50%;background:var(--sky);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.tl-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.18em;}
+.tl-progress-wrap{display:flex;align-items:center;gap:10px;}
+.tl-progress-text{font-size:11px;color:rgba(255,255,255,.5);font-weight:500;}
+.tl-progress-bar{width:120px;height:4px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden;}
+.tl-progress-fill{height:100%;background:var(--sky);border-radius:2px;transition:width .4s;width:0%;}
+
+/* ── TIMELINE TRACK ── */
+.tl-track-wrap{
+  background:#fff;border:1.5px solid var(--line);
+  border-top:none;border-radius:0 0 14px 14px;
+  padding:28px 24px 32px;
+  box-shadow:var(--shadow);
+}
+
+/* Desktop: horizontal scroll track */
+.tl-scroll{overflow-x:auto;padding-bottom:12px;}
+.tl-scroll::-webkit-scrollbar{height:4px;}
+.tl-scroll::-webkit-scrollbar-track{background:var(--line);border-radius:2px;}
+.tl-scroll::-webkit-scrollbar-thumb{background:var(--sky);border-radius:2px;}
+.tl-track{
+  display:flex;align-items:flex-start;gap:0;
+  min-width:800px;
+  position:relative;
+  padding-top:12px;
+}
+
+/* Connecting line */
+.tl-track::before{
+  content:'';position:absolute;
+  top:30px;left:24px;right:24px;height:2px;
+  background:linear-gradient(90deg,var(--sky),rgba(0,174,239,.3));
+  z-index:0;
+}
+
+/* ── TIMELINE BLOCK ── */
+.tl-block{
+  flex:1;min-width:130px;
+  display:flex;flex-direction:column;align-items:center;
+  position:relative;z-index:1;cursor:pointer;
+}
+.tl-block:focus{outline:none;}
+.tl-block.locked{cursor:not-allowed;opacity:.45;}
+.tl-block.locked .tl-node{border-color:var(--border);background:#f0f4f7;}
+.tl-block.locked .tl-tap{color:var(--border);}
+.tl-lock-icon{
+  position:absolute;top:-2px;right:calc(50% - 30px);
+  font-size:10px;background:var(--border);color:#fff;
+  border-radius:4px;padding:1px 5px;font-weight:700;letter-spacing:.04em;
+  display:none;
+}
+.tl-block.locked .tl-lock-icon{display:block;}
+
+/* Node circle */
+.tl-node{
+  width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;
+  border:2.5px solid var(--line);
+  background:#fff;
+  transition:all .25s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 2px 8px rgba(10,53,66,.1);
+  margin-bottom:8px;
+  position:relative;
+}
+.tl-block:hover .tl-node,
+.tl-block.active .tl-node{
+  border-color:var(--sky);
+  background:var(--sky);
+  transform:scale(1.12);
+  box-shadow:0 0 0 6px rgba(0,174,239,.15),0 4px 16px rgba(0,174,239,.3);
+}
+.tl-block.done .tl-node{
+  border-color:var(--green);
+  background:var(--green);
+  box-shadow:0 0 0 4px rgba(11,122,78,.12);
+}
+.tl-block.done .tl-node::after{
+  content:'✓';
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:16px;color:#fff;font-weight:700;
+}
+.tl-block.done .tl-node .tl-emoji{display:none;}
+.tl-block.active .tl-node .tl-emoji,
+.tl-block:hover .tl-node .tl-emoji{filter:brightness(10);}
+
+.tl-time{
+  font-size:10px;font-weight:700;color:var(--sky);
+  letter-spacing:.06em;margin-bottom:3px;text-align:center;
+}
+.tl-block.done .tl-time{color:var(--green);}
+.tl-name{
+  font-size:11px;font-weight:600;color:var(--body);
+  text-align:center;line-height:1.35;max-width:100px;
+}
+.tl-tap{
+  font-size:9px;color:var(--muted);margin-top:3px;font-style:italic;
+  transition:opacity .2s;
+}
+.tl-block.done .tl-tap,.tl-block.active .tl-tap{opacity:0;}
+
+/* ── EXPANDED PANEL ── */
+.tl-panels{margin-top:24px;}
+.tl-panel{
+  display:none;
+  background:var(--navy);border-radius:14px;
+  padding:24px 26px;
+  animation:slideIn .3s ease;
+  border:1.5px solid rgba(0,174,239,.15);
+}
+.tl-panel.visible{display:block;}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+.panel-top{display:flex;align-items:flex-start;gap:16px;margin-bottom:18px;}
+.panel-icon-wrap{
+  width:52px;height:52px;border-radius:14px;
+  background:rgba(0,174,239,.15);
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;flex-shrink:0;
+}
+.panel-time-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(0,174,239,.12);border:1px solid rgba(0,174,239,.25);
+  border-radius:6px;padding:3px 10px;
+  font-size:10px;font-weight:700;color:var(--sky);letter-spacing:.08em;
+  margin-bottom:6px;
+}
+.panel-title{font-family:var(--serif);font-size:20px;color:#fff;line-height:1.2;}
+.panel-title em{color:var(--sky);font-style:italic;}
+
+.panel-body{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:600px){.panel-body{grid-template-columns:1fr;}}
+
+.panel-card{
+  background:rgba(255,255,255,.05);border-radius:10px;
+  padding:16px 18px;border:1px solid rgba(255,255,255,.07);
+}
+.panel-card-label{
+  font-size:9px;font-weight:700;letter-spacing:.2em;
+  color:var(--sky);margin-bottom:8px;opacity:.8;
+}
+.panel-card-text{font-size:13px;color:rgba(255,255,255,.8);line-height:1.65;}
+.panel-card-text strong{color:#fff;font-weight:600;}
+.panel-card-text ul{padding-left:14px;margin-top:6px;}
+.panel-card-text li{margin-bottom:4px;}
+
+.panel-tip{
+  margin-top:14px;
+  background:rgba(0,174,239,.1);border-left:3px solid var(--sky);
+  border-radius:0 8px 8px 0;padding:12px 16px;
+}
+.panel-tip-label{font-size:9px;font-weight:700;color:var(--sky);letter-spacing:.18em;margin-bottom:4px;}
+.panel-tip-text{font-size:12.5px;color:rgba(255,255,255,.75);line-height:1.6;font-style:italic;}
+
+.panel-close{
+  display:block;margin-top:16px;
+  text-align:right;font-size:11px;color:rgba(255,255,255,.35);
+  cursor:pointer;font-weight:600;letter-spacing:.06em;
+  transition:color .2s;
+}
+.panel-close:hover{color:var(--sky);}
+
+/* ── DONE STATE ── */
+.tl-done-banner{
+  display:none;
+  background:linear-gradient(135deg,var(--green),#0A6040);
+  border-radius:12px;padding:18px 22px;margin-top:20px;
+  border:1px solid rgba(11,122,78,.3);
+  text-align:center;
+  animation:slideIn .4s ease;
+}
+.tl-done-banner.show{display:block;}
+.tl-done-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:4px;}
+.tl-done-sub{font-size:12.5px;color:rgba(255,255,255,.7);}
+
+/* ── KEY RULES SECTION ── */
+.rules-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+@media(max-width:640px){.rules-grid{grid-template-columns:1fr;}}
+.rule-card{
+  background:#fff;border-radius:14px;padding:20px 18px;
+  border:1.5px solid var(--line);box-shadow:var(--shadow);
+  transition:all .2s;
+  border-top:3px solid var(--sky);
+}
+.rule-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);}
+.rule-num{
+  font-size:28px;font-weight:700;font-family:var(--serif);
+  color:var(--sky);margin-bottom:8px;line-height:1;
+}
+.rule-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px;}
+.rule-text{font-size:12.5px;color:var(--muted);line-height:1.6;}
+
+/* ── NARRATION CARD ── */
+.narration{
+  background:var(--navy);border-radius:14px;padding:24px 26px;
+  display:flex;gap:16px;align-items:flex-start;
+  border-left:4px solid var(--sky);
+}
+.narration-quote{font-size:22px;color:var(--sky);line-height:1;flex-shrink:0;margin-top:-4px;}
+.narration-text{font-size:14px;color:rgba(255,255,255,.8);line-height:1.75;font-style:italic;}
+.narration-text strong{color:#fff;font-style:normal;}
+
+/* ── COMPLETION ── */
+#completion{display:none;background:var(--navy2);padding:52px 28px;}
+.cpl-inner{max-width:560px;margin:0 auto;text-align:center;}
+.cpl-icon{font-size:52px;margin-bottom:14px;}
+.cpl-title{font-family:var(--serif);color:#fff;font-size:32px;margin-bottom:8px;}
+.cpl-title span{color:var(--sky);font-style:italic;}
+.cpl-sub{color:rgba(255,255,255,.55);font-size:13.5px;line-height:1.7;margin-bottom:22px;}
+.cpl-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:28px;}
+.cpl-chip{
+  background:rgba(0,174,239,.12);border:1px solid rgba(0,174,239,.25);
+  border-radius:20px;padding:5px 14px;font-size:11px;font-weight:600;color:var(--sky);
+}
+
+/* ── SEPARATOR ── */
+.sep{height:1px;background:var(--line);max-width:900px;margin:0 auto;}
+</style>
+</head>
+<body>
+<div id="prog"><div id="prog-fill"></div></div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-stripe"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow"><span></span>CONFIRMATIONS TEAM · DAY 2</div>
+    <h1 class="hero-title">A Typical Day —<br><em>Hour by Hour</em></h1>
+    <p class="hero-sub">Your shift has a rhythm. Understanding it is the difference between a reactive day and a productive one.</p>
+    <div class="hero-meta">
+      <div class="hero-pill">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        ~8 minutes
+      </div>
+      <div class="hero-pill">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Click all blocks to unlock
+      </div>
+      <div class="hero-pill">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        Mon – Sat · 9am – 8pm NSW
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTRO CARD -->
+<div id="intro-section">
+  <div class="intro-card">
+    <div class="intro-icon">💡</div>
+    <div>
+      <div class="intro-title">WHY THIS MATTERS</div>
+      <div class="intro-text">Most setters lose their best opportunities by dialling in the wrong order. <strong>Your energy is a resource</strong> — and your shift is designed to use it strategically. New leads first, callbacks second, training data last. Click each time block below to learn what happens and why.</div>
+    </div>
+  </div>
+</div>
+
+<!-- TIMELINE SECTION -->
+<div class="section" style="padding-top:24px;">
+  <div class="inner">
+    <div class="section-label">ACTIVITY — CLICK ALL BLOCKS</div>
+    <div class="section-title">Your Shift Timeline</div>
+    <div class="s-bar"></div>
+
+    <!-- Timeline Header -->
+    <div class="tl-header">
+      <div class="tl-header-left">
+        <div class="tl-dot"></div>
+        <div class="tl-label">DIAL WINDOW: 9:00AM – 8:00PM NSW · MON – SAT</div>
+      </div>
+      <div class="tl-progress-wrap">
+        <div class="tl-progress-text" id="tl-prog-text">0 of 6 explored</div>
+        <div class="tl-progress-bar"><div class="tl-progress-fill" id="tl-prog-fill"></div></div>
+      </div>
+    </div>
+
+    <!-- Timeline Track -->
+    <div class="tl-track-wrap">
+      <div class="tl-scroll">
+        <div class="tl-track" id="tl-track">
+
+          <!-- Block 1 -->
+          <div class="tl-block" id="blk-0" onclick="openBlock(0)" tabindex="0">
+            <div class="tl-node"><span class="tl-emoji">🌅</span></div>
+            <div class="tl-time">9:00AM</div>
+            <div class="tl-name">Shift Start</div>
+            <div class="tl-tap">tap to explore</div>
+          </div>
+
+          <!-- Block 2 -->
+          <div class="tl-block locked" id="blk-1" onclick="openBlock(1)" tabindex="0">
+            <div class="tl-lock-icon">🔒</div>
+            <div class="tl-node"><span class="tl-emoji">🔥</span></div>
+            <div class="tl-time">9:00 – 11:00</div>
+            <div class="tl-name">New Leads</div>
+            <div class="tl-tap">complete previous first</div>
+          </div>
+
+          <!-- Block 3 -->
+          <div class="tl-block locked" id="blk-2" onclick="openBlock(2)" tabindex="0">
+            <div class="tl-lock-icon">🔒</div>
+            <div class="tl-node"><span class="tl-emoji">📋</span></div>
+            <div class="tl-time">11:00 – 12:30</div>
+            <div class="tl-name">Task List</div>
+            <div class="tl-tap">complete previous first</div>
+          </div>
+
+          <!-- Block 4 -->
+          <div class="tl-block locked" id="blk-3" onclick="openBlock(3)" tabindex="0">
+            <div class="tl-lock-icon">🔒</div>
+            <div class="tl-node"><span class="tl-emoji">☕</span></div>
+            <div class="tl-time">12:30PM</div>
+            <div class="tl-name">Team Catch-Up</div>
+            <div class="tl-tap">complete previous first</div>
+          </div>
+
+          <!-- Block 5 -->
+          <div class="tl-block locked" id="blk-4" onclick="openBlock(4)" tabindex="0">
+            <div class="tl-lock-icon">🔒</div>
+            <div class="tl-node"><span class="tl-emoji">📞</span></div>
+            <div class="tl-time">After Catch-Up</div>
+            <div class="tl-name">Training Data</div>
+            <div class="tl-tap">complete previous first</div>
+          </div>
+
+          <!-- Block 6 -->
+          <div class="tl-block locked" id="blk-5" onclick="openBlock(5)" tabindex="0">
+            <div class="tl-lock-icon">🔒</div>
+            <div class="tl-node"><span class="tl-emoji">🏁</span></div>
+            <div class="tl-time">End of Shift</div>
+            <div class="tl-name">Wrap Up</div>
+            <div class="tl-tap">complete previous first</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Expanded Panels -->
+      <div class="tl-panels" id="tl-panels">
+
+        <!-- Panel 0: Shift Start -->
+        <div class="tl-panel" id="panel-0">
+          <div class="panel-top">
+            <div class="panel-icon-wrap">🌅</div>
+            <div>
+              <div class="panel-time-badge">⏰ 8:00AM – 9:00AM</div>
+              <div class="panel-title">Daily Prep — <em>Set Yourself Up to Win</em></div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="panel-card">
+              <div class="panel-card-label">WHAT HAPPENS</div>
+              <div class="panel-card-text">Before you dial a single number: check the <strong>CX inbox</strong>, review any <strong>cancellations and reschedules</strong> from overnight, check the <strong>Same Day appointment list</strong>, and do a <strong>calendar cleanup</strong>. Log into Zoho CRM and the dialer. Know what you're walking into.</div>
+            </div>
+            <div class="panel-card">
+              <div class="panel-card-label">WHY IT MATTERS</div>
+              <div class="panel-card-text">The prep hour sets the tone for the entire day. <strong>An unreviewed calendar means surprises.</strong> An unread CX inbox means missed reschedules. Two minutes on each check saves you thirty minutes of chaos later in the day.</div>
+            </div>
+          </div>
+          <div class="panel-tip">
+            <div class="panel-tip-label">🏆 TOP PERFORMER TIP</div>
+            <div class="panel-tip-text">"Check the CX inbox and calendar before anything else. If there's an overnight cancellation you missed, that appointment is still sitting in the 1st run queue — and you'll waste a call on it."</div>
+          </div>
+          <span class="panel-close" onclick="closePanel(0)">CLOSE ✕</span>
+        </div>
+
+        <!-- Panel 1: New Leads -->
+        <div class="tl-panel" id="panel-1">
+          <div class="panel-top">
+            <div class="panel-icon-wrap">🔥</div>
+            <div>
+              <div class="panel-time-badge">⏰ 9:00AM – 12:00PM</div>
+              <div class="panel-title">1st Run — <em>Call All Next Day Bookings</em></div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="panel-card">
+              <div class="panel-card-label">WHAT HAPPENS</div>
+              <div class="panel-card-text">Call every appointment booked for the next day. If the customer <strong>answers</strong>: confirm the appointment and update the CRM with notes. If they <strong>don't answer</strong>: leave a voicemail, mark the appointment as Unconfirmed, and update the CRM. Monitor the CX inbox and action SMS/email responses between calls.</div>
+            </div>
+            <div class="panel-card">
+              <div class="panel-card-label">WHY IT MATTERS</div>
+              <div class="panel-card-text">The 1st run sets the baseline. Every appointment you confirm now is one less to chase later. <strong>Every no-answer needs a voicemail and a CRM note</strong> — the 2nd run team picks up exactly where you left off. No note = no handover.</div>
+            </div>
+          </div>
+          <div class="panel-tip">
+            <div class="panel-tip-label">⚡ THE LOGIC</div>
+            <div class="panel-tip-text">"Don't batch your CRM updates — do them immediately after each call. By the time the 2nd run starts, your notes need to be accurate. The person running the next attempt is relying on you."</div>
+          </div>
+          <span class="panel-close" onclick="closePanel(1)">CLOSE ✕</span>
+        </div>
+
+        <!-- Panel 2: Task List -->
+        <div class="tl-panel" id="panel-2">
+          <div class="panel-top">
+            <div class="panel-icon-wrap">📋</div>
+            <div>
+              <div class="panel-time-badge">⏰ 12:00PM – 2:00PM</div>
+              <div class="panel-title">2nd Run — <em>Re-Attempt Every Unconfirmed</em></div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="panel-card">
+              <div class="panel-card-label">WHAT HAPPENS</div>
+              <div class="panel-card-text">Re-attempt all appointments marked <strong>Unconfirmed</strong> from the 1st run. Same process: customer answers → confirm + CRM notes. No answer → update CRM notes. Continue monitoring the CX inbox and clearing the dashboard between calls.</div>
+            </div>
+            <div class="panel-card">
+              <div class="panel-card-label">WHY IT MATTERS</div>
+              <div class="panel-card-text">Every unconfirmed appointment is a potential no-show. <strong>The 2nd run is where you recover the ones who missed the first call.</strong> Most customers who weren't home at 9AM are reachable by midday — this run converts more than people expect.</div>
+            </div>
+          </div>
+          <div class="panel-tip">
+            <div class="panel-tip-label">🎯 COACHING NOTE</div>
+            <div class="panel-tip-text">"Don't assume a 1st run no-answer is a dead end. Midday is often the sweet spot — customers are on lunch, more available, more receptive. Your tone on a 2nd attempt should be warmer, not more urgent."</div>
+          </div>
+          <span class="panel-close" onclick="closePanel(2)">CLOSE ✕</span>
+        </div>
+
+        <!-- Panel 3: Team Catch-Up -->
+        <div class="tl-panel" id="panel-3">
+          <div class="panel-top">
+            <div class="panel-icon-wrap">☕</div>
+            <div>
+              <div class="panel-time-badge">⏰ 2:00PM – 4:00PM</div>
+              <div class="panel-title">3rd & 4th Run + SMS — <em>Keep Pushing</em></div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="panel-card">
+              <div class="panel-card-label">WHAT HAPPENS</div>
+              <div class="panel-card-text">The 3rd run (2–3PM) re-attempts remaining unconfirmed appointments. The 4th run (3–4PM) is the final phone attempt plus the <strong>SMS blast</strong> to all remaining unconfirmed — a direct message to anyone who hasn't picked up. Continue CX inbox and dashboard monitoring throughout.</div>
+            </div>
+            <div class="panel-card">
+              <div class="panel-card-label">WHY IT MATTERS</div>
+              <div class="panel-card-text">By the 4th run, most of the day's confirmations are locked. <strong>The SMS adds a second channel</strong> — some customers don't pick up calls but will respond to a text. Don't skip it. Every confirmed appointment in these runs is one less no-show tomorrow.</div>
+            </div>
+          </div>
+          <div class="panel-tip">
+            <div class="panel-tip-label">📅 REMEMBER</div>
+            <div class="panel-tip-text">"The SMS blast in the 4th run is not a replacement for the call — it's a backup. Send it after the call attempt, not instead of it. Kaysie will confirm the approved SMS template to use."</div>
+          </div>
+          <span class="panel-close" onclick="closePanel(3)">CLOSE ✕</span>
+        </div>
+
+        <!-- Panel 4: Training Data -->
+        <div class="tl-panel" id="panel-4">
+          <div class="panel-top">
+            <div class="panel-icon-wrap">📞</div>
+            <div>
+              <div class="panel-time-badge">⏰ 5:00PM – 6:00PM</div>
+              <div class="panel-title">5th Run — <em>Final Attempt & Recovery</em></div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="panel-card">
+              <div class="panel-card-label">WHAT HAPPENS</div>
+              <div class="panel-card-text">Review all remaining <strong>unconfirmed or un-contacted</strong> appointments. Complete final contact attempts where appropriate. Ensure every CRM status is accurate and fully updated. Add final notes for outstanding appointments and <strong>flag high-priority leads for next-day action</strong>.</div>
+            </div>
+            <div class="panel-card">
+              <div class="panel-card-label">WHY IT MATTERS</div>
+              <div class="panel-card-text">The 5th run is your last chance to protect tomorrow's schedule. <strong>An unconfirmed appointment left overnight is a risk.</strong> Every attempt you make now — even if it doesn't connect — shows in your outbound call count and protects your KPIs.</div>
+            </div>
+          </div>
+          <div class="panel-tip">
+            <div class="panel-tip-label">🧠 THE STRATEGY</div>
+            <div class="panel-tip-text">"Don't wind down mentally at 5PM. The 5th run often catches customers who just got home from work — this is one of the highest answer-rate windows of the day. Stay sharp."</div>
+          </div>
+          <span class="panel-close" onclick="closePanel(4)">CLOSE ✕</span>
+        </div>
+
+        <!-- Panel 5: Wrap Up -->
+        <div class="tl-panel" id="panel-5">
+          <div class="panel-top">
+            <div class="panel-icon-wrap">🏁</div>
+            <div>
+              <div class="panel-time-badge">⏰ 6:00PM – 7:00PM</div>
+              <div class="panel-title">End of Day — <em>Leave No Loose Ends</em></div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="panel-card">
+              <div class="panel-card-label">WHAT HAPPENS</div>
+              <div class="panel-card-text">Before you log off: ensure the <strong>calendar is fully accurate and up to date</strong>, complete a final <strong>CX inbox check</strong>, and confirm every CRM status is correct. Every appointment must have a status — Confirmed, Unconfirmed, Cancelled, or Rescheduled. No blanks.</div>
+            </div>
+            <div class="panel-card">
+              <div class="panel-card-label">WHY IT MATTERS</div>
+              <div class="panel-card-text">The <strong>Solar Specialist's entire day</strong> is built on what you hand them. An inaccurate calendar means a specialist arriving at a cancelled appointment. <strong>Your EOD is someone else's morning.</strong> Treat it that way.</div>
+            </div>
+          </div>
+          <div class="panel-tip">
+            <div class="panel-tip-label">✅ THE CHECKLIST</div>
+            <div class="panel-tip-text">Calendar accurate ✓ &nbsp;|&nbsp; CX inbox cleared ✓ &nbsp;|&nbsp; All CRM statuses updated ✓. Three things. Every. Single. Day.</div>
+          </div>
+          <span class="panel-close" onclick="closePanel(5)">CLOSE ✕</span>
+        </div>
+
+      </div><!-- /tl-panels -->
+
+      <!-- Done Banner -->
+      <div class="tl-done-banner" id="tl-done-banner">
+        <div class="tl-done-title">✅ All time blocks explored — great work!</div>
+        <div class="tl-done-sub">You now understand the rhythm of your shift. Scroll down to see the key rules.</div>
+      </div>
+
+    </div><!-- /tl-track-wrap -->
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- KEY RULES SECTION -->
+<div class="section" style="background:#fff;">
+  <div class="inner">
+    <div class="section-label">THE NON-NEGOTIABLES</div>
+    <div class="section-title">Three Rules That Drive Results</div>
+    <div class="s-bar"></div>
+    <div class="rules-grid">
+      <div class="rule-card">
+        <div class="rule-num">01</div>
+        <div class="rule-title">Prep before you dial</div>
+        <div class="rule-text">Check the CX inbox and calendar before the 1st run, every day. Not after your first call — before. Surprises in the queue are your responsibility to catch early.</div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-num">02</div>
+        <div class="rule-title">Every run matters</div>
+        <div class="rule-text">All 5 runs must be completed every day — non-negotiable. Missing a run isn't catching up later. It's appointments left uncontacted and a confirm rate that drops below minimum.</div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-num">03</div>
+        <div class="rule-title">CRM accuracy is non-negotiable</div>
+        <div class="rule-text">Every call gets a status. Every status gets a note. The specialist who walks into a home tomorrow is relying on what you update tonight. Sloppy notes are not a small thing.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- NARRATION -->
+<div class="section">
+  <div class="inner">
+    <div class="narration">
+      <div class="narration-quote">"</div>
+      <div class="narration-text">Your day has a rhythm — <strong>prep, then 5 runs, then EOD.</strong> That structure isn't arbitrary. It's designed to give every appointment the maximum number of contact attempts before the specialist shows up. The Confirmers who follow the structure hit their confirm rate. The ones who don't spend their time explaining no-shows.</div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPLETION -->
+<div id="completion">
+  <div class="cpl-inner">
+    <div class="cpl-icon">🎯</div>
+    <div class="cpl-title">Module 3 <span>complete.</span></div>
+    <div class="cpl-sub">You understand the structure of your day. Now let's get you set up in the systems you'll use every shift.</div>
+    <div class="cpl-chips">
+      <span class="cpl-chip">✓ 9am–8pm dial window</span>
+      <span class="cpl-chip">✓ New leads → callbacks → training data</span>
+      <span class="cpl-chip">✓ 12:30pm team catch-up</span>
+      <span class="cpl-chip">✓ Wrap-up checklist</span>
+    </div>
+  </div>
+</div>
+
+<script>
+// Progress bar on scroll
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('prog-fill').style.width=Math.min(p,100)+'%';
+});
+
+const TOTAL=6;
+const seen=new Set();
+let activePanel=null;
+
+function openBlock(i){
+  const blk=document.getElementById('blk-'+i);
+
+  // If locked, shake and bail
+  if(blk.classList.contains('locked')){
+    blk.style.animation='shake .35s ease';
+    setTimeout(()=>blk.style.animation='',400);
+    return;
+  }
+
+  // If same panel open, close it (but keep as done)
+  if(activePanel===i){
+    closePanel(i);
+    return;
+  }
+
+  // Close current panel
+  if(activePanel!==null){
+    document.getElementById('panel-'+activePanel).classList.remove('visible');
+    document.getElementById('blk-'+activePanel).classList.remove('active');
+    document.getElementById('blk-'+activePanel).classList.add('done');
+  }
+
+  // Open new panel
+  activePanel=i;
+  seen.add(i);
+  document.getElementById('panel-'+i).classList.add('visible');
+  document.getElementById('blk-'+i).classList.remove('locked');
+  document.getElementById('blk-'+i).classList.add('active');
+
+  // Unlock next block
+  const next=i+1;
+  if(next<TOTAL){
+    document.getElementById('blk-'+next).classList.remove('locked');
+    document.getElementById('blk-'+next).querySelector('.tl-tap').textContent='tap to explore';
+    const lockIcon=document.getElementById('blk-'+next).querySelector('.tl-lock-icon');
+    if(lockIcon) lockIcon.style.display='none';
+  }
+
+  setTimeout(()=>{
+    document.getElementById('panel-'+i).scrollIntoView({behavior:'smooth',block:'nearest'});
+  },100);
+
+  updateProgress();
+}
+
+function closePanel(i){
+  document.getElementById('panel-'+i).classList.remove('visible');
+  document.getElementById('blk-'+i).classList.remove('active');
+  document.getElementById('blk-'+i).classList.add('done');
+  activePanel=null;
+  updateProgress();
+}
+
+function updateProgress(){
+  const done=seen.size;
+  document.getElementById('tl-prog-text').textContent=done+' of '+TOTAL+' explored';
+  document.getElementById('tl-prog-fill').style.width=(done/TOTAL*100)+'%';
+
+  if(done===TOTAL){
+    // Mark all as done
+    for(let j=0;j<TOTAL;j++) document.getElementById('blk-'+j).classList.add('done');
+    document.getElementById('tl-done-banner').classList.add('show');
+    setTimeout(()=>{
+      document.getElementById('completion').style.display='block';
+      document.getElementById('prog-fill').style.width='100%';
+      document.getElementById('completion').scrollIntoView({behavior:'smooth',block:'start'});
+    },800);
+  }
+}
+
+// Shake keyframes
+const styleEl=document.createElement('style');
+styleEl.textContent='@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-5px);}75%{transform:translateX(5px);}}';
+document.head.appendChild(styleEl);
+
+// Keyboard support
+document.querySelectorAll('.tl-block').forEach((b,i)=>{
+  b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openBlock(i);}});
+});
+</script>
+</body>
+</html>
