@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Who is RESINC? — Confirmations Team Day 1</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0A3542;--navy2:#071F28;--navy3:#0D4558;
+  --sky:#00AEEF;--sky2:#0090C4;--sky-lt:#EAF6FD;--sky-bg:#F2FAFF;
+  --green:#0B7A4E;--green-lt:#E3F5EC;
+  --orange:#D4620A;--orange-lt:#FEF3EB;
+  --red:#B5251B;--red-lt:#FDECEB;
+  --teal:#007A8A;
+  --body:#1A2A32;--muted:#5A6E78;--light:#F4F8FB;
+  --border:#C8DDE8;--line:#E2EEF4;
+  --font:'DM Sans',system-ui,sans-serif;
+  --serif:'DM Serif Display',Georgia,serif;
+  --shadow:0 1px 3px rgba(10,53,66,.06),0 4px 12px rgba(10,53,66,.08);
+  --shadow-lg:0 4px 16px rgba(10,53,66,.1),0 12px 32px rgba(10,53,66,.1);
+  --max:860px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--light);color:var(--body);line-height:1.6;}
+
+/* ── PROGRESS BAR ── */
+#progress-bar{
+  position:fixed;top:0;left:0;right:0;height:3px;
+  background:rgba(0,174,239,.15);z-index:100;
+}
+#progress-fill{height:100%;background:var(--sky);width:0%;transition:width .4s ease;}
+
+/* ── SECTIONS ── */
+section{padding:60px 20px;}
+.inner{max-width:var(--max);margin:0 auto;}
+
+/* ── HERO ── */
+#hero{
+  background:var(--navy);
+  padding:70px 20px 60px;
+  position:relative;overflow:hidden;
+}
+.hero-deco{position:absolute;border-radius:50%;border:1px solid rgba(0,174,239,.07);pointer-events:none;}
+.hero-stripe{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--sky);}
+.hero-inner{max-width:var(--max);margin:0 auto;position:relative;z-index:1;}
+.hero-eyebrow{
+  color:var(--sky);font-size:9px;letter-spacing:.28em;font-weight:600;
+  margin-bottom:18px;opacity:.9;
+}
+.hero-title{
+  color:#fff;font-size:52px;font-weight:700;line-height:1.05;
+  margin-bottom:16px;font-family:var(--serif);
+}
+.hero-title strong{
+  color:var(--sky);display:block;
+  font-family:var(--font);font-size:56px;font-style:normal;
+}
+.hero-sub{
+  color:rgba(255,255,255,.6);font-size:15px;line-height:1.7;
+  max-width:540px;margin-bottom:32px;
+}
+.hero-scroll-hint{
+  display:flex;align-items:center;gap:8px;
+  color:rgba(0,174,239,.5);font-size:11px;font-weight:500;
+  letter-spacing:.08em;
+}
+.scroll-arrow{
+  width:28px;height:28px;border-radius:50%;
+  border:1px solid rgba(0,174,239,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;animation:bounce 2s infinite;
+}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(4px);}}
+
+/* ── SECTION HEADERS ── */
+.section-eyebrow{
+  font-size:8.5px;letter-spacing:.26em;font-weight:600;
+  color:var(--sky);margin-bottom:8px;opacity:.85;
+}
+.section-title{
+  font-size:30px;font-weight:700;color:var(--navy);
+  line-height:1.2;margin-bottom:6px;
+  font-family:var(--serif);
+}
+.section-sub{font-size:14px;color:var(--muted);margin-bottom:28px;line-height:1.6;}
+.section-divider{
+  width:48px;height:3px;background:var(--sky);
+  border-radius:2px;margin-bottom:28px;
+}
+
+/* ── MISSION ── */
+#mission{background:#fff;}
+.mission-quote{
+  background:var(--navy);border-radius:14px;
+  padding:28px 30px;margin-bottom:20px;
+  position:relative;overflow:hidden;
+  box-shadow:var(--shadow-lg);
+}
+.mission-quote::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--sky);}
+.mission-quote-label{color:var(--sky);font-size:7.5px;letter-spacing:.22em;font-weight:600;margin-bottom:10px;opacity:.85;padding-left:14px;}
+.mission-quote-text{
+  color:#fff;font-size:22px;font-weight:600;line-height:1.5;
+  padding-left:14px;font-family:var(--serif);font-style:italic;
+}
+.mission-quote-text em{color:var(--sky);font-style:normal;font-family:var(--font);font-weight:700;}
+.not-most{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:22px;}
+.nm{
+  border-radius:12px;padding:16px 18px;
+  display:flex;align-items:center;gap:12px;
+  border:1.5px solid;cursor:default;
+  transition:transform .2s,box-shadow .2s;
+}
+.nm:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);}
+.nm.no{background:var(--red-lt);border-color:rgba(181,37,27,.18);}
+.nm.yes{background:var(--sky-lt);border-color:rgba(0,174,239,.3);}
+.nm-icon{font-size:22px;flex-shrink:0;}
+.nm-text{font-size:14px;font-weight:600;}
+.nm.no .nm-text{color:var(--red);}
+.nm.yes .nm-text{color:var(--sky2);}
+.mission-body{
+  background:var(--sky-bg);
+  border-left:4px solid var(--sky);
+  border-radius:0 12px 12px 0;
+  padding:18px 22px;
+  font-size:13.5px;line-height:1.8;color:#2A3E48;
+}
+.mission-body em{color:var(--sky2);font-style:normal;font-weight:600;}
+
+/* ── FAST FACTS ── */
+#facts{background:var(--light);}
+.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
+.metric{
+  background:#fff;border-radius:12px;
+  padding:20px 18px;text-align:center;
+  border:1.5px solid var(--line);box-shadow:var(--shadow);
+  transition:transform .2s,box-shadow .2s;cursor:default;
+}
+.metric:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);}
+.metric-value{
+  font-size:32px;font-weight:700;color:var(--sky);
+  font-family:var(--serif);line-height:1;margin-bottom:6px;
+}
+.metric-label{font-size:11.5px;color:var(--muted);line-height:1.5;}
+.metric-label strong{color:var(--navy);display:block;}
+.bento{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;}
+.bc{border-radius:12px;padding:18px 18px;transition:transform .2s,box-shadow .2s;cursor:default;}
+.bc:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);}
+.bc.n{background:var(--navy);}
+.bc.s{background:var(--sky);}
+.bc.l{background:#fff;border:1.5px solid var(--line);box-shadow:var(--shadow);}
+.bc-icon{font-size:22px;margin-bottom:8px;}
+.bc-val{font-size:14.5px;font-weight:700;line-height:1.3;margin-bottom:4px;}
+.bc.n .bc-val{color:var(--sky);}
+.bc.s .bc-val{color:#fff;}
+.bc.l .bc-val{color:var(--navy);}
+.bc-lbl{font-size:11px;line-height:1.4;}
+.bc.n .bc-lbl{color:rgba(0,174,239,.6);}
+.bc.s .bc-lbl{color:rgba(255,255,255,.75);}
+.bc.l .bc-lbl{color:var(--muted);}
+
+/* ── ETHICAL SELLING ── */
+#ethical{background:#fff;}
+.eth-layout{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:0;}
+.eth-dark{
+  background:var(--navy);border-radius:14px;
+  padding:24px 24px;display:flex;flex-direction:column;justify-content:center;
+  box-shadow:var(--shadow);
+}
+.eth-headline{color:#fff;font-size:18px;font-weight:700;line-height:1.4;margin-bottom:8px;font-family:var(--serif);}
+.eth-sub{color:var(--sky);font-size:12.5px;font-style:italic;margin-bottom:14px;}
+.eth-body{color:rgba(255,255,255,.58);font-size:12.5px;line-height:1.75;}
+.eth-rows{display:flex;flex-direction:column;gap:12px;justify-content:center;}
+.eth-row{
+  background:#fff;border-radius:12px;padding:14px 16px;
+  display:flex;align-items:flex-start;gap:13px;
+  border-left:4px solid;box-shadow:var(--shadow);
+  transition:all .2s;cursor:default;
+}
+.eth-row:hover{transform:translateX(5px);box-shadow:var(--shadow-lg);}
+.eth-row:nth-child(1){border-color:var(--sky);}
+.eth-row:nth-child(2){border-color:var(--green);}
+.eth-row:nth-child(3){border-color:var(--orange);}
+.eth-icon{font-size:19px;flex-shrink:0;margin-top:2px;}
+.eth-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:3px;}
+.eth-desc{font-size:11.5px;color:var(--muted);line-height:1.5;}
+
+/* ── SCENARIOS ── */
+#scenarios{background:var(--light);}
+.flip-instructions{
+  background:var(--navy);border-radius:10px;
+  padding:13px 18px;margin-bottom:20px;
+  display:flex;align-items:center;gap:10px;
+  font-size:12.5px;color:rgba(255,255,255,.7);
+}
+.flip-instructions span{font-size:18px;}
+.flip-instructions strong{color:#fff;}
+.flip-blocker-note{
+  font-size:11px;color:var(--sky);font-weight:600;
+  margin-left:auto;padding-left:12px;white-space:nowrap;
+  opacity:.8;
+}
+.flip-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
+.flip-card{height:210px;cursor:pointer;perspective:1000px;position:relative;}
+.flip-card-inner{
+  position:relative;width:100%;height:100%;
+  transition:transform .65s cubic-bezier(.4,0,.2,1);
+  transform-style:preserve-3d;
+}
+.flip-card.flipped .flip-card-inner{transform:rotateY(180deg);}
+.flip-front,.flip-back{
+  position:absolute;inset:0;border-radius:14px;
+  backface-visibility:hidden;
+  display:flex;flex-direction:column;justify-content:center;padding:20px 18px;
+}
+.flip-front{
+  background:var(--navy);
+  border:1.5px solid rgba(0,174,239,.22);
+  box-shadow:var(--shadow);
+}
+.flip-back{transform:rotateY(180deg);}
+.flip-back.r{background:linear-gradient(140deg,#B5251B,#7A160F);}
+.flip-back.o{background:linear-gradient(140deg,#D4620A,#9A4208);}
+.flip-back.g{background:linear-gradient(140deg,var(--teal),#004455);}
+.flip-tag{font-size:7.5px;letter-spacing:.18em;font-weight:600;margin-bottom:8px;}
+.flip-front .flip-tag{color:rgba(0,174,239,.7);}
+.flip-back .flip-tag{color:rgba(255,255,255,.65);}
+.flip-scenario{font-size:13px;color:#fff;line-height:1.55;font-weight:500;}
+.flip-hint{margin-top:10px;font-size:9.5px;color:rgba(0,174,239,.5);font-weight:600;display:flex;align-items:center;gap:4px;}
+.flip-hint::before{content:'↩';}
+.flip-result-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:6px;}
+.flip-result-body{font-size:11.5px;color:rgba(255,255,255,.88);line-height:1.55;}
+/* unflipped blocker state */
+.flip-card:not(.flipped) .flip-front{border-color:rgba(0,174,239,.22);}
+.flip-progress{
+  text-align:center;font-size:12px;color:var(--muted);
+  padding:10px 0;transition:all .3s;
+}
+.flip-progress.done{color:var(--green);font-weight:600;}
+
+/* ── WHAT IT MEANS ── */
+#means{background:#fff;}
+.num-list{display:flex;flex-direction:column;gap:0;}
+.num-item{
+  display:flex;gap:18px;padding:16px 0;position:relative;
+}
+.num-item:not(:last-child)::before{
+  content:'';position:absolute;left:16px;top:36px;bottom:0;
+  width:2px;background:var(--line);border-radius:1px;
+}
+.num-circle{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--navy);color:var(--sky);
+  font-size:14px;font-weight:700;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;z-index:1;
+  box-shadow:0 0 0 4px #fff;
+  transition:all .2s;
+}
+.num-item:hover .num-circle{background:var(--sky);color:#fff;transform:scale(1.08);}
+.num-content{padding-top:6px;}
+.num-title{font-size:14.5px;font-weight:700;color:var(--navy);margin-bottom:4px;line-height:1.3;}
+.num-desc{font-size:12.5px;color:var(--muted);line-height:1.65;}
+
+/* ── QUIZ ── */
+#quiz{background:var(--light);}
+.quiz-header-card{
+  background:var(--navy);border-radius:14px;
+  padding:18px 22px;margin-bottom:24px;
+  display:flex;align-items:center;gap:16px;
+  box-shadow:var(--shadow);
+}
+.qhc-icon{font-size:30px;flex-shrink:0;}
+.qhc-text{color:rgba(255,255,255,.7);font-size:13px;line-height:1.6;}
+.qhc-text strong{color:#fff;}
+.q-block{margin-bottom:0;}
+.q-num{
+  font-size:9px;color:var(--sky);font-weight:600;letter-spacing:.16em;
+  margin-bottom:10px;display:flex;align-items:center;gap:6px;
+}
+.q-num::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--sky);flex-shrink:0;}
+.q-text{font-size:16px;font-weight:700;color:var(--navy);line-height:1.45;margin-bottom:16px;}
+.q-opts{display:flex;flex-direction:column;gap:9px;}
+.q-opt{
+  display:flex;align-items:center;gap:13px;
+  padding:13px 16px;border-radius:10px;
+  border:1.5px solid var(--line);background:#fff;
+  cursor:pointer;transition:all .18s;user-select:none;
+  box-shadow:0 1px 2px rgba(10,53,66,.04);
+}
+.q-opt:hover:not(.correct):not(.wrong):not(.disabled){
+  border-color:var(--sky);background:var(--sky-lt);
+  transform:translateX(3px);
+}
+.q-opt.correct{border-color:var(--green);background:var(--green-lt);pointer-events:none;}
+.q-opt.wrong{border-color:var(--red);background:var(--red-lt);pointer-events:none;}
+.q-opt.disabled{pointer-events:none;opacity:.4;}
+.q-dot{
+  width:22px;height:22px;border-radius:50%;
+  border:2px solid var(--border);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:#fff;transition:all .18s;
+}
+.q-opt.correct .q-dot{background:var(--green);border-color:var(--green);}
+.q-opt.wrong .q-dot{background:var(--red);border-color:var(--red);}
+.q-opt-text{font-size:13px;color:var(--body);line-height:1.4;flex:1;}
+.q-opt.correct .q-opt-text{color:#0A4425;font-weight:600;}
+.q-opt.wrong .q-opt-text{color:#7A1010;}
+.q-feedback{
+  border-radius:10px;padding:13px 16px;font-size:13px;line-height:1.65;
+  margin-top:12px;display:none;
+}
+.q-feedback.show{display:block;}
+.q-feedback.ok{background:var(--green-lt);border-left:4px solid var(--green);color:#0A4425;}
+.q-feedback.bad{background:var(--red-lt);border-left:4px solid var(--red);color:#7A1010;}
+.q-retry{font-size:12px;color:var(--red);font-weight:600;margin-top:7px;display:none;}
+.q-retry.show{display:block;}
+.q-next-btn{
+  margin-top:16px;background:var(--sky);color:#fff;border:none;
+  border-radius:10px;padding:11px 24px;
+  font-family:var(--font);font-size:13px;font-weight:600;
+  cursor:pointer;display:none;transition:all .18s;
+  box-shadow:0 4px 14px rgba(0,174,239,.3);
+}
+.q-next-btn:hover{background:var(--sky2);transform:translateY(-1px);}
+.q-next-btn.show{display:inline-block;}
+
+/* Quiz done */
+.quiz-done{
+  text-align:center;padding:28px;
+  background:#fff;border-radius:16px;
+  box-shadow:var(--shadow-lg);
+}
+.qd-icon{font-size:52px;margin-bottom:14px;}
+.qd-score{font-size:28px;font-weight:700;color:var(--navy);margin-bottom:6px;font-family:var(--serif);}
+.qd-sub{font-size:13px;color:var(--muted);margin-bottom:20px;}
+.qd-rows{display:flex;flex-direction:column;gap:8px;max-width:480px;margin:0 auto 22px;}
+.qd-row{display:flex;align-items:center;gap:11px;padding:10px 14px;border-radius:9px;font-size:12px;font-weight:600;}
+.qd-row.ok{background:var(--green-lt);border:1.5px solid rgba(11,122,78,.2);color:#0A4425;}
+.qd-row.bad{background:var(--red-lt);border:1.5px solid rgba(181,37,27,.2);color:#7A1010;}
+
+/* ── COMPLETE BANNER ── */
+#complete-banner{
+  display:none;
+  background:var(--navy);
+  padding:60px 20px;text-align:center;
+}
+#complete-banner.show{display:block;}
+.cb-inner{max-width:500px;margin:0 auto;}
+.cb-icon{font-size:56px;margin-bottom:16px;}
+.cb-title{color:#fff;font-size:32px;font-weight:700;margin-bottom:8px;font-family:var(--serif);}
+.cb-title span{color:var(--sky);font-style:italic;}
+.cb-sub{color:rgba(255,255,255,.6);font-size:14px;line-height:1.7;margin-bottom:24px;}
+.cb-score{
+  display:inline-block;
+  background:rgba(0,174,239,.12);
+  border:1.5px solid rgba(0,174,239,.3);
+  border-radius:12px;padding:14px 36px;
+}
+.cb-score-n{font-size:44px;font-weight:700;color:var(--sky);font-family:var(--serif);}
+.cb-score-lbl{font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.14em;}
+
+/* ── SECTION SEPARATORS ── */
+.sep{height:1px;background:var(--line);max-width:var(--max);margin:0 auto;}
+</style>
+</head>
+<body>
+
+<!-- PROGRESS BAR -->
+<div id="progress-bar"><div id="progress-fill"></div></div>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hero-deco" style="width:420px;height:420px;right:-100px;top:-100px;"></div>
+  <div class="hero-deco" style="width:250px;height:250px;right:10px;top:10px;"></div>
+  <div class="hero-stripe"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">CONFIRMATIONS TEAM · DAY 1</div>
+    <div class="hero-title">
+      Who is
+      <strong>RESINC?</strong>
+    </div>
+    <div class="hero-sub">The company you're representing — and why that matters on every single call you make.</div>
+    <div class="hero-scroll-hint">
+      <div class="scroll-arrow">↓</div>
+      Scroll to explore
+    </div>
+  </div>
+</section>
+
+<!-- ══ MISSION ══ -->
+<section id="mission">
+  <div class="inner">
+    <div class="section-eyebrow">THE MISSION</div>
+    <div class="section-title">What RESINC is actually trying to be</div>
+    <div class="section-divider"></div>
+    <div class="mission-quote">
+      <div class="mission-quote-label">RESINC'S MISSION STATEMENT</div>
+      <div class="mission-quote-text">"Our mission is to become the most <em>reputable</em> solar company in the industry."</div>
+    </div>
+    <div class="not-most">
+      <div class="nm no"><span class="nm-icon">❌</span><span class="nm-text">Not the cheapest</span></div>
+      <div class="nm no"><span class="nm-icon">❌</span><span class="nm-text">Not the loudest</span></div>
+      <div class="nm yes"><span class="nm-icon">✅</span><span class="nm-text">The most reputable</span></div>
+    </div>
+    <div class="mission-body">
+      That word — <em>reputable</em> — shapes every decision the business makes. It's why we only progress customers solar genuinely helps. It's why we invest in quality products. It's why <em>how you sell</em> matters as much as whether you sell.
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ══ FAST FACTS ══ -->
+<section id="facts">
+  <div class="inner">
+    <div class="section-eyebrow">FAST FACTS</div>
+    <div class="section-title">RESINC by the numbers</div>
+    <div class="section-divider"></div>
+    <div class="metric-row">
+      <div class="metric">
+        <div class="metric-value">#1</div>
+        <div class="metric-label">Most popular solar installer in Australia<strong>SunWiz 2025</strong></div>
+      </div>
+      <div class="metric">
+        <div class="metric-value">10K+</div>
+        <div class="metric-label">Five-star reviews — Legendary status<strong>SolarQuotes</strong></div>
+      </div>
+      <div class="metric">
+        <div class="metric-value">100+</div>
+        <div class="metric-label">Installations per week<strong>QLD · NSW · ACT · VIC</strong></div>
+      </div>
+    </div>
+    <div class="bento">
+      <div class="bc n"><div class="bc-icon">🏆</div><div class="bc-val">Australia's most awarded</div><div class="bc-lbl">Solar &amp; battery installer</div></div>
+      <div class="bc s"><div class="bc-icon">⚡</div><div class="bc-val">Solar · Batteries · VPPs</div><div class="bc-lbl">Complete energy ecosystem</div></div>
+      <div class="bc l"><div class="bc-icon">🏗️</div><div class="bc-val">Residential + Commercial</div><div class="bc-lbl">Full-service solutions</div></div>
+      <div class="bc l"><div class="bc-icon">❤️</div><div class="bc-val">Surf Clubs · Veterans · Schools</div><div class="bc-lbl">Social enterprise — built in</div></div>
+      <div class="bc n"><div class="bc-icon">🔋</div><div class="bc-val">LONGi · Sungrow · Anker</div><div class="bc-lbl">Premium product partners</div></div>
+      <div class="bc s"><div class="bc-icon">🏅</div><div class="bc-val">Triple ISO certified</div><div class="bc-lbl">9001 · 14001 · 45001</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ══ ETHICAL SELLING ══ -->
+<section id="ethical">
+  <div class="inner">
+    <div class="section-eyebrow">ETHICAL SELLING</div>
+    <div class="section-title">Doing it right protects everyone</div>
+    <div class="section-divider"></div>
+    <div class="eth-layout">
+      <div class="eth-dark">
+        <div class="eth-headline">"We only progress customers solar genuinely helps."</div>
+        <div class="eth-sub">That's not charity. That's the business model.</div>
+        <div class="eth-body">In an industry where plenty of companies will sell solar to anyone with a roof and a credit card, RESINC's competitive edge is trust. Ethical selling isn't a nice-to-have — it protects the customer, the business, and you.</div>
+      </div>
+      <div class="eth-rows">
+        <div class="eth-row"><span class="eth-icon">✅</span><div><div class="eth-title">Protects the customer</div><div class="eth-desc">Only recommended if it genuinely makes financial sense</div></div></div>
+        <div class="eth-row"><span class="eth-icon">✅</span><div><div class="eth-title">Protects the business</div><div class="eth-desc">Happy customers refer neighbours. Unhappy customers leave reviews.</div></div></div>
+        <div class="eth-row"><span class="eth-icon">✅</span><div><div class="eth-title">Protects you</div><div class="eth-desc">An unqualified appointment hurts your KPIs. Quality over quantity, every time.</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ══ SCENARIOS — FLIP CARDS BLOCKER ══ -->
+<section id="scenarios">
+  <div class="inner">
+    <div class="section-eyebrow">INDUSTRY CONTEXT</div>
+    <div class="section-title">See what happens — flip all three cards</div>
+    <div class="section-divider"></div>
+    <div class="flip-instructions">
+      <span>↩</span>
+      <span><strong>Tap each card</strong> to reveal the real-world outcome. You must flip all three to continue.</span>
+      <span class="flip-blocker-note" id="flip-counter">0 of 3 flipped</span>
+    </div>
+    <div class="flip-grid">
+      <div class="flip-card" id="fc0" onclick="flipCard(0)">
+        <div class="flip-card-inner">
+          <div class="flip-front">
+            <div class="flip-tag">SCENARIO 1</div>
+            <div class="flip-scenario">A company sells solar to a customer with heavy roof shading</div>
+            <div class="flip-hint">Tap to reveal</div>
+          </div>
+          <div class="flip-back r">
+            <div class="flip-tag">OUTCOME</div>
+            <div class="flip-result-title">❌ Bad outcome</div>
+            <div class="flip-result-body">System underperforms. Customer unhappy. Negative review. Trust destroyed — and word spreads.</div>
+          </div>
+        </div>
+      </div>
+      <div class="flip-card" id="fc1" onclick="flipCard(1)">
+        <div class="flip-card-inner">
+          <div class="flip-front">
+            <div class="flip-tag">SCENARIO 2</div>
+            <div class="flip-scenario">A company books anyone regardless of their power bill size</div>
+            <div class="flip-hint">Tap to reveal</div>
+          </div>
+          <div class="flip-back o">
+            <div class="flip-tag">OUTCOME</div>
+            <div class="flip-result-title">❌ Wasted time</div>
+            <div class="flip-result-body">Consultant arrives. Numbers don't stack. No sale. Wasted everyone's time — including yours.</div>
+          </div>
+        </div>
+      </div>
+      <div class="flip-card" id="fc2" onclick="flipCard(2)">
+        <div class="flip-card-inner">
+          <div class="flip-front">
+            <div class="flip-tag">SCENARIO 3</div>
+            <div class="flip-scenario">RESINC qualifies every customer properly before booking</div>
+            <div class="flip-hint">Tap to reveal</div>
+          </div>
+          <div class="flip-back g">
+            <div class="flip-tag">OUTCOME</div>
+            <div class="flip-result-title">✅ Better for everyone</div>
+            <div class="flip-result-body">Consultant arrives prepared. Higher sit rate. Higher close rate. Better outcome for everyone.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flip-progress" id="flip-progress">Flip all three cards to unlock the next section ↓</div>
+  </div>
+</section>
+
+<!-- ══ WHAT IT MEANS (locked until cards flipped) ══ -->
+<div id="locked-sections" style="display:none;">
+
+<div class="sep"></div>
+
+<!-- WHAT IT MEANS -->
+<section id="means">
+  <div class="inner">
+    <div class="section-eyebrow">YOUR ROLE</div>
+    <div class="section-title">What this means on every call</div>
+    <div class="section-divider"></div>
+    <div class="num-list">
+      <div class="num-item">
+        <div class="num-circle">1</div>
+        <div class="num-content">
+          <div class="num-title">You represent RESINC on every call</div>
+          <div class="num-desc">How you speak, how you qualify, how you treat the customer. That's the brand — not the logo, not the ads. You.</div>
+        </div>
+      </div>
+      <div class="num-item">
+        <div class="num-circle">2</div>
+        <div class="num-content">
+          <div class="num-title">Disqualifying someone is not a failure</div>
+          <div class="num-desc">It's doing your job properly. A disqualified customer is a customer you protected — and a consultant's time you respected.</div>
+        </div>
+      </div>
+      <div class="num-item">
+        <div class="num-circle">3</div>
+        <div class="num-content">
+          <div class="num-title">Quality appointments build your reputation internally</div>
+          <div class="num-desc">Consultants notice who sends good leads. Your long-term standing in this team is built one qualified appointment at a time.</div>
+        </div>
+      </div>
+      <div class="num-item">
+        <div class="num-circle">4</div>
+        <div class="num-content">
+          <div class="num-title">You're not selling solar</div>
+          <div class="num-desc">You're opening a door to a free consultation that could genuinely change someone's quarterly electricity bills. That's worth doing right.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- QUIZ -->
+<section id="quiz">
+  <div class="inner">
+    <div class="section-eyebrow">KNOWLEDGE CHECK</div>
+    <div class="section-title">Three questions — all must be correct</div>
+    <div class="section-divider"></div>
+    <div class="quiz-header-card">
+      <div class="qhc-icon">🎯</div>
+      <div class="qhc-text"><strong>Three questions.</strong> You need to get each one right to complete this module. Wrong answers give you feedback — keep trying until you nail it.</div>
+    </div>
+    <div id="quiz-body"></div>
+  </div>
+</section>
+
+</div><!-- /locked-sections -->
+
+<!-- ══ COMPLETE BANNER ══ -->
+<div id="complete-banner">
+  <div class="cb-inner">
+    <div class="cb-icon">🏆</div>
+    <div class="cb-title">Module complete.<br><span>Well done.</span></div>
+    <div class="cb-sub">You know who RESINC is, why ethical selling is the business model — and what your role in that reputation looks like on every call.</div>
+    <div class="cb-score">
+      <div class="cb-score-n" id="cb-score">3/3</div>
+      <div class="cb-score-lbl">KNOWLEDGE CHECK SCORE</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── PROGRESS BAR ──────────────────────────────────────────
+function updateProgress() {
+  const scrollTop = window.scrollY;
+  const docHeight = document.body.scrollHeight - window.innerHeight;
+  const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+  document.getElementById('progress-fill').style.width = Math.min(pct, 100) + '%';
+}
+window.addEventListener('scroll', updateProgress);
+
+// ── FLIP CARDS BLOCKER ────────────────────────────────────
+const flipped = [false, false, false];
+
+function flipCard(idx) {
+  const card = document.getElementById('fc' + idx);
+  card.classList.add('flipped');
+  flipped[idx] = true;
+  const count = flipped.filter(Boolean).length;
+  document.getElementById('flip-counter').textContent = count + ' of 3 flipped';
+  if (count === 3) {
+    document.getElementById('flip-progress').textContent = '✅ All cards flipped — content unlocked below!';
+    document.getElementById('flip-progress').classList.add('done');
+    setTimeout(() => {
+      const locked = document.getElementById('locked-sections');
+      locked.style.display = 'block';
+      locked.style.animation = 'fadeIn .5s ease';
+      renderQuiz();
+      locked.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 600);
+  }
+}
+
+// ── QUIZ ──────────────────────────────────────────────────
+const QUIZ = [
+  {
+    q: "RESINC's mission is to be the most…",
+    opts: ["Profitable solar company in Australia", "Reputable solar company in the industry", "Popular solar company by volume", "Affordable solar company in the market"],
+    c: 1,
+    fb: "Not cheapest, not largest — most reputable. That word drives every single business decision RESINC makes."
+  },
+  {
+    q: "A customer is a renter but is genuinely interested. You disqualify them. Is that the right call?",
+    opts: ["No — if they're interested you should book it anyway", "Yes — renters can't authorise an installation", "Maybe — depends on how interested they seem", "No — it's the consultant's job to qualify on the day"],
+    c: 1,
+    fb: "Disqualifying isn't a failure. It protects the customer, the consultant's time, and RESINC's reputation."
+  },
+  {
+    q: "Why does ethical selling matter to your results specifically?",
+    opts: ["It doesn't — results are based on volume of calls only", "It helps RESINC's brand but doesn't affect your KPIs", "Unqualified appointments hurt your KPIs — quality over quantity every time", "Only matters if the consultant complains"],
+    c: 2,
+    fb: "A low sit rate and low close rate trace back to booking quality. Qualifying properly protects your own numbers."
+  }
+];
+
+let qIdx = 0;
+const qCorrect = [false, false, false];
+const qAnswered = [false, false, false];
+const qSelected = [-1, -1, -1];
+
+function renderQuiz() {
+  const body = document.getElementById('quiz-body');
+  if (!body) return;
+  if (qIdx >= QUIZ.length) { body.innerHTML = renderDone(); return; }
+  const q = QUIZ[qIdx];
+  const answered = qAnswered[qIdx];
+  body.innerHTML = `
+    <div class="q-block">
+      <div class="q-num">QUESTION ${qIdx + 1} OF ${QUIZ.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-opts">
+        ${q.opts.map((opt, i) => {
+          let cls = '';
+          if (answered) {
+            if (i === q.c) cls = 'correct';
+            else if (i === qSelected[qIdx] && !qCorrect[qIdx]) cls = 'wrong';
+            else cls = 'disabled';
+          }
+          const dot = answered && i === q.c ? '✓' : answered && i === qSelected[qIdx] && i !== q.c ? '✗' : '';
+          return `<div class="q-opt ${cls}" onclick="pick(${i})">
+            <div class="q-dot">${dot}</div>
+            <div class="q-opt-text">${opt}</div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="q-feedback ${answered ? 'show' : ''} ${answered ? (qCorrect[qIdx] ? 'ok' : 'bad') : ''}">
+        ${answered ? (qCorrect[qIdx] ? '✅  ' : '❌  ') + q.fb : ''}
+      </div>
+      ${answered && !qCorrect[qIdx] ? '<div class="q-retry show">Select the correct answer to continue.</div>' : ''}
+    </div>
+  `;
+}
+
+function pick(i) {
+  if (qAnswered[qIdx] && qCorrect[qIdx]) return;
+  const q = QUIZ[qIdx];
+  qSelected[qIdx] = i;
+  const correct = i === q.c;
+  if (correct) {
+    qAnswered[qIdx] = true;
+    qCorrect[qIdx] = true;
+    renderQuiz();
+    setTimeout(() => {
+      if (qIdx < QUIZ.length - 1) {
+        qIdx++;
+        renderQuiz();
+        document.getElementById('quiz-body').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } else {
+        document.getElementById('quiz-body').innerHTML = renderDone();
+      }
+    }, 1400);
+  } else {
+    qAnswered[qIdx] = true;
+    renderQuiz();
+    setTimeout(() => { qAnswered[qIdx] = false; renderQuiz(); }, 2000);
+  }
+}
+
+function renderDone() {
+  const score = qCorrect.filter(Boolean).length;
+  const rows = QUIZ.map((q, i) => `
+    <div class="qd-row ${qCorrect[i] ? 'ok' : 'bad'}">
+      <span style="font-size:17px">${qCorrect[i] ? '✅' : '❌'}</span>
+      <span>${q.q.substring(0, 64)}…</span>
+    </div>
+  `).join('');
+  setTimeout(() => {
+    const banner = document.getElementById('complete-banner');
+    document.getElementById('cb-score').textContent = score + '/' + QUIZ.length;
+    banner.classList.add('show');
+    banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 800);
+  return `
+    <div class="quiz-done">
+      <div class="qd-icon">🎯</div>
+      <div class="qd-score">${score}/${QUIZ.length} correct</div>
+      <div class="qd-sub">All questions answered correctly.</div>
+      <div class="qd-rows">${rows}</div>
+    </div>
+  `;
+}
+
+// Fade-in animation for locked sections
+const style = document.createElement('style');
+style.textContent = '@keyframes fadeIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}';
+document.head.appendChild(style);
+</script>
+</body>
+</html>
