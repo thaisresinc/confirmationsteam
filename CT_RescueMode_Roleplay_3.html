@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Rescue Mode | Confirmations Team</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0A3542;--navy2:#071F28;--navy3:#0D4558;
+  --sky:#00AEEF;--sky2:#0090C4;
+  --green:#0B7A4E;--green-lt:#E3F5EC;
+  --red:#B5251B;--red-lt:#FDECEB;
+  --orange:#D4620A;--orange-lt:#FEF3EB;
+  --gold:#D4940A;
+  --body:#1A2A32;--muted:#5A6E78;--light:#F4F8FB;
+  --border:#C8DDE8;--line:#E2EEF4;
+  --font:'DM Sans',system-ui,sans-serif;
+  --serif:'DM Serif Display',Georgia,serif;
+  --max:780px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--navy2);color:#fff;min-height:100vh;}
+
+/* ═══ INTRO ═══ */
+#intro-screen{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:40px 20px;position:relative;overflow:hidden;
+}
+.orb{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none;}
+.intro-inner{max-width:580px;text-align:center;position:relative;z-index:1;}
+.rescue-badge{
+  display:inline-flex;align-items:center;gap:10px;
+  background:rgba(181,37,27,.15);border:1.5px solid rgba(181,37,27,.3);
+  border-radius:20px;padding:8px 20px;margin-bottom:28px;
+  font-size:10px;font-weight:700;letter-spacing:.22em;color:#F87171;
+  animation:badgePulse 2s infinite;
+}
+@keyframes badgePulse{0%,100%{box-shadow:0 0 0 0 rgba(181,37,27,.3);}50%{box-shadow:0 0 0 8px rgba(181,37,27,0);}}
+.intro-title{
+  font-family:var(--serif);font-size:clamp(52px,9vw,80px);
+  color:#fff;line-height:.95;margin-bottom:16px;
+}
+.intro-title em{color:#F87171;font-style:italic;display:block;}
+.intro-sub{color:rgba(255,255,255,.5);font-size:15px;line-height:1.7;max-width:440px;margin:0 auto 32px;}
+.intro-scenario{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  border-radius:16px;padding:20px 24px;margin-bottom:32px;text-align:left;
+}
+.intro-scenario-label{font-size:9px;font-weight:700;letter-spacing:.2em;color:#F87171;margin-bottom:10px;}
+.intro-scenario-text{font-size:13.5px;color:rgba(255,255,255,.7);line-height:1.7;}
+.intro-scenario-text strong{color:#fff;}
+.intro-rules{display:flex;flex-direction:column;gap:10px;margin-bottom:32px;text-align:left;}
+.intro-rule{
+  display:flex;align-items:flex-start;gap:12px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+  border-radius:12px;padding:12px 16px;
+}
+.intro-rule-ico{font-size:20px;flex-shrink:0;}
+.intro-rule-text{font-size:13px;color:rgba(255,255,255,.65);line-height:1.5;}
+.intro-rule-text strong{color:#fff;}
+.start-btn{
+  background:var(--red);color:#fff;border:none;
+  border-radius:14px;padding:18px 52px;
+  font-family:var(--font);font-size:16px;font-weight:700;
+  cursor:pointer;transition:all .2s;
+  box-shadow:0 8px 32px rgba(181,37,27,.4);
+}
+.start-btn:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(181,37,27,.5);}
+
+/* ═══ GAME SCREEN ═══ */
+#game-screen{display:none;padding-bottom:80px;}
+
+/* SIGNAL BAR */
+.signal-bar{
+  position:sticky;top:0;z-index:50;
+  background:rgba(7,31,40,.96);backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  padding:10px 20px;
+}
+.signal-inner{max-width:var(--max);margin:0 auto;display:flex;align-items:center;gap:14px;}
+.signal-dot{
+  width:10px;height:10px;border-radius:50%;flex-shrink:0;
+  animation:signalBlink 1.2s infinite;
+}
+.signal-dot.live{background:#4ADE80;}
+.signal-dot.warning{background:var(--orange);animation-duration:.6s;}
+.signal-dot.critical{background:#F87171;animation-duration:.3s;}
+@keyframes signalBlink{0%,100%{opacity:1;}50%{opacity:.3;}}
+.signal-label{font-size:10px;font-weight:700;letter-spacing:.14em;flex:1;}
+.signal-label.live{color:#4ADE80;}
+.signal-label.warning{color:var(--orange);}
+.signal-label.critical{color:#F87171;}
+.signal-trust{display:flex;align-items:center;gap:8px;}
+.signal-trust-label{font-size:9px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.35);}
+.trust-bar-bg{width:100px;height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;}
+.trust-bar-fill{height:100%;border-radius:3px;transition:width .6s ease,background .6s ease;}
+.trust-val{font-size:10px;font-weight:700;min-width:28px;}
+.rescue-btn{
+  background:rgba(181,37,27,.2);border:1.5px solid rgba(181,37,27,.4);
+  color:#F87171;border-radius:8px;padding:6px 14px;
+  font-family:var(--font);font-size:11px;font-weight:700;
+  cursor:pointer;transition:all .2s;white-space:nowrap;
+  letter-spacing:.06em;
+}
+.rescue-btn:hover{background:rgba(181,37,27,.35);}
+.rescue-btn.hidden{opacity:0;pointer-events:none;}
+
+/* TRANSCRIPT */
+.transcript-wrap{max-width:var(--max);margin:0 auto;padding:28px 20px;}
+.transcript-header{margin-bottom:24px;}
+.call-info{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;padding:16px 20px;display:flex;gap:16px;align-items:center;
+}
+.call-info-avatar{
+  width:44px;height:44px;border-radius:50%;
+  background:linear-gradient(135deg,#1E3A4A,#0D2535);
+  border:2px solid rgba(255,255,255,.1);
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  flex-shrink:0;
+}
+.call-info-name{font-size:13px;font-weight:700;color:#fff;}
+.call-info-detail{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px;}
+.call-timer{
+  margin-left:auto;text-align:right;
+  font-family:monospace;font-size:20px;font-weight:700;color:#4ADE80;
+  letter-spacing:.05em;
+}
+
+/* TRANSCRIPT LINES */
+.transcript-lines{display:flex;flex-direction:column;gap:0;}
+
+.tline{
+  display:flex;gap:12px;padding:10px 0;
+  border-bottom:1px solid rgba(255,255,255,.04);
+  opacity:0;transform:translateY(8px);
+  transition:opacity .35s ease,transform .35s ease;
+}
+.tline.visible{opacity:1;transform:none;}
+.tline.confirmer{flex-direction:row;}
+.tline.customer{flex-direction:row-reverse;}
+.tline.narration{justify-content:center;}
+
+.tline-avatar{
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;flex-shrink:0;margin-top:2px;
+}
+.tline-avatar.conf{background:rgba(0,174,239,.2);border:1px solid rgba(0,174,239,.3);}
+.tline-avatar.cust{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);}
+
+.tline-content{max-width:72%;}
+.tline-speaker{font-size:9px;font-weight:700;letter-spacing:.1em;margin-bottom:4px;color:rgba(255,255,255,.35);}
+.tline.customer .tline-speaker{text-align:right;}
+
+.tline-bubble{
+  border-radius:14px;padding:12px 16px;
+  font-size:13.5px;line-height:1.6;
+}
+.tline.confirmer .tline-bubble{
+  background:rgba(0,174,239,.12);border:1px solid rgba(0,174,239,.15);
+  color:rgba(255,255,255,.85);border-radius:4px 14px 14px 14px;
+}
+.tline.customer .tline-bubble{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);
+  color:rgba(255,255,255,.8);border-radius:14px 4px 14px 14px;
+}
+.tline.narration .tline-bubble{
+  background:transparent;border:none;
+  color:rgba(255,255,255,.3);font-size:11.5px;font-style:italic;
+  text-align:center;padding:6px 0;
+}
+
+/* ERROR HIGHLIGHT */
+.tline-bubble.error{
+  background:rgba(181,37,27,.15)!important;
+  border-color:rgba(181,37,27,.4)!important;
+  color:#FCA5A5!important;
+  position:relative;
+}
+.tline-bubble.error::after{
+  content:'⚠️ MISSED ERROR';
+  position:absolute;top:-22px;right:0;
+  font-size:9px;font-weight:700;color:#F87171;letter-spacing:.1em;
+  background:rgba(181,37,27,.2);border-radius:4px;padding:2px 7px;
+}
+
+/* RESCUE MOMENT */
+.rescue-moment-overlay{
+  position:fixed;inset:0;z-index:100;
+  background:rgba(7,31,40,.92);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;animation:overlayIn .3s ease;
+}
+@keyframes overlayIn{from{opacity:0;}to{opacity:1;}}
+.rescue-panel{
+  background:var(--navy);border-radius:20px;
+  width:100%;max-width:640px;overflow:hidden;
+  box-shadow:0 24px 64px rgba(0,0,0,.5);
+  animation:panelIn .35s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes panelIn{from{opacity:0;transform:scale(.95) translateY(20px);}to{opacity:1;transform:none;}}
+.rp-header{
+  background:rgba(181,37,27,.15);border-bottom:1px solid rgba(181,37,27,.2);
+  padding:16px 22px;display:flex;align-items:center;gap:12px;
+}
+.rp-header-ico{font-size:24px;}
+.rp-header-title{font-size:14px;font-weight:700;color:#F87171;}
+.rp-header-sub{font-size:11.5px;color:rgba(255,255,255,.4);margin-top:2px;}
+.rp-body{padding:22px;}
+
+/* ERROR REVEAL */
+.error-reveal{
+  background:rgba(181,37,27,.1);border:1.5px solid rgba(181,37,27,.25);
+  border-radius:12px;padding:14px 16px;margin-bottom:18px;
+}
+.error-reveal-label{font-size:9px;font-weight:700;letter-spacing:.14em;color:#F87171;margin-bottom:6px;}
+.error-reveal-text{font-size:13.5px;color:#FCA5A5;line-height:1.6;font-style:italic;}
+
+/* PATH CHOICE */
+.path-label{font-size:9px;font-weight:700;letter-spacing:.16em;color:rgba(255,255,255,.4);margin-bottom:12px;}
+.paths{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+.path-btn{
+  background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.1);
+  border-radius:12px;padding:14px;cursor:pointer;
+  text-align:center;transition:all .2s;
+}
+.path-btn:hover{background:rgba(0,174,239,.08);border-color:rgba(0,174,239,.3);}
+.path-btn.selected{background:rgba(0,174,239,.12);border-color:var(--sky);}
+.path-btn.wrong-path{background:rgba(181,37,27,.1);border-color:rgba(181,37,27,.3);}
+.path-ico{font-size:24px;margin-bottom:6px;}
+.path-name{font-size:12.5px;font-weight:700;color:#fff;margin-bottom:3px;}
+.path-desc{font-size:11px;color:rgba(255,255,255,.4);line-height:1.4;}
+
+/* BLOCK BUILDER */
+.block-label{font-size:9px;font-weight:700;letter-spacing:.16em;color:rgba(255,255,255,.4);margin-bottom:12px;}
+.blocks-pool{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;min-height:48px;padding:10px;background:rgba(255,255,255,.02);border-radius:10px;border:1px dashed rgba(255,255,255,.1);}
+.block{
+  background:rgba(0,174,239,.1);border:1.5px solid rgba(0,174,239,.2);
+  border-radius:8px;padding:8px 14px;font-size:12.5px;color:rgba(255,255,255,.8);
+  cursor:grab;user-select:none;transition:all .18s;
+}
+.block:hover{background:rgba(0,174,239,.18);border-color:var(--sky);}
+.block.dragging{opacity:.4;cursor:grabbing;}
+.block.placed{opacity:.25;pointer-events:none;}
+.drop-slots{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+.drop-slot{
+  border:1.5px dashed rgba(255,255,255,.15);border-radius:10px;
+  padding:10px 14px;min-height:46px;
+  display:flex;align-items:center;gap:10px;
+  transition:all .2s;
+}
+.drop-slot.over{border-color:var(--sky);background:rgba(0,174,239,.06);}
+.drop-slot.filled{border-style:solid;border-color:rgba(0,174,239,.3);background:rgba(0,174,239,.08);}
+.drop-slot.correct-slot{border-color:var(--green);background:rgba(11,122,78,.1);}
+.drop-slot.wrong-slot{border-color:var(--red);background:rgba(181,37,27,.1);}
+.slot-num{
+  width:22px;height:22px;border-radius:50%;
+  background:rgba(255,255,255,.08);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;color:rgba(255,255,255,.4);
+  flex-shrink:0;
+}
+.slot-content{font-size:12.5px;color:rgba(255,255,255,.7);flex:1;}
+.slot-empty{font-size:11.5px;color:rgba(255,255,255,.2);font-style:italic;}
+
+.check-blocks-btn{
+  background:var(--sky);color:#fff;border:none;
+  border-radius:10px;padding:11px 22px;
+  font-family:var(--font);font-size:13px;font-weight:700;
+  cursor:pointer;transition:all .18s;
+  box-shadow:0 4px 14px rgba(0,174,239,.3);
+  width:100%;
+}
+.check-blocks-btn:hover{background:var(--sky2);}
+
+.rp-feedback{
+  border-radius:10px;padding:12px 16px;font-size:13px;line-height:1.6;
+  margin-top:12px;display:none;
+}
+.rp-feedback.show{display:block;}
+.rp-feedback.ok{background:rgba(11,122,78,.15);border-left:3px solid var(--green);color:#A3F0C8;}
+.rp-feedback.bad{background:rgba(181,37,27,.12);border-left:3px solid var(--red);color:#FCA5A5;}
+.rp-continue-btn{
+  background:var(--green);color:#fff;border:none;
+  border-radius:10px;padding:12px 24px;width:100%;
+  font-family:var(--font);font-size:14px;font-weight:700;
+  cursor:pointer;transition:all .2s;margin-top:12px;
+  display:none;box-shadow:0 4px 14px rgba(11,122,78,.3);
+}
+.rp-continue-btn.show{display:block;}
+.rp-continue-btn:hover{background:#0A6940;}
+
+/* MISSED RESCUE POPUP */
+.missed-popup{
+  position:fixed;top:80px;left:50%;transform:translateX(-50%);
+  z-index:200;background:rgba(181,37,27,.95);
+  border-radius:12px;padding:12px 20px;
+  font-size:13px;font-weight:700;color:#fff;
+  box-shadow:0 8px 24px rgba(0,0,0,.4);
+  animation:popIn .3s cubic-bezier(.34,1.56,.64,1);
+  white-space:nowrap;
+}
+@keyframes popIn{from{opacity:0;transform:translateX(-50%) scale(.8);}to{opacity:1;transform:translateX(-50%) scale(1);}}
+
+/* END SCREEN */
+#end-screen{
+  display:none;min-height:100vh;
+  align-items:center;justify-content:center;
+  padding:40px 20px;flex-direction:column;
+}
+#end-screen.show{display:flex;}
+.end-inner{max-width:640px;width:100%;text-align:center;}
+.end-icon{font-size:72px;margin-bottom:16px;animation:bounceIn .6s cubic-bezier(.34,1.56,.64,1);}
+@keyframes bounceIn{from{opacity:0;transform:scale(.4);}to{opacity:1;transform:scale(1);}}
+.end-title{font-family:var(--serif);font-size:52px;color:#fff;line-height:1;margin-bottom:8px;}
+.end-title em{color:var(--sky);font-style:italic;}
+.end-sub{color:rgba(255,255,255,.5);font-size:14px;margin-bottom:28px;line-height:1.6;}
+.end-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+.end-stat{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px 12px;}
+.end-stat-n{font-family:var(--serif);font-size:36px;font-weight:700;color:var(--sky);margin-bottom:4px;}
+.end-stat-l{font-size:9.5px;color:rgba(255,255,255,.35);letter-spacing:.1em;}
+.end-feedback{background:rgba(0,174,239,.06);border:1px solid rgba(0,174,239,.12);border-radius:14px;padding:18px 22px;margin-bottom:24px;font-size:13.5px;color:rgba(255,255,255,.65);line-height:1.7;text-align:left;}
+.end-feedback strong{color:#fff;}
+
+/* ═══ SLOW BURN COUNTDOWN ═══ */
+.slowburn-overlay{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  z-index:70;pointer-events:none;
+  background:rgba(181,37,27,0);
+  transition:background .5s ease;
+}
+.slowburn-overlay.stage1{background:rgba(181,37,27,.04);}
+.slowburn-overlay.stage2{background:rgba(181,37,27,.1);}
+.slowburn-overlay.stage3{background:rgba(181,37,27,.18);}
+.slowburn-overlay.stage4{background:rgba(181,37,27,.28);pointer-events:auto;}
+
+.countdown-badge{
+  position:fixed;top:50%;right:20px;transform:translateY(-50%);
+  z-index:75;pointer-events:none;
+  display:none;flex-direction:column;align-items:center;gap:4px;
+}
+.countdown-badge.show{display:flex;}
+.countdown-num{
+  font-family:var(--serif);font-size:72px;font-weight:700;
+  color:#F87171;line-height:1;
+  text-shadow:0 0 40px rgba(248,113,113,.8);
+  animation:countPulse .9s ease infinite;
+}
+@keyframes countPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
+.countdown-label{
+  font-size:9px;font-weight:700;letter-spacing:.2em;
+  color:rgba(248,113,113,.6);white-space:nowrap;
+}
+.countdown-rescue-btn{
+  margin-top:12px;
+  background:#F87171;color:#fff;border:none;
+  border-radius:12px;padding:14px 28px;
+  font-family:var(--font);font-size:14px;font-weight:800;
+  cursor:pointer;letter-spacing:.04em;
+  box-shadow:0 0 0 0 rgba(248,113,113,.6);
+  animation:rescuePulse 1s ease infinite;
+  pointer-events:auto;
+}
+@keyframes rescuePulse{
+  0%{box-shadow:0 0 0 0 rgba(248,113,113,.6);transform:scale(1);}
+  50%{box-shadow:0 0 0 12px rgba(248,113,113,0);transform:scale(1.04);}
+  100%{box-shadow:0 0 0 0 rgba(248,113,113,0);transform:scale(1);}
+}
+.countdown-rescue-btn:hover{background:#EF4444;transform:scale(1.06)!important;}
+
+/* ERROR LINE HEAT */
+.tline-bubble.heat-0{}
+.tline-bubble.heat-1{
+  background:rgba(212,148,10,.12)!important;
+  border-color:rgba(212,148,10,.3)!important;
+  transition:all .5s ease;
+}
+.tline-bubble.heat-2{
+  background:rgba(212,98,10,.15)!important;
+  border-color:rgba(212,98,10,.4)!important;
+  color:#FDBA74!important;
+  transition:all .5s ease;
+}
+.tline-bubble.heat-3{
+  background:rgba(181,37,27,.2)!important;
+  border-color:rgba(248,113,113,.5)!important;
+  color:#FCA5A5!important;
+  box-shadow:0 0 20px rgba(181,37,27,.3)!important;
+  transition:all .5s ease;
+}
+.tline-bubble.heat-4{
+  background:rgba(181,37,27,.3)!important;
+  border-color:#F87171!important;
+  color:#fff!important;
+  box-shadow:0 0 32px rgba(248,113,113,.5)!important;
+  animation:heatPulse .6s ease infinite;
+  transition:all .3s ease;
+}
+@keyframes heatPulse{0%,100%{box-shadow:0 0 20px rgba(248,113,113,.4);}50%{box-shadow:0 0 40px rgba(248,113,113,.7);}}
+
+/* ═══ RESCUE BANNER (full-width pause) ═══ */
+#rescue-banner{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;z-index:80;
+  background:linear-gradient(135deg,rgba(181,37,27,.97),rgba(120,20,10,.97));
+  border-top:2px solid rgba(248,113,113,.4);
+  padding:16px 20px;
+  animation:bannerSlide .35s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes bannerSlide{from{transform:translateY(100%);}to{transform:translateY(0);}}
+#rescue-banner.show{display:block;}
+.banner-inner{max-width:var(--max);margin:0 auto;display:flex;align-items:center;gap:16px;}
+.banner-pulse{
+  width:14px;height:14px;border-radius:50%;background:#F87171;flex-shrink:0;
+  animation:hardBlink .4s infinite;
+}
+@keyframes hardBlink{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.3;transform:scale(.7);}}
+.banner-text{flex:1;}
+.banner-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:2px;}
+.banner-sub{font-size:11.5px;color:rgba(255,255,255,.6);}
+.banner-rescue-btn{
+  background:#fff;color:var(--red);border:none;
+  border-radius:10px;padding:12px 24px;
+  font-family:var(--font);font-size:14px;font-weight:800;
+  cursor:pointer;transition:all .2s;white-space:nowrap;
+  box-shadow:0 4px 14px rgba(0,0,0,.3);
+  animation:btnPop .5s cubic-bezier(.34,1.56,.64,1) .2s both;
+  letter-spacing:.02em;
+}
+@keyframes btnPop{from{transform:scale(.8);opacity:0;}to{transform:scale(1);opacity:1;}}
+.banner-rescue-btn:hover{transform:scale(1.04);box-shadow:0 6px 20px rgba(0,0,0,.4);}
+
+/* ═══ DEBRIEF SCREEN ═══ */
+#debrief-screen{
+  display:none;min-height:100vh;
+  background:var(--navy2);padding:0 0 60px;
+}
+.debrief-header{
+  background:rgba(181,37,27,.1);border-bottom:1px solid rgba(181,37,27,.2);
+  padding:24px 20px;text-align:center;
+}
+.debrief-inner{max-width:var(--max);margin:0 auto;}
+.debrief-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(181,37,27,.15);border:1.5px solid rgba(181,37,27,.3);
+  border-radius:20px;padding:6px 16px;
+  font-size:10px;font-weight:700;letter-spacing:.18em;color:#F87171;
+  margin-bottom:14px;
+}
+.debrief-title{font-family:var(--serif);font-size:36px;color:#fff;margin-bottom:8px;}
+.debrief-title em{color:#F87171;font-style:italic;}
+.debrief-sub{font-size:13.5px;color:rgba(255,255,255,.5);line-height:1.6;max-width:480px;margin:0 auto;}
+.debrief-progress{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:16px;
+}
+.debrief-pip{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.15);transition:all .3s;}
+.debrief-pip.done{background:#4ADE80;}
+.debrief-pip.active{background:#F87171;animation:hardBlink .6s infinite;}
+.debrief-body{max-width:var(--max);margin:0 auto;padding:28px 20px;}
+.debrief-context{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;padding:16px 20px;margin-bottom:20px;
+}
+.debrief-context-label{font-size:9px;font-weight:700;letter-spacing:.14em;color:rgba(255,255,255,.35);margin-bottom:8px;}
+.debrief-context-lines{display:flex;flex-direction:column;gap:6px;}
+.debrief-ctx-line{font-size:13px;color:rgba(255,255,255,.65);line-height:1.5;padding:8px 12px;border-radius:8px;}
+.debrief-ctx-line.conf{background:rgba(0,174,239,.06);}
+.debrief-ctx-line.cust{background:rgba(255,255,255,.03);}
+.debrief-ctx-line.error-line{background:rgba(181,37,27,.1);color:#FCA5A5;border:1px solid rgba(181,37,27,.2);}
+
+/* REPLAY TRANSCRIPT */
+.replay-wrap{background:var(--navy);border-radius:16px;margin-top:28px;overflow:hidden;text-align:left;}
+.replay-header{padding:14px 20px;background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.06);}
+.replay-title{font-size:11px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.14em;}
+.replay-lines{padding:16px 20px;display:flex;flex-direction:column;gap:10px;max-height:400px;overflow-y:auto;}
+.replay-line{font-size:12.5px;line-height:1.6;padding:10px 14px;border-radius:10px;}
+.replay-line.conf{background:rgba(0,174,239,.08);color:rgba(255,255,255,.75);}
+.replay-line.conf strong{color:var(--sky);}
+.replay-line.cust{background:rgba(255,255,255,.04);color:rgba(255,255,255,.6);}
+.replay-line.cust strong{color:rgba(255,255,255,.8);}
+.replay-line.error{background:rgba(181,37,27,.1);color:#FCA5A5;}
+.replay-line.error strong{color:#F87171;}
+.replay-line.fixed{background:rgba(11,122,78,.1);color:#A3F0C8;}
+.replay-line.fixed strong{color:#4ADE80;}
+.replay-line.narr{background:transparent;color:rgba(255,255,255,.25);font-style:italic;text-align:center;font-size:11.5px;}
+
+.replay-btn{background:rgba(255,255,255,.06);color:rgba(255,255,255,.6);border:1.5px solid rgba(255,255,255,.1);border-radius:10px;padding:11px 22px;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;margin-top:10px;}
+.replay-btn:hover{background:rgba(255,255,255,.1);color:#fff;}
+.restart-btn{background:var(--red);color:#fff;border:none;border-radius:12px;padding:14px 36px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 6px 20px rgba(181,37,27,.35);}
+.restart-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(181,37,27,.45);}
+</style>
+</head>
+<body>
+
+<!-- ═══ INTRO ═══ -->
+<div id="intro-screen">
+  <div class="orb" style="width:500px;height:500px;background:radial-gradient(rgba(181,37,27,.15),transparent);top:-150px;right:-150px;"></div>
+  <div class="orb" style="width:400px;height:400px;background:radial-gradient(rgba(0,174,239,.08),transparent);bottom:-100px;left:-100px;"></div>
+
+  <div class="intro-inner">
+    <div class="rescue-badge">🆘 RESCUE MODE</div>
+    <div class="intro-title">
+      Something's
+      <em>going wrong.</em>
+    </div>
+    <div class="intro-sub">A real call is playing out in front of you. Your colleague is making mistakes in real time. Spot the errors, stop the call, and fix it before the customer is gone.</div>
+
+    <div class="intro-scenario">
+      <div class="intro-scenario-label">📞 THE SITUATION</div>
+      <div class="intro-scenario-text">
+        <strong>Alex</strong> is a new Confirmations Specialist on their second week.<br>
+        They're calling <strong>James & Carol Webb</strong> to confirm tomorrow's 11AM Zoom appointment.<br>
+        The call is going off the rails. <strong>3 critical errors are hidden in the transcript.</strong><br>
+        Your job: catch them before the damage is done.
+      </div>
+    </div>
+
+    <div class="intro-rules">
+      <div class="intro-rule">
+        <div class="intro-rule-ico">👁️</div>
+        <div class="intro-rule-text"><strong>Watch the transcript unfold</strong> line by line. When something feels wrong — hit Rescue.</div>
+      </div>
+      <div class="intro-rule">
+        <div class="intro-rule-ico">🔀</div>
+        <div class="intro-rule-text"><strong>Choose the right path</strong> — acknowledge, reframe, or explain. Direction matters before words.</div>
+      </div>
+      <div class="intro-rule">
+        <div class="intro-rule-ico">🧩</div>
+        <div class="intro-rule-text"><strong>Build the correct response</strong> by dragging blocks into the right order. Order matters.</div>
+      </div>
+      <div class="intro-rule">
+        <div class="intro-rule-ico">⏳</div>
+        <div class="intro-rule-text"><strong>Miss an error</strong> and the call continues in the wrong direction — trust drops and it gets harder.</div>
+      </div>
+    </div>
+
+    <button class="start-btn" onclick="startGame()">Start the call 🆘</button>
+  </div>
+</div>
+
+<!-- SLOW BURN OVERLAY -->
+<div class="slowburn-overlay" id="slowburn-overlay"></div>
+<div class="countdown-badge" id="countdown-badge">
+  <div class="countdown-num" id="countdown-num">5</div>
+  <div class="countdown-label">SECONDS BEFORE TRUST DROPS</div>
+  <button class="countdown-rescue-btn" onclick="triggerRescue()">🆘 RESCUE NOW</button>
+</div>
+
+<!-- ═══ GAME SCREEN ═══ -->
+<div id="game-screen">
+  <div class="signal-bar">
+    <div class="signal-inner">
+      <div class="signal-dot live" id="signal-dot"></div>
+      <div class="signal-label live" id="signal-label">CALL IN PROGRESS</div>
+      <div class="signal-trust">
+        <div class="signal-trust-label">CUSTOMER TRUST</div>
+        <div class="trust-bar-bg"><div class="trust-bar-fill" id="trust-bar" style="width:100%;background:#4ADE80;"></div></div>
+        <div class="trust-val" id="trust-val" style="color:#4ADE80;">100</div>
+      </div>
+      <button class="rescue-btn hidden" id="rescue-btn" onclick="triggerRescue()">🆘 RESCUE</button>
+    </div>
+  </div>
+
+  <div class="transcript-wrap">
+    <div class="call-info">
+      <div class="call-info-avatar">👤</div>
+      <div>
+        <div class="call-info-name">James & Carol Webb</div>
+        <div class="call-info-detail">Tomorrow — 11:00 AM · Zoom · Specialist: Sarah Chen</div>
+      </div>
+      <div class="call-timer" id="call-timer">0:00</div>
+    </div>
+
+    <div style="height:20px;"></div>
+    <div class="transcript-lines" id="transcript-lines"></div>
+    <div id="transcript-end"></div>
+  </div>
+</div>
+
+<!-- RESCUE OVERLAY -->
+<div class="rescue-moment-overlay" id="rescue-overlay" style="display:none;">
+  <div class="rescue-panel">
+    <div class="rp-header">
+      <div class="rp-header-ico">🆘</div>
+      <div>
+        <div class="rp-header-title">RESCUE ACTIVATED</div>
+        <div class="rp-header-sub">Fix this before the call continues</div>
+      </div>
+    </div>
+    <div class="rp-body" id="rp-body"></div>
+  </div>
+</div>
+
+<!-- ═══ RESCUE BANNER ═══ -->
+<div id="rescue-banner">
+  <div class="banner-inner">
+    <div class="banner-pulse"></div>
+    <div class="banner-text">
+      <div class="banner-title">⚠️ Something just went wrong on this call</div>
+      <div class="banner-sub">The call is paused — intervene before it continues</div>
+    </div>
+    <button class="banner-rescue-btn" onclick="triggerRescue()">🆘 RESCUE NOW</button>
+  </div>
+</div>
+
+<!-- ═══ DEBRIEF SCREEN ═══ -->
+<div id="debrief-screen">
+  <div class="debrief-header">
+    <div class="debrief-inner">
+      <div class="debrief-badge">📋 DEBRIEF MODE</div>
+      <div class="debrief-title">You missed <em>some errors.</em></div>
+      <div class="debrief-sub">The call is over — but you still need to fix what went wrong. Work through each missed error before seeing your final score.</div>
+      <div class="debrief-progress" id="debrief-progress"></div>
+    </div>
+  </div>
+  <div class="debrief-body" id="debrief-body">
+    <div id="debrief-panel"></div>
+  </div>
+</div>
+
+<!-- ═══ END SCREEN ═══ -->
+<div id="end-screen">
+  <div class="end-inner">
+    <div class="end-icon" id="end-icon">✅</div>
+    <div class="end-title" id="end-title">Call <em>Rescued.</em></div>
+    <div class="end-sub" id="end-sub"></div>
+    <div class="end-stats">
+      <div class="end-stat"><div class="end-stat-n" id="es-caught">0/3</div><div class="end-stat-l">ERRORS CAUGHT</div></div>
+      <div class="end-stat"><div class="end-stat-n" id="es-trust">100</div><div class="end-stat-l">FINAL TRUST</div></div>
+      <div class="end-stat"><div class="end-stat-n" id="es-score">0</div><div class="end-stat-l">SCORE</div></div>
+    </div>
+    <div class="end-feedback" id="end-feedback"></div>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <button class="restart-btn" onclick="restartGame()">Play again ↺</button>
+      <button class="replay-btn" onclick="toggleReplay()">Review transcript 📋</button>
+    </div>
+    <div id="replay-wrap" style="display:none;">
+      <div class="replay-wrap">
+        <div class="replay-header"><div class="replay-title">FULL CALL TRANSCRIPT — ANNOTATED</div></div>
+        <div class="replay-lines" id="replay-lines"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// TRANSCRIPT DATA
+// Each line: type (conf/cust/narration), text, 
+// isError (bool), errorWindow (lines after which rescue btn appears)
+// ═══════════════════════════════════════════════
+const TRANSCRIPT=[
+  {type:'narration',text:'📞 Alex dials the number. James answers.'},
+  {type:'cust',text:'"Hello?"'},
+  {type:'conf',text:'"Hi, is this James? I\'m calling from RESINC about your appointment tomorrow."'},
+  // ERROR 1 — No name, no company intro properly, no "how are you"
+  {type:'cust',text:'"Oh — yes. Who am I speaking with?"'},
+  {
+    type:'conf',
+    text:'"Oh sorry, it\'s Alex here. So I\'m just calling to confirm your appointment tomorrow at 11 — does that still work?"',
+    isError:true,
+    errorId:1,
+    errorLabel:'OPENER ERROR',
+    errorExplain:'Alex apologised awkwardly, skipped the company name ("RESINC Solar"), didn\'t ask how James was, and went straight to confirming without building any rapport.',
+    rescueBtnAppears:true,
+    paths:[
+      {id:'correct',ico:'😊',name:'Rebuild the rapport',desc:'Introduce properly, apologise warmly, ask how he is',correct:true},
+      {id:'wrong',ico:'⏩',name:'Just keep going',desc:'Already said the name — move on quickly',correct:false,wrongFeedback:'Skipping the proper intro compounds the awkwardness. James already asked who he was speaking with — you owe him a proper introduction before moving forward.'}
+    ],
+    blocks:[
+      {id:'a',text:'"Sorry about that — it\'s Alex here from RESINC Solar."'},
+      {id:'b',text:'"How are you going today, James?"'},
+      {id:'c',text:'"I\'m just giving you a quick call to make sure you\'re all set for your solar assessment tomorrow."'},
+      {id:'d',text:'"I\'ll be as quick as I can, I promise!"'},
+    ],
+    correctOrder:['a','b','c'],
+    orderFeedback:'Name + company → ask how they are → state purpose. "I\'ll be as quick as I can" sounds anxious — leave it out.',
+    fixedLine:'"Sorry about that — it\'s Alex from RESINC Solar. How are you going today, James? I\'m just giving you a quick call to make sure you\'re all set for your solar assessment tomorrow."'
+  },
+  {type:'cust',text:'"Oh yes, right. Yes we\'re still on for tomorrow."'},
+  {type:'conf',text:'"Great. I\'ve got you and Carol booked in for 11 AM — does that still suit you both?"'},
+  {type:'cust',text:'"Yes, that works for us."'},
+  {type:'conf',text:'"Perfect. And the specialist coming out is Sarah Chen — she\'ll take you through everything on the day."'},
+  // ERROR 2 — "coming out" implies in-home but it's a Zoom
+  {type:'cust',text:'"Coming out? I thought this was online?"'},
+  {
+    type:'conf',
+    text:'"Oh — yeah, no, it\'s on Zoom, sorry about that."',
+    isError:true,
+    errorId:2,
+    errorLabel:'ZOOM CONFUSION ERROR',
+    errorExplain:'Alex said "coming out" — implying an in-home visit — when the appointment is on Zoom. Then corrected it with a flat "sorry about that" which sounds unprepared and shakes the customer\'s confidence.',
+    rescueBtnAppears:true,
+    paths:[
+      {id:'correct',ico:'💻',name:'Clarify confidently',desc:'Correct the confusion clearly and reassure James it\'s Zoom',correct:true},
+      {id:'wrong',ico:'😅',name:'Apologise and move on',desc:'Say sorry again and quickly change the subject',correct:false,wrongFeedback:'Another apology without explanation makes it worse. James now wonders if the person confirming his appointment actually knows what\'s going on. Confidence is the fix here, not more apologies.'}
+    ],
+    blocks:[
+      {id:'a',text:'"Yes — this is a Zoom assessment, so you\'ll be doing it from the comfort of your own home."'},
+      {id:'b',text:'"Sarah will be joining you online — no need for anyone to travel."'},
+      {id:'c',text:'"You\'ll receive your Zoom link about 15 minutes before the session starts."'},
+      {id:'d',text:'"I\'m really sorry about the confusion there."'},
+    ],
+    correctOrder:['a','b','c'],
+    orderFeedback:'Confirm it\'s Zoom → no travel needed → Zoom link timing. The apology (d) isn\'t necessary — it was a slip of the tongue, not a big mistake. Confidence, not apology.',
+    fixedLine:'"Yes — this is all on Zoom, so you\'ll be doing it from home. Sarah will join you online — no travel needed at all. You\'ll receive your Zoom link about 15 minutes before the session."'
+  },
+  {type:'cust',text:'"Oh right, good. Yes, that makes more sense."'},
+  {type:'conf',text:'"Great. And just so you know, the session will run about 60 to 90 minutes."'},
+  {type:'cust',text:'"60 to 90 minutes? That seems like a long time for a Zoom call."'},
+  {type:'conf',text:'"Yeah I know, it is a bit long. But that\'s just how long it takes unfortunately."'},
+  // ERROR 3 — Confirmed the negative, no explanation of WHY, used "unfortunately"
+  {
+    type:'conf',
+    text:'"Anyway — did you have your electricity bill ready to send through?"',
+    isError:true,
+    errorId:3,
+    errorLabel:'TIME OBJECTION MISSED',
+    errorExplain:'Alex validated the concern ("yeah I know it is a bit long") then added "unfortunately" — making it sound like a bad thing. Then immediately changed the subject instead of explaining the VALUE of the 60–90 minutes.',
+    rescueBtnAppears:true,
+    paths:[
+      {id:'correct',ico:'💡',name:'Explain the value',desc:'Reframe why 60–90 minutes is actually a good thing for them',correct:true},
+      {id:'wrong',ico:'⏩',name:'Just move past it',desc:'The subject has already changed — no need to go back',correct:false,wrongFeedback:'Moving past it leaves James with the impression that the appointment is a long, unfortunate obligation. That\'s exactly the mindset that leads to no-shows. Always address the 60–90 minutes with value, not apology.'}
+    ],
+    blocks:[
+      {id:'a',text:'"The reason we allow that time is so Sarah can go through your usage, your roof, and design a system that actually works for your home."'},
+      {id:'b',text:'"It\'s not a sales pitch — it\'s a tailored assessment specific to you."'},
+      {id:'c',text:'"Most people find it goes really quickly once they get into it."'},
+      {id:'d',text:'"I know it sounds like a lot but trust me it\'s worth it."'},
+    ],
+    correctOrder:['a','b','c'],
+    orderFeedback:'Why → what it is → reassurance. Option (d) sounds pleading — "trust me" undermines confidence. The facts speak for themselves.',
+    fixedLine:'"The reason we allow that time is so Sarah can properly go through your usage, your roof, and design a system that actually works for your home specifically. It\'s not a generic pitch — it\'s tailored to you. Most people actually find it goes quickly once they\'re in it."'
+  },
+  {type:'cust',text:'"Oh okay — that actually makes sense. I didn\'t realise it was that specific."'},
+  {type:'conf',text:'"Exactly — it\'s all built around your home. So before the session, we\'ll just need a recent electricity bill and a clear photo of your meter box. Have you been able to send those through yet?"'},
+  {type:'cust',text:'"Not yet — I\'ll make sure to do that today."'},
+  {type:'conf',text:'"Perfect. And just keep an eye on your spam folder for the Zoom link — sometimes it lands there. If you can jump on a few minutes early to test the audio, that\'s always helpful."'},
+  {type:'cust',text:'"Will do — thanks."'},
+  {type:'conf',text:'"That\'s everything from me. You and Carol are all set for tomorrow at 11. We look forward to speaking with you both — have a great rest of your day!"'},
+  {type:'cust',text:'"Thank you — see you tomorrow."'},
+  {type:'narration',text:'📞 Call ended.'},
+];
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let currentLine=0;
+let trust=100;
+let errorsCaught=0;
+let errorsTotal=3;
+let score=0;
+let currentError=null;
+let pendingError=null;
+let rescueWindowOpen=false;
+let timerInterval=null;
+let timerSecs=0;
+let wrongPathChosen=false;
+let blocksDragging=null;
+let slotsFilled={};
+let firstAttemptBlocks=true;
+const missedErrors=[];
+const fixedLines={};
+const replayLog=[];
+
+// ═══════════════════════════════════════════════
+// START
+// ═══════════════════════════════════════════════
+function startGame(){
+  document.getElementById('intro-screen').style.display='none';
+  document.getElementById('game-screen').style.display='block';
+  currentLine=0;trust=100;errorsCaught=0;score=0;
+  timerSecs=0;slotsFilled={};wrongPathChosen=false;
+  blocksDragging=null;firstAttemptBlocks=true;
+  missedErrors.length=0;
+  Object.keys(fixedLines).forEach(k=>delete fixedLines[k]);
+  replayLog.length=0;
+  document.getElementById('transcript-lines').innerHTML='';
+  document.getElementById('transcript-end').innerHTML='';
+  startTimer();
+  setTimeout(()=>revealNextLine(),400);
+}
+
+function restartGame(){
+  document.getElementById('end-screen').classList.remove('show');
+  document.getElementById('end-screen').style.display='none';
+  clearInterval(timerInterval);
+  startGame();
+}
+
+function startTimer(){
+  clearInterval(timerInterval);
+  timerInterval=setInterval(()=>{
+    timerSecs++;
+    const m=Math.floor(timerSecs/60);
+    const s=timerSecs%60;
+    document.getElementById('call-timer').textContent=m+':'+(s<10?'0':'')+s;
+  },1000);
+}
+
+// ═══════════════════════════════════════════════
+// REVEAL LINES
+// ═══════════════════════════════════════════════
+function revealNextLine(){
+  if(currentLine>=TRANSCRIPT.length){ endGame(); return; }
+  const line=TRANSCRIPT[currentLine];
+
+  // Build DOM element
+  const wrap=document.createElement('div');
+  wrap.className=`tline ${line.type}`;
+  wrap.id='line-'+currentLine;
+
+  if(line.type==='narration'){
+    wrap.innerHTML=`<div class="tline-content"><div class="tline-bubble">${line.text}</div></div>`;
+  } else {
+    const isConf=line.type==='conf';
+    wrap.innerHTML=`
+      <div class="tline-avatar ${isConf?'conf':'cust'}">${isConf?'🎧':'👤'}</div>
+      <div class="tline-content">
+        <div class="tline-speaker">${isConf?'ALEX (CONFIRMER)':'JAMES (CUSTOMER)'}</div>
+        <div class="tline-bubble" id="bubble-${currentLine}">${line.text}</div>
+      </div>`;
+  }
+
+  document.getElementById('transcript-lines').appendChild(wrap);
+  replayLog.push({type:line.type,text:line.text,isError:false});
+
+  setTimeout(()=>{
+    wrap.classList.add('visible');
+    wrap.scrollIntoView({behavior:'smooth',block:'nearest'});
+
+    // If this line has an error, show the rescue button
+    if(line.isError && line.rescueBtnAppears){
+      pendingError=line;
+      rescueWindowOpen=true;
+      showRescueBtn();
+    }
+
+    currentLine++;
+
+    // If rescue window is open — CALL PAUSES, player must act
+    if(rescueWindowOpen){
+      // No auto-continue — player MUST click rescue
+    } else {
+      // Continue after delay
+      const delay=line.type==='narration'?600:getDelay(line.text);
+      setTimeout(revealNextLine, delay);
+    }
+  },80);
+}
+
+function getDelay(text){
+  return Math.min(Math.max(text.length*28, 900), 2800);
+}
+
+let burnInterval=null;
+let burnCount=5;
+
+function showRescueBtn(){
+  // Start slow burn — don't show banner immediately
+  burnCount=5;
+  startSlowBurn();
+}
+
+function startSlowBurn(){
+  clearInterval(burnInterval);
+  const overlay=document.getElementById('slowburn-overlay');
+  const badge=document.getElementById('countdown-badge');
+  const numEl=document.getElementById('countdown-num');
+  const errorLineIdx=TRANSCRIPT.indexOf(pendingError);
+  const bubble=document.getElementById('bubble-'+errorLineIdx);
+
+  // Scroll to error line
+  if(bubble) setTimeout(()=>bubble.scrollIntoView({behavior:'smooth',block:'center'}),300);
+
+  // Signal bar — immediate subtle hint
+  document.getElementById('signal-dot').className='signal-dot warning';
+  document.getElementById('signal-label').className='signal-label warning';
+  document.getElementById('signal-label').textContent='⚠️ Something feels off...';
+
+  // Show badge + rescue button immediately
+  numEl.textContent=burnCount;
+  badge.classList.add('show');
+
+  burnInterval=setInterval(()=>{
+    burnCount--;
+    const stage=5-burnCount;
+
+    // Heat up the bubble
+    if(bubble) bubble.className=`tline-bubble heat-${Math.min(stage,4)}`;
+
+    // Overlay gets redder
+    overlay.className=`slowburn-overlay ${stage>=1?'stage'+Math.min(stage,4):''}`;
+
+    // Signal bar escalates
+    if(stage===2){
+      document.getElementById('signal-dot').className='signal-dot critical';
+      document.getElementById('signal-label').textContent='🔴 Error detected — hit Rescue now';
+    } else if(stage===3){
+      document.getElementById('signal-label').textContent='🔴 Customer trust dropping...';
+    } else if(stage>=4){
+      document.getElementById('signal-label').textContent='⛔ Last chance — RESCUE NOW';
+    }
+
+    // Update countdown number
+    numEl.textContent=Math.max(0,burnCount);
+
+    // At 0 — call pauses, lock it
+    if(burnCount<=0){
+      clearInterval(burnInterval);
+      overlay.className='slowburn-overlay stage4';
+      document.getElementById('signal-label').textContent='⛔ CALL PAUSED';
+      // Player must still click rescue btn — it stays visible
+    }
+  },1000);
+}
+
+function hideRescueBtn(){
+  clearInterval(burnInterval);
+  document.getElementById('rescue-banner').classList.remove('show');
+  document.getElementById('slowburn-overlay').className='slowburn-overlay';
+  document.getElementById('countdown-badge').classList.remove('show');
+  document.getElementById('countdown-num').textContent='5';
+  // Cool down bubbles
+  document.querySelectorAll('.tline-bubble').forEach(b=>{
+    b.className='tline-bubble';
+    b.style.outline='';
+  });
+  document.getElementById('signal-dot').className='signal-dot live';
+  document.getElementById('signal-label').className='signal-label live';
+  document.getElementById('signal-label').textContent='CALL IN PROGRESS';
+}
+
+// ═══════════════════════════════════════════════
+// RESCUE TRIGGERED
+// ═══════════════════════════════════════════════
+function triggerRescue(){
+  if(!pendingError) return;
+  rescueWindowOpen=false;
+  clearInterval(burnInterval);
+  hideRescueBtn();
+  currentError=pendingError;
+  pendingError=null;
+  wrongPathChosen=false;
+  firstAttemptBlocks=true;
+  slotsFilled={};
+  showRescuePanel(currentError);
+}
+
+function missError(error){
+  if(!rescueWindowOpen) return;
+  rescueWindowOpen=false;
+  hideRescueBtn();
+  pendingError=null;
+  missedErrors.push(error.errorId);
+
+  // Highlight the error line in red
+  const bubbles=document.querySelectorAll('.tline-bubble');
+  if(bubbles.length>=2){
+    const lastConf=Array.from(bubbles).filter((_,i)=>TRANSCRIPT[currentLine-1]?.type==='conf'||true).pop();
+    // find the error line bubble
+    const errorLineIdx=TRANSCRIPT.indexOf(error);
+    const b=document.getElementById('bubble-'+errorLineIdx);
+    if(b) b.classList.add('error');
+  }
+
+  // Drop trust
+  dropTrust(20);
+
+  // Show missed popup
+  const popup=document.createElement('div');
+  popup.className='missed-popup';
+  popup.textContent='⚠️ Missed it! Trust dropped.';
+  document.body.appendChild(popup);
+  setTimeout(()=>popup.remove(),2000);
+
+  // Continue call
+  const delay=getDelay(TRANSCRIPT[currentLine-1]?.text||'');
+  setTimeout(revealNextLine, 1200);
+}
+
+// ═══════════════════════════════════════════════
+// RESCUE PANEL
+// ═══════════════════════════════════════════════
+function showRescuePanel(error){
+  clearInterval(timerInterval);
+  document.getElementById('rescue-overlay').style.display='flex';
+  const body=document.getElementById('rp-body');
+  wrongPathChosen=false;
+
+  body.innerHTML=`
+    <div class="error-reveal">
+      <div class="error-reveal-label">🚩 ${error.errorLabel} — HERE'S WHAT WENT WRONG</div>
+      <div class="error-reveal-text">${error.errorExplain}</div>
+    </div>
+
+    <div class="path-label">STEP 1 — CHOOSE YOUR APPROACH</div>
+    <div class="paths">
+      ${error.paths.map(p=>`
+        <div class="path-btn" onclick="choosePath('${p.id}')" id="path-${p.id}">
+          <div class="path-ico">${p.ico}</div>
+          <div class="path-name">${p.name}</div>
+          <div class="path-desc">${p.desc}</div>
+        </div>`).join('')}
+    </div>
+
+    <div id="block-section" style="display:none;">
+      <div class="block-label">STEP 2 — BUILD THE CORRECT RESPONSE (drag into order)</div>
+      <div class="blocks-pool" id="blocks-pool">
+        ${shuffleArray([...error.blocks]).map(b=>`
+          <div class="block" id="block-${b.id}" draggable="true"
+            ondragstart="blockDragStart('${b.id}')"
+            ondragend="blockDragEnd('${b.id}')">${b.text}</div>`).join('')}
+      </div>
+      <div class="drop-slots" id="drop-slots">
+        ${error.correctOrder.map((_,i)=>`
+          <div class="drop-slot" id="dslot-${i}"
+            ondragover="event.preventDefault();this.classList.add('over')"
+            ondragleave="this.classList.remove('over')"
+            ondrop="blockDrop(${i},event)">
+            <div class="slot-num">${i+1}</div>
+            <div class="slot-content" id="dslot-content-${i}"><span class="slot-empty">Drop here</span></div>
+          </div>`).join('')}
+      </div>
+      <button class="check-blocks-btn" onclick="checkBlocks()">Check my response ✓</button>
+      <div class="rp-feedback" id="block-feedback"></div>
+      <button class="rp-continue-btn" id="rp-continue" onclick="closeRescue()">Resume call →</button>
+    </div>`;
+}
+
+function choosePath(pathId){
+  const error=currentError;
+  const path=error.paths.find(p=>p.id===pathId);
+  document.querySelectorAll('.path-btn').forEach(b=>b.style.pointerEvents='none');
+
+  if(path.correct){
+    document.getElementById('path-'+pathId).classList.add('selected');
+    // Show block builder
+    document.getElementById('block-section').style.display='block';
+    document.getElementById('block-section').scrollIntoView({behavior:'smooth',block:'nearest'});
+  } else {
+    document.getElementById('path-'+pathId).classList.add('wrong-path');
+    wrongPathChosen=true;
+    dropTrust(10);
+    const fb=document.createElement('div');
+    fb.className='rp-feedback show bad';
+    fb.innerHTML='❌  '+path.wrongFeedback+' <strong>Choose the other path.</strong>';
+    document.getElementById('path-'+pathId).after(fb);
+    setTimeout(()=>{
+      document.querySelectorAll('.path-btn').forEach(b=>b.style.pointerEvents='');
+      fb.remove();
+    },2000);
+  }
+}
+
+// ═══════════════════════════════════════════════
+// BLOCK DRAG
+// ═══════════════════════════════════════════════
+function shuffleArray(arr){ return arr.sort(()=>Math.random()-.5); }
+
+function blockDragStart(id){ blocksDragging=id; document.getElementById('block-'+id).classList.add('dragging'); }
+function blockDragEnd(id){ document.getElementById('block-'+id).classList.remove('dragging'); }
+
+function blockDrop(slotIdx, e){
+  e.preventDefault();
+  const zone=document.getElementById('dslot-'+slotIdx);
+  zone.classList.remove('over');
+  if(!blocksDragging) return;
+
+  // Return previously placed block in this slot
+  if(slotsFilled[slotIdx]){
+    const prev=slotsFilled[slotIdx];
+    const prevBlock=document.getElementById('block-'+prev);
+    prevBlock.classList.remove('placed');
+    document.getElementById('blocks-pool').appendChild(prevBlock);
+  }
+
+  // Check if block already placed in another slot
+  Object.entries(slotsFilled).forEach(([si,bid])=>{
+    if(bid===blocksDragging && parseInt(si)!==slotIdx){
+      delete slotsFilled[si];
+      document.getElementById('dslot-'+si).classList.remove('filled');
+      document.getElementById('dslot-content-'+si).innerHTML='<span class="slot-empty">Drop here</span>';
+    }
+  });
+
+  slotsFilled[slotIdx]=blocksDragging;
+  const block=document.getElementById('block-'+blocksDragging);
+  block.classList.add('placed');
+  zone.classList.add('filled');
+  document.getElementById('dslot-content-'+slotIdx).textContent=block.textContent;
+  blocksDragging=null;
+}
+
+function checkBlocks(){
+  const error=currentError;
+  const fb=document.getElementById('block-feedback');
+  const isFirst=firstAttemptBlocks;
+  firstAttemptBlocks=false;
+
+  // Check if all slots filled
+  const allFilled=error.correctOrder.every((_,i)=>slotsFilled[i]);
+  if(!allFilled){ fb.className='rp-feedback show bad'; fb.innerHTML='❌ Fill all slots before checking.'; return; }
+
+  let allCorrect=true;
+  error.correctOrder.forEach((correctId,i)=>{
+    const zone=document.getElementById('dslot-'+i);
+    zone.classList.remove('correct-slot','wrong-slot');
+    if(slotsFilled[i]===correctId){
+      zone.classList.add('correct-slot');
+    } else {
+      zone.classList.add('wrong-slot');
+      allCorrect=false;
+    }
+  });
+
+  if(allCorrect){
+    fb.className='rp-feedback show ok';
+    fb.innerHTML='✅  '+error.orderFeedback;
+    if(isFirst&&!wrongPathChosen){
+      errorsCaught++;
+      score+=300;
+    } else if(isFirst){
+      errorsCaught++;
+      score+=150;
+    } else {
+      errorsCaught++;
+      score+=75;
+    }
+    fixedLines[error.errorId]=error.fixedLine;
+    document.getElementById('rp-continue').classList.add('show');
+    document.getElementById('rp-continue').scrollIntoView({behavior:'smooth',block:'nearest'});
+  } else {
+    fb.className='rp-feedback show bad';
+    fb.innerHTML='❌ Some blocks are in the wrong order (shown in red). The wrong ones have been returned — try again.';
+    // Return wrong blocks
+    setTimeout(()=>{
+      error.correctOrder.forEach((correctId,i)=>{
+        if(slotsFilled[i]!==correctId){
+          const bid=slotsFilled[i];
+          const block=document.getElementById('block-'+bid);
+          block.classList.remove('placed');
+          document.getElementById('blocks-pool').appendChild(block);
+          document.getElementById('dslot-'+i).classList.remove('filled','wrong-slot');
+          document.getElementById('dslot-content-'+i).innerHTML='<span class="slot-empty">Drop here</span>';
+          delete slotsFilled[i];
+        }
+      });
+    },1500);
+  }
+}
+
+function closeRescue(){
+  document.getElementById('rescue-overlay').style.display='none';
+  currentError=null;
+  startTimer();
+
+  // Add fixed version as a new bubble in transcript
+  const error=TRANSCRIPT.find(l=>l.isError&&fixedLines[l.errorId]);
+  // Continue
+  setTimeout(revealNextLine, 500);
+}
+
+// ═══════════════════════════════════════════════
+// TRUST
+// ═══════════════════════════════════════════════
+function dropTrust(amount){
+  trust=Math.max(0,trust-amount);
+  const bar=document.getElementById('trust-bar');
+  const val=document.getElementById('trust-val');
+  bar.style.width=trust+'%';
+  bar.style.background=trust>60?'#4ADE80':trust>30?'#FBBF24':'#F87171';
+  val.textContent=trust;
+  val.style.color=trust>60?'#4ADE80':trust>30?'#FBBF24':'#F87171';
+  const dot=document.getElementById('signal-dot');
+  const label=document.getElementById('signal-label');
+  if(trust<=30){ dot.className='signal-dot critical'; label.className='signal-label critical'; label.textContent='🔴 CRITICAL — CUSTOMER LOSING TRUST'; }
+  else if(trust<=60){ dot.className='signal-dot warning'; label.className='signal-label warning'; label.textContent='⚠️ TRUST DROPPING'; }
+}
+
+// ═══════════════════════════════════════════════
+// END GAME
+// ═══════════════════════════════════════════════
+// ═══ DEBRIEF + END FLOW ═══
+let debriefQueue=[];
+let debriefIdx=0;
+
+function endGame(){
+  clearInterval(timerInterval);
+  document.getElementById('game-screen').style.display='none';
+  document.getElementById('rescue-banner').classList.remove('show');
+  const missed=TRANSCRIPT.filter(l=>l.isError&&missedErrors.includes(l.errorId));
+  if(missed.length>0){ debriefQueue=missed; debriefIdx=0; showDebrief(); }
+  else { showEndScreen(); }
+}
+
+function showDebrief(){
+  document.getElementById('debrief-screen').style.display='block';
+  document.getElementById('debrief-screen').scrollIntoView({behavior:'smooth',block:'start'});
+  const pip=document.getElementById('debrief-progress');
+  pip.innerHTML=debriefQueue.map((_,i)=>`<div class="debrief-pip ${i===0?'active':''}" id="dpip-${i}"></div>`).join('');
+  renderDebriefPanel();
+}
+
+function renderDebriefPanel(){
+  debriefQueue.forEach((_,i)=>{
+    const p=document.getElementById('dpip-'+i);
+    if(p) p.className='debrief-pip '+(i<debriefIdx?'done':i===debriefIdx?'active':'');
+  });
+  const error=debriefQueue[debriefIdx];
+  debriefSlots={};
+  const errorIdx=TRANSCRIPT.indexOf(error);
+  const ctxLines=TRANSCRIPT.slice(Math.max(0,errorIdx-2),errorIdx+1);
+  document.getElementById('debrief-panel').innerHTML=`
+    <div class="debrief-context">
+      <div class="debrief-context-label">📼 WHAT HAPPENED IN THE CALL</div>
+      <div class="debrief-context-lines">
+        ${ctxLines.map(l=>{
+          if(l.type==='narration') return '';
+          const isErr=(l===error);
+          const cls=isErr?'error-line':l.type==='conf'?'conf':'cust';
+          return `<div class="debrief-ctx-line ${cls}"><strong>${l.type==='conf'?'Alex:':'James:'}</strong> ${l.text}${isErr?' <span style="font-size:10px;font-weight:700;color:#F87171;margin-left:6px;">← MISSED ERROR</span>':''}</div>`;
+        }).join('')}
+      </div>
+    </div>
+    <div style="background:var(--navy);border-radius:16px;padding:22px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red),var(--orange));"></div>
+      <div style="margin-top:8px;">
+        <div class="error-reveal"><div class="error-reveal-label">🚩 ${error.errorLabel}</div><div class="error-reveal-text">${error.errorExplain}</div></div>
+        <div class="path-label">STEP 1 — CHOOSE YOUR APPROACH</div>
+        <div class="paths">${error.paths.map(p=>`<div class="path-btn" onclick="debriefChoosePath('${p.id}')" id="dpath-${p.id}"><div class="path-ico">${p.ico}</div><div class="path-name">${p.name}</div><div class="path-desc">${p.desc}</div></div>`).join('')}</div>
+        <div id="debrief-block-section" style="display:none;">
+          <div class="block-label">STEP 2 — BUILD THE CORRECT RESPONSE</div>
+          <div class="blocks-pool" id="debrief-blocks-pool">${shuffleArray([...error.blocks]).map(b=>`<div class="block" id="dblock-${b.id}" draggable="true" ondragstart="debriefDragStart('${b.id}')" ondragend="debriefDragEnd('${b.id}')">${b.text}</div>`).join('')}</div>
+          <div class="drop-slots">${error.correctOrder.map((_,i)=>`<div class="drop-slot" id="ddslot-${i}" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="debriefDrop(${i},event)"><div class="slot-num">${i+1}</div><div class="slot-content" id="ddslot-content-${i}"><span class="slot-empty">Drop here</span></div></div>`).join('')}</div>
+          <button class="check-blocks-btn" onclick="checkDebriefBlocks()">Check my response ✓</button>
+          <div class="rp-feedback" id="debrief-fb"></div>
+          <button class="rp-continue-btn" id="debrief-cont" onclick="nextDebrief()" style="display:none;margin-top:12px;">${debriefIdx<debriefQueue.length-1?'Next error →':'See my final score 🏆'}</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+let debriefSlots={};
+let debriefDrag=null;
+function debriefDragStart(id){ debriefDrag=id; document.getElementById('dblock-'+id).classList.add('dragging'); }
+function debriefDragEnd(id){ document.getElementById('dblock-'+id).classList.remove('dragging'); }
+function debriefDrop(si,e){
+  e.preventDefault();
+  const zone=document.getElementById('ddslot-'+si);
+  zone.classList.remove('over');
+  if(!debriefDrag) return;
+  if(debriefSlots[si]){ const p=debriefSlots[si]; document.getElementById('dblock-'+p).classList.remove('placed'); document.getElementById('debrief-blocks-pool').appendChild(document.getElementById('dblock-'+p)); }
+  Object.entries(debriefSlots).forEach(([k,v])=>{ if(v===debriefDrag&&parseInt(k)!==si){ delete debriefSlots[k]; document.getElementById('ddslot-'+k).classList.remove('filled'); document.getElementById('ddslot-content-'+k).innerHTML='<span class="slot-empty">Drop here</span>'; }});
+  debriefSlots[si]=debriefDrag;
+  document.getElementById('dblock-'+debriefDrag).classList.add('placed');
+  zone.classList.add('filled');
+  document.getElementById('ddslot-content-'+si).textContent=document.getElementById('dblock-'+debriefDrag).textContent;
+  debriefDrag=null;
+}
+function debriefChoosePath(pid){
+  const error=debriefQueue[debriefIdx];
+  const path=error.paths.find(p=>p.id===pid);
+  document.querySelectorAll('[id^="dpath-"]').forEach(b=>b.style.pointerEvents='none');
+  if(path.correct){
+    document.getElementById('dpath-'+pid).classList.add('selected');
+    document.getElementById('debrief-block-section').style.display='block';
+    document.getElementById('debrief-block-section').scrollIntoView({behavior:'smooth',block:'nearest'});
+  } else {
+    document.getElementById('dpath-'+pid).classList.add('wrong-path');
+    const fb=document.createElement('div'); fb.className='rp-feedback show bad'; fb.innerHTML='❌ '+path.wrongFeedback+' <strong>Choose the other path.</strong>';
+    document.getElementById('dpath-'+pid).after(fb);
+    setTimeout(()=>{ document.querySelectorAll('[id^="dpath-"]').forEach(b=>b.style.pointerEvents=''); document.getElementById('dpath-'+pid).classList.remove('wrong-path'); fb.remove(); },2000);
+  }
+}
+function checkDebriefBlocks(){
+  const error=debriefQueue[debriefIdx];
+  const fb=document.getElementById('debrief-fb');
+  if(!error.correctOrder.every((_,i)=>debriefSlots[i])){ fb.className='rp-feedback show bad'; fb.innerHTML='❌ Fill all slots first.'; return; }
+  let ok=true;
+  error.correctOrder.forEach((cid,i)=>{ const z=document.getElementById('ddslot-'+i); z.classList.remove('correct-slot','wrong-slot'); if(debriefSlots[i]===cid) z.classList.add('correct-slot'); else { z.classList.add('wrong-slot'); ok=false; }});
+  if(ok){
+    fb.className='rp-feedback show ok';
+    fb.innerHTML='✅ '+error.orderFeedback+'<br><br><em>Fixed in debrief — fewer points than a live rescue, but it counts.</em>';
+    errorsCaught++; score+=75; fixedLines[error.errorId]=error.fixedLine;
+    const btn=document.getElementById('debrief-cont'); btn.style.display='block';
+    btn.textContent=debriefIdx<debriefQueue.length-1?'Next error →':'See my final score 🏆';
+    btn.scrollIntoView({behavior:'smooth',block:'nearest'});
+  } else {
+    fb.className='rp-feedback show bad'; fb.innerHTML='❌ Some blocks wrong — returned. Try again.';
+    setTimeout(()=>{ error.correctOrder.forEach((cid,i)=>{ if(debriefSlots[i]!==cid){ const bid=debriefSlots[i]; if(bid){ document.getElementById('dblock-'+bid).classList.remove('placed'); document.getElementById('debrief-blocks-pool').appendChild(document.getElementById('dblock-'+bid)); document.getElementById('ddslot-'+i).classList.remove('filled','wrong-slot'); document.getElementById('ddslot-content-'+i).innerHTML='<span class="slot-empty">Drop here</span>'; delete debriefSlots[i]; }}}); },1500);
+  }
+}
+function nextDebrief(){
+  debriefIdx++;
+  if(debriefIdx<debriefQueue.length){ renderDebriefPanel(); document.getElementById('debrief-screen').scrollIntoView({behavior:'smooth',block:'start'}); }
+  else { document.getElementById('debrief-screen').style.display='none'; showEndScreen(); }
+}
+
+function showEndScreen(){
+  score+=trust*2;
+  const es=document.getElementById('end-screen');
+  es.style.display='flex'; es.classList.add('show');
+  document.getElementById('es-caught').textContent=errorsCaught+'/'+errorsTotal;
+  document.getElementById('es-trust').textContent=trust;
+  document.getElementById('es-score').textContent=score.toLocaleString();
+  const won=errorsCaught>=2&&trust>=60;
+  document.getElementById('end-icon').textContent=won?(errorsCaught===3?'🏆':'✅'):'📉';
+  document.getElementById('end-title').innerHTML=won?'Call <em>Rescued.</em>':'Call <em>Struggled.</em>';
+  document.getElementById('end-sub').textContent=won?'James and Carol are confirmed for tomorrow at 11AM. Sarah Chen is ready.':'The appointment survived — but the debrief showed the gaps. Study the transcript and try again.';
+  const fb={3:'<strong>All three caught live.</strong> You were watching the whole time. That\'s exactly what a senior Confirmer does.',2:'<strong>Two caught, one in debrief.</strong> Solid — but next time spot all three before they land.',1:'<strong>One live catch.</strong> The debrief fixed the rest. Train your ear for the warning signs.',0:'<strong>All fixed in debrief.</strong> You worked through every error. Now play again and try to catch them live.'};
+  document.getElementById('end-feedback').innerHTML=fb[Math.min(errorsCaught,3)]||fb[0];
+  buildReplay();
+  es.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function buildReplay(){
+  const lines=document.getElementById('replay-lines');
+  lines.innerHTML='';
+  TRANSCRIPT.forEach(line=>{
+    const div=document.createElement('div');
+    const isMissed=line.isError&&missedErrors.includes(line.errorId);
+    const isCaught=line.isError&&fixedLines[line.errorId];
+
+    if(line.type==='narration'){
+      div.className='replay-line narr';
+      div.textContent=line.text;
+    } else if(isMissed){
+      div.className='replay-line error';
+      div.innerHTML=`<strong>⚠️ MISSED ERROR — ${line.errorLabel}:</strong> ${line.text}`;
+    } else if(isCaught){
+      div.className='replay-line error';
+      div.innerHTML=`<strong>🚩 ERROR CAUGHT (${line.errorLabel}):</strong> ${line.text}`;
+      const fix=document.createElement('div');
+      fix.className='replay-line fixed';
+      fix.innerHTML=`<strong>✅ CORRECT VERSION:</strong> ${fixedLines[line.errorId]}`;
+      lines.appendChild(div);
+      lines.appendChild(fix);
+      return;
+    } else if(line.type==='conf'){
+      div.className='replay-line conf';
+      div.innerHTML=`<strong>Alex:</strong> ${line.text}`;
+    } else {
+      div.className='replay-line cust';
+      div.innerHTML=`<strong>James:</strong> ${line.text}`;
+    }
+    lines.appendChild(div);
+  });
+}
+
+function toggleReplay(){
+  const wrap=document.getElementById('replay-wrap');
+  wrap.style.display=wrap.style.display==='none'?'block':'none';
+  if(wrap.style.display==='block') wrap.scrollIntoView({behavior:'smooth',block:'start'});
+}
+</script>
+</body>
+</html>
