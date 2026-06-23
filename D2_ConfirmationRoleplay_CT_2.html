@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Confirmation Call Roleplay | Confirmations Team</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0A3542;--navy2:#071F28;--navy3:#0D4558;
+  --sky:#00AEEF;--sky2:#0090C4;--sky-lt:#EAF6FD;--sky-bg:#F2FAFF;
+  --green:#0B7A4E;--green-lt:#E3F5EC;
+  --red:#B5251B;--red-lt:#FDECEB;
+  --orange:#D4620A;--orange-lt:#FEF3EB;
+  --gold:#D4940A;
+  --body:#1A2A32;--muted:#5A6E78;--light:#F4F8FB;
+  --border:#C8DDE8;--line:#E2EEF4;
+  --font:'DM Sans',system-ui,sans-serif;
+  --serif:'DM Serif Display',Georgia,serif;
+  --shadow:0 1px 3px rgba(10,53,66,.06),0 4px 12px rgba(10,53,66,.08);
+  --shadow-lg:0 4px 16px rgba(10,53,66,.1),0 12px 32px rgba(10,53,66,.1);
+  --max:820px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--light);color:var(--body);line-height:1.6;}
+#prog{position:fixed;top:0;left:0;right:0;height:3px;background:rgba(0,174,239,.15);z-index:100;}
+#prog-fill{height:100%;background:var(--sky);width:0%;transition:width .4s ease;}
+
+/* HERO */
+.hero{background:var(--navy);padding:60px 20px 50px;position:relative;overflow:hidden;}
+.hero-stripe{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--sky);}
+.hero-deco{position:absolute;border-radius:50%;border:1px solid rgba(0,174,239,.07);pointer-events:none;}
+.hero-inner{max-width:var(--max);margin:0 auto;position:relative;z-index:1;}
+.hero-ey{color:var(--sky);font-size:9px;letter-spacing:.28em;font-weight:600;margin-bottom:16px;}
+.hero-title{color:#fff;font-size:44px;font-weight:700;line-height:1.05;margin-bottom:12px;font-family:var(--serif);}
+.hero-title em{color:var(--sky);font-style:italic;}
+.hero-sub{color:rgba(255,255,255,.6);font-size:14px;line-height:1.7;max-width:520px;margin-bottom:28px;}
+.hero-pills{display:flex;flex-wrap:wrap;gap:8px;}
+.hero-pill{background:rgba(0,174,239,.12);border:1px solid rgba(0,174,239,.25);border-radius:20px;padding:4px 12px;color:var(--sky);font-size:11px;font-weight:600;}
+
+/* SCENE */
+.scene-card{background:#fff;border-radius:16px;padding:24px 26px;box-shadow:var(--shadow);border:1.5px solid var(--line);margin-bottom:20px;}
+.scene-label{font-size:8.5px;letter-spacing:.22em;font-weight:700;color:var(--sky);margin-bottom:10px;}
+.scene-title{font-size:18px;font-weight:700;color:var(--navy);margin-bottom:14px;font-family:var(--serif);}
+.scene-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.scene-item{background:var(--sky-bg);border-radius:10px;padding:12px 14px;border:1.5px solid var(--border);}
+.scene-item-label{font-size:9px;letter-spacing:.14em;font-weight:700;color:var(--muted);margin-bottom:4px;}
+.scene-item-val{font-size:13.5px;font-weight:600;color:var(--navy);}
+.scene-note{background:var(--navy);border-radius:10px;padding:14px 16px;margin-top:14px;display:flex;gap:10px;align-items:flex-start;}
+.scene-note-txt{font-size:12.5px;color:rgba(255,255,255,.75);line-height:1.6;}
+.scene-note-txt strong{color:#fff;}
+
+/* STEP TRACKER */
+.step-tracker{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:28px;max-width:var(--max);margin-left:auto;margin-right:auto;padding:0 20px;}
+.st-step{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;position:relative;}
+.st-step:not(:last-child)::after{content:'';position:absolute;top:14px;left:calc(50% + 14px);right:calc(-50% + 14px);height:2px;background:var(--line);z-index:0;}
+.st-step.done::after{background:var(--sky);}
+.st-circle{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--muted);position:relative;z-index:1;transition:all .3s;}
+.st-step.active .st-circle{background:var(--sky);border-color:var(--sky);color:#fff;}
+.st-step.done .st-circle{background:var(--green);border-color:var(--green);color:#fff;}
+.st-label{font-size:9px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-align:center;line-height:1.3;}
+.st-step.active .st-label{color:var(--sky);}
+.st-step.done .st-label{color:var(--green);}
+
+/* CHAT */
+.chat-wrap{display:flex;flex-direction:column;gap:14px;margin-bottom:24px;}
+.bubble-row{display:flex;gap:10px;align-items:flex-start;}
+.bubble-row.customer{flex-direction:row-reverse;}
+.bubble-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.bubble-avatar.conf{background:var(--sky);}
+.bubble-avatar.cust{background:var(--navy);}
+.bubble{border-radius:16px;padding:13px 16px;max-width:78%;font-size:13.5px;line-height:1.65;}
+.bubble.conf{background:var(--sky);color:#fff;border-radius:16px 16px 16px 4px;}
+.bubble.cust{background:var(--navy);color:rgba(255,255,255,.88);border-radius:16px 16px 4px 16px;}
+.bubble.narration{background:var(--light);border:1.5px solid var(--border);color:var(--muted);font-style:italic;font-size:12.5px;border-radius:10px;max-width:100%;text-align:center;}
+.speaker-name{font-size:9.5px;font-weight:700;letter-spacing:.08em;margin-bottom:4px;color:var(--muted);}
+.bubble-row.customer .speaker-name{text-align:right;}
+
+/* CHOICES */
+.choices-wrap{margin-bottom:20px;}
+.choices-label{font-size:9px;letter-spacing:.18em;font-weight:700;color:var(--sky);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.choices-label::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--sky);display:inline-block;}
+.choices{display:flex;flex-direction:column;gap:9px;}
+.choice{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer;transition:all .18s;display:flex;align-items:flex-start;gap:12px;font-size:13px;line-height:1.5;color:var(--body);}
+.choice:hover:not(.correct):not(.wrong):not(.disabled){border-color:var(--sky);background:var(--sky-bg);transform:translateX(3px);}
+.choice.correct{border-color:var(--green);background:var(--green-lt);pointer-events:none;}
+.choice.wrong{border-color:var(--red);background:var(--red-lt);}
+.choice.wrong-locked{border-color:var(--red);background:var(--red-lt);pointer-events:none;opacity:.5;}
+.choice.disabled{pointer-events:none;opacity:.35;}
+.choice-dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;margin-top:1px;}
+.choice.correct .choice-dot{background:var(--green);border-color:var(--green);color:#fff;}
+.choice.wrong .choice-dot,.choice.wrong-locked .choice-dot{background:var(--red);border-color:var(--red);color:#fff;}
+.choice-text{flex:1;}
+
+/* FEEDBACK */
+.feedback{border-radius:12px;padding:14px 16px;font-size:13px;line-height:1.65;margin-bottom:16px;display:none;animation:fadeUp .3s ease;}
+.feedback.show{display:block;}
+.feedback.ok{background:var(--green-lt);border-left:4px solid var(--green);color:#0A4425;}
+.feedback.bad{background:var(--red-lt);border-left:4px solid var(--red);color:#7A1010;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* TYPING ACTIVITY */
+.typing-activity{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px;}
+.typing-label{font-size:9px;letter-spacing:.2em;font-weight:700;color:var(--orange);margin-bottom:6px;}
+.typing-prompt{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:6px;line-height:1.4;}
+.typing-hint{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5;}
+.typing-hint em{color:var(--sky);font-style:normal;font-weight:600;}
+.typing-input{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;font-family:var(--font);font-size:13.5px;color:var(--body);resize:vertical;min-height:80px;transition:border-color .18s;outline:none;}
+.typing-input:focus{border-color:var(--sky);}
+.typing-input.ok{border-color:var(--green);background:var(--green-lt);}
+.typing-input.bad{border-color:var(--red);background:var(--red-lt);}
+.typing-check-btn{margin-top:10px;background:var(--navy);color:#fff;border:none;border-radius:8px;padding:10px 20px;font-family:var(--font);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .18s;}
+.typing-check-btn:hover{background:var(--navy3);}
+.typing-result{margin-top:10px;font-size:12.5px;line-height:1.65;display:none;border-radius:8px;padding:10px 14px;}
+.typing-result.show{display:block;}
+.typing-result.ok{background:var(--green-lt);color:#0A4425;}
+.typing-result.partial{background:var(--orange-lt);color:#7A2E00;}
+.typing-ref{background:rgba(0,174,239,.06);border:1px solid rgba(0,174,239,.2);border-radius:8px;padding:10px 14px;margin-top:8px;font-size:12.5px;color:var(--muted);line-height:1.6;}
+.typing-ref strong{color:var(--navy);}
+
+/* DRAG SORT */
+.drag-activity{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px;}
+.drag-label{font-size:9px;letter-spacing:.2em;font-weight:700;color:#6B4FBB;margin-bottom:6px;}
+.drag-prompt{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:6px;}
+.drag-hint{font-size:12px;color:var(--muted);margin-bottom:16px;}
+.drag-pool{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.drag-chip{background:var(--navy);color:rgba(255,255,255,.85);border-radius:10px;padding:11px 14px;font-size:12.5px;cursor:grab;border:1.5px solid rgba(0,174,239,.15);transition:all .18s;user-select:none;display:flex;align-items:center;gap:10px;}
+.drag-chip:active{cursor:grabbing;opacity:.8;}
+.drag-chip.dragging{opacity:.4;}
+.drag-chip.placed{background:var(--green);border-color:var(--green);cursor:default;}
+.drag-chip.placed-wrong{background:var(--red-lt);border-color:var(--red);color:var(--red);cursor:default;}
+.drag-chip-num{font-size:10px;font-weight:700;color:var(--sky);background:rgba(0,174,239,.15);border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.drag-chip.placed .drag-chip-num{background:rgba(255,255,255,.2);color:#fff;}
+.drop-zone{border:2px dashed var(--border);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--muted);text-align:center;transition:all .18s;min-height:48px;display:flex;align-items:center;justify-content:center;}
+.drop-zone.over{border-color:var(--sky);background:var(--sky-bg);}
+.drop-zone.filled{border-style:solid;border-color:var(--green);background:var(--green-lt);justify-content:flex-start;text-align:left;}
+.drop-zone.filled-wrong{border-style:solid;border-color:var(--red);background:var(--red-lt);}
+.drop-slots{display:flex;flex-direction:column;gap:8px;}
+.slot-label{font-size:9px;letter-spacing:.12em;font-weight:700;color:var(--muted);margin-bottom:3px;}
+.drag-check-btn{background:var(--navy);color:#fff;border:none;border-radius:8px;padding:10px 20px;font-family:var(--font);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .18s;margin-top:12px;}
+.drag-check-btn:hover{background:var(--navy3);}
+.drag-result{margin-top:10px;font-size:12.5px;line-height:1.65;display:none;border-radius:8px;padding:10px 14px;}
+.drag-result.show{display:block;}
+.drag-result.ok{background:var(--green-lt);color:#0A4425;}
+.drag-result.partial{background:var(--orange-lt);color:#7A2E00;}
+
+/* NEXT BTN */
+.next-btn{background:var(--sky);color:#fff;border:none;border-radius:10px;padding:12px 26px;font-family:var(--font);font-size:13.5px;font-weight:600;cursor:pointer;display:none;transition:all .18s;box-shadow:0 4px 14px rgba(0,174,239,.3);}
+.next-btn:hover{background:var(--sky2);transform:translateY(-1px);}
+.next-btn.show{display:inline-block;}
+
+/* CHECKLIST */
+.checklist-wrap{background:#fff;border-radius:16px;padding:24px 26px;box-shadow:var(--shadow);border:1.5px solid var(--line);}
+.checklist-section-title{background:var(--navy);color:var(--sky);font-size:10px;font-weight:700;letter-spacing:.18em;padding:8px 14px;border-radius:8px;margin-bottom:10px;}
+.checklist-item{display:flex;align-items:flex-start;gap:12px;padding:11px 12px;border-radius:10px;cursor:pointer;transition:all .18s;border:1.5px solid transparent;margin-bottom:6px;}
+.checklist-item:hover{background:var(--sky-bg);border-color:var(--border);}
+.checklist-item.checked{background:var(--green-lt);border-color:rgba(11,122,78,.2);}
+.checklist-box{width:22px;height:22px;border-radius:6px;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;transition:all .18s;margin-top:1px;}
+.checklist-item.checked .checklist-box{background:var(--green);border-color:var(--green);color:#fff;}
+.checklist-item-text{font-size:13px;color:var(--body);line-height:1.45;}
+.checklist-item.checked .checklist-item-text{color:var(--green);text-decoration:line-through;opacity:.7;}
+.checklist-progress{background:var(--sky-bg);border:1.5px solid var(--border);border-radius:12px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;margin-top:20px;}
+.checklist-bar-wrap{flex:1;height:6px;background:var(--line);border-radius:3px;margin:0 16px;overflow:hidden;}
+.checklist-bar-fill{height:100%;background:var(--sky);border-radius:3px;transition:width .4s ease;width:0%;}
+
+/* SCORE */
+.score-panel{background:var(--navy);border-radius:16px;padding:32px 26px;text-align:center;margin-bottom:24px;}
+.score-icon{font-size:52px;margin-bottom:12px;}
+.score-title{font-family:var(--serif);font-size:28px;color:#fff;margin-bottom:6px;}
+.score-title em{color:var(--sky);font-style:italic;}
+.score-sub{color:rgba(255,255,255,.55);font-size:13px;margin-bottom:22px;line-height:1.6;}
+.score-nums{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;}
+.score-num{background:rgba(0,174,239,.1);border:1.5px solid rgba(0,174,239,.25);border-radius:12px;padding:14px 24px;}
+.score-n{font-family:var(--serif);font-size:36px;font-weight:700;color:var(--sky);}
+.score-l{font-size:9.5px;color:rgba(255,255,255,.45);letter-spacing:.12em;margin-top:2px;}
+.tip-box{background:rgba(0,174,239,.08);border:1px solid rgba(0,174,239,.2);border-radius:10px;padding:12px 16px;font-size:12.5px;color:rgba(255,255,255,.7);line-height:1.6;}
+.tip-box strong{color:var(--sky);}
+
+/* SCRIPT REF */
+.script-ref{background:var(--navy);border-radius:14px;padding:20px 22px;margin-bottom:14px;position:relative;overflow:hidden;}
+.script-ref::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--sky);}
+.script-ref-label{color:var(--sky);font-size:8px;letter-spacing:.2em;font-weight:700;margin-bottom:8px;padding-left:14px;}
+.script-ref-text{color:rgba(255,255,255,.82);font-size:13px;line-height:1.75;padding-left:14px;font-style:italic;}
+.script-ref-text strong{color:#fff;font-style:normal;}
+
+.section{padding:40px 20px;}
+.inner{max-width:var(--max);margin:0 auto;}
+.s-label{font-size:8.5px;letter-spacing:.22em;font-weight:700;color:var(--sky);margin-bottom:6px;}
+.s-title{font-family:var(--serif);font-size:26px;color:var(--navy);margin-bottom:6px;}
+.s-bar{width:44px;height:3px;background:var(--sky);border-radius:2px;margin-bottom:20px;}
+.sep{height:1px;background:var(--line);max-width:var(--max);margin:0 auto;}
+.rp-stage{max-width:var(--max);margin:0 auto;padding:0 20px;}
+</style>
+</head>
+<body>
+<div id="prog"><div id="prog-fill"></div></div>
+
+<div class="hero">
+  <div class="hero-deco" style="width:380px;height:380px;right:-80px;top:-80px;"></div>
+  <div class="hero-stripe"></div>
+  <div class="hero-inner">
+    <div class="hero-ey">CONFIRMATIONS TEAM · DAY 2 · ROLEPLAY</div>
+    <div class="hero-title">The Confirmation<br><em>Call Roleplay</em></div>
+    <div class="hero-sub">Run a live confirmation call from start to finish. Choose your responses, type key lines from memory, and sort the voicemail. Wrong answers let you retry — but your score reflects your first attempt.</div>
+    <div class="hero-pills">
+      <span class="hero-pill">🎭 5 Call Steps</span>
+      <span class="hero-pill">✍️ Type-from-memory</span>
+      <span class="hero-pill">🔀 Drag to sort</span>
+      <span class="hero-pill">✅ Checklist sign-off</span>
+      <span class="hero-pill">🏆 First-attempt score</span>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="background:#fff;">
+  <div class="inner">
+    <div class="s-label">YOUR SCENARIO</div>
+    <div class="s-title">Meet Your Customer</div>
+    <div class="s-bar"></div>
+    <div class="scene-card">
+      <div class="scene-label">APPOINTMENT DETAILS — READ BEFORE DIALLING</div>
+      <div class="scene-grid">
+        <div class="scene-item"><div class="scene-item-label">CUSTOMER</div><div class="scene-item-val">Sarah & Mark Thompson</div></div>
+        <div class="scene-item"><div class="scene-item-label">APPOINTMENT</div><div class="scene-item-val">Tomorrow, 2:00 PM</div></div>
+        <div class="scene-item"><div class="scene-item-label">FORMAT</div><div class="scene-item-val">Zoom</div></div>
+        <div class="scene-item"><div class="scene-item-label">SPECIALIST</div><div class="scene-item-val">James Reeve</div></div>
+        <div class="scene-item"><div class="scene-item-label">ADDRESS</div><div class="scene-item-val">12 Coral St, Cronulla</div></div>
+        <div class="scene-item"><div class="scene-item-label">CALLBACK</div><div class="scene-item-val">0489 910 768</div></div>
+      </div>
+      <div class="scene-note">
+        <div style="font-size:18px;flex-shrink:0;">📋</div>
+        <div class="scene-note-txt"><strong>CRM Notes:</strong> Sarah is primary contact. Husband Mark will be present. High power bill (~$600/qtr). Good roof, no shading. <strong>Electricity bill not yet received.</strong> Both decision-makers confirmed available tomorrow.</div>
+      </div>
+    </div>
+    <div style="text-align:center;">
+      <button class="next-btn show" onclick="startRoleplay()" style="padding:14px 32px;font-size:14px;">Start the call ☎️</button>
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<div class="section" id="rp-section" style="display:none;">
+  <div class="inner">
+    <div class="step-tracker" id="step-tracker">
+      <div class="st-step active" id="st-0"><div class="st-circle">1</div><div class="st-label">Intro &<br>Rapport</div></div>
+      <div class="st-step" id="st-1"><div class="st-circle">2</div><div class="st-label">Appt<br>Details</div></div>
+      <div class="st-step" id="st-2"><div class="st-circle">3</div><div class="st-label">Assessment<br>Value</div></div>
+      <div class="st-step" id="st-3"><div class="st-circle">4</div><div class="st-label">Zoom &<br>Docs</div></div>
+      <div class="st-step" id="st-4"><div class="st-circle">5</div><div class="st-label">Close</div></div>
+    </div>
+    <div class="rp-stage" id="rp-stage"></div>
+  </div>
+</div>
+
+<div class="section" id="checklist-section" style="display:none;background:#fff;">
+  <div class="inner">
+    <div class="s-label">BEFORE YOU FINISH</div>
+    <div class="s-title">Confirmation Call Checklist</div>
+    <div class="s-bar"></div>
+    <p style="font-size:13.5px;color:var(--muted);margin-bottom:22px;line-height:1.7;">Tick every item that was covered in your call. All 11 must be checked to complete the module.</p>
+    <div class="checklist-wrap">
+      <div style="margin-bottom:20px;">
+        <div class="checklist-section-title">✓ Appointment Details</div>
+        <div class="checklist-item" onclick="tickItem(this)"><div class="checklist-box"></div><div class="checklist-item-text">Confirmed Appointment Date & Time</div></div>
+        <div class="checklist-item" onclick="tickItem(this)"><div class="checklist-box"></div><div class="checklist-item-text">Confirmed All Decision Makers Will Be Present</div></div>
+        <div class="checklist-item" onclick="tickItem(this)"><div class="checklist-box"></div><div class="checklist-item-text">Confirmed if this is a Dual Appointment (if applicable)</div></div>
+        <div class="checklist-item" onclick="tickItem(this)"><div class="checklist-box"></div><div class="checklist-item-text">Explained the Role of the Solar Specialist</div></div>
+        <div class="checklist-item" onclick="tickItem(this)"><div class="checklist-box"></div><div class="checklist-item-text">Explained Appointment Duration (60–90 minutes)</div></div>
+      </div>
+      <div style="margin-bottom:20px;">
+        <div class="checklist-section-title">✓ Zoom Protocol</div>
+        <div class="checklist-item" onclick="tickItem(this)"><div class="checklist-box"></div><div class="checklist-item-text">Customer will receive Zoom Link 15 minutes prior</div></div>
+        <div class="checklist-item" onclick="tickItem(this)"><div class="checklist-box"></div><div class="checklist-item-text">Advised to check spam/junk folder</div></div>
+        <div class="checklist-item" onclick="tickItem(this)"><div class="checklist-box"></div><div class="checklist-item-text">Asked customer to test Zoom link prior to meeting</div></div>
+      </div>
+      <div style="margin-bottom:20px;">
+        <div class="checklist-section-title">✓ Finer Details</div>
+        <div class="checklist-item" onclick="tickItem(this)"><div class="checklist-box"></div><div class="checklist-item-text">Confirmed required documents (Electricity Bill & Meter Box)</div></div>
+        <div class="checklist-item" onclick="tickItem(this)"><div class="checklist-box"></div><div class="checklist-item-text">Requested a Clear & Detailed copy of Electricity Bill</div></div>
+        <div class="checklist-item" onclick="tickItem(this)"><div class="checklist-box"></div><div class="checklist-item-text">Requested a Clear Photo of Meter Box</div></div>
+      </div>
+      <div class="checklist-progress">
+        <div style="font-size:12px;font-weight:600;color:var(--navy);">Items confirmed</div>
+        <div class="checklist-bar-wrap"><div class="checklist-bar-fill" id="cl-bar"></div></div>
+        <div style="font-size:13px;font-weight:700;color:var(--navy);white-space:nowrap;" id="cl-count">0 / 11</div>
+      </div>
+      <div style="text-align:center;margin-top:20px;">
+        <button class="next-btn" id="complete-btn" onclick="showComplete()">Complete module ✓</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="complete-section" style="display:none;">
+  <div class="inner">
+    <div class="score-panel">
+      <div class="score-icon">🏆</div>
+      <div class="score-title">Call <em>Complete.</em></div>
+      <div class="score-sub">Your score is based on first attempts only — retries don't count.</div>
+      <div class="score-nums">
+        <div class="score-num"><div class="score-n" id="final-correct">0</div><div class="score-l">FIRST-ATTEMPT CORRECT</div></div>
+        <div class="score-num"><div class="score-n" id="final-total">0</div><div class="score-l">TOTAL QUESTIONS</div></div>
+        <div class="score-num"><div class="score-n" id="final-pct">0%</div><div class="score-l">SCORE</div></div>
+      </div>
+      <div class="tip-box" id="final-tip"></div>
+    </div>
+    <div class="s-label" style="margin-top:32px;">SCRIPT REFERENCE</div>
+    <div class="s-title">Key Lines to Know</div>
+    <div class="s-bar"></div>
+    <div class="script-ref"><div class="script-ref-label">OPENING</div><div class="script-ref-text">"Hey <strong>[Customer Name]</strong>, it's <strong>[Your Name]</strong> here from RESINC Solar. How are you going today? I'm just giving you a quick call to make sure you're all set for your upcoming solar assessment with us."</div></div>
+    <div class="script-ref"><div class="script-ref-label">DUAL ATTENDANCE</div><div class="script-ref-text">"I've got yourself and <strong>[Partner]</strong> booked in for <strong>[Date & Time]</strong> — does that still suit you both? The reason we lock both of you in is because the specialist will be going through tailored recommendations specific to your household. Having both of you there means you can make a fully informed decision together."</div></div>
+    <div class="script-ref"><div class="script-ref-label">ASSESSMENT VALUE</div><div class="script-ref-text">"The specialist's role is to first make sure solar is actually suitable for your home — they'll assess your roof, meter box, and compliance. From there, they'll design a system that works best for you. It's a tailored approach, so allow around <strong>60 to 90 minutes</strong>."</div></div>
+    <div class="script-ref"><div class="script-ref-label">ZOOM & DOCS</div><div class="script-ref-text">"You'll receive your Zoom link about <strong>15 minutes prior</strong>. Keep an eye on spam or junk. Jump on a few minutes early to test the link and audio. We'll also need a recent electricity bill and a clear photo of your meter box."</div></div>
+    <div class="script-ref"><div class="script-ref-label">VOICEMAIL</div><div class="script-ref-text">"Hi <strong>[Customer Name]</strong>, this is <strong>[Your Name]</strong> from RESINC Solar calling regarding your upcoming solar assessment with us tomorrow at <strong>[Time]</strong>. Could you please give us a call back on <strong>0489 910 768</strong> to confirm your assessment. Thank you."</div></div>
+  </div>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('prog-fill').style.width=Math.min(p,100)+'%';
+});
+
+let currentStep=0;
+let correctFirstAttempt=0;
+let totalQuestions=0;
+let stepAnswered=false;
+
+const STEPS=[
+  // STEP 1 — Multiple choice: Opening
+  {
+    type:'choice',
+    label:'Step 1 — Introduction & Rapport',
+    chat:[
+      {t:'narration',text:'📞 The phone rings twice. Sarah answers.'},
+      {t:'cust',text:'"Hello?"'},
+    ],
+    prompt:'You\'ve checked the CRM. You know her name. How do you open?',
+    choices:[
+      {text:'"Hey Sarah, it\'s [Your Name] here from RESINC Solar. How are you going today? I\'m just giving you a quick call to make sure you\'re all set for your upcoming solar assessment with us."',correct:true,
+        feedback:'Perfect. Name → company → purpose. Warm, clear, and professional. This is the opener.',
+        response:{t:'cust',text:'"Oh hi! Yeah I\'m good thanks — yes, the assessment! We\'ve been looking forward to it actually."'}},
+      {text:'"Hi is this Sarah? I\'m calling about your appointment tomorrow."',correct:false,
+        feedback:'You didn\'t introduce yourself or mention RESINC. She doesn\'t know who she\'s speaking to. Try again — lead with your name and company.'},
+      {text:'"Good morning, this is RESINC Solar calling. We need to confirm your appointment details."',correct:false,
+        feedback:'"We need to confirm" sounds like a demand. The script calls for warmth and your name first. Try again.'},
+      {text:'"Hey Sarah! Just a super quick one — are you still on for tomorrow?"',correct:false,
+        feedback:'Too casual, no company name, undersells the call. Try again — be warm but clear.'}
+    ],
+    tip:'💡 Always: Your name → RESINC Solar → purpose. Every single call.'
+  },
+
+  // STEP 2 — Multiple choice: Appointment Details + Dual
+  {
+    type:'choice',
+    label:'Step 2 — Appointment Details & Dual Attendance',
+    chat:[
+      {t:'cust',text:'"Oh hi! Yeah I\'m good thanks — yes, the assessment! We\'ve been looking forward to it actually."'},
+    ],
+    prompt:'Great start. Now confirm the appointment details and lock in dual attendance.',
+    choices:[
+      {text:'"Awesome to hear! So I\'ve got yourself and Mark booked in for tomorrow at 2:00 PM — does that still suit you both? And just confirming, Mark will be joining as well?"',correct:true,
+        feedback:'You confirmed the time, named both attendees, and explicitly asked about dual attendance. Three checklist items in one natural beat.',
+        response:{t:'cust',text:'"Yes, that\'s right! Mark will definitely be there — we cleared the afternoon for it."'}},
+      {text:'"Great! So your appointment is tomorrow. Is everything still okay for you?"',correct:false,
+        feedback:'Too vague — no time confirmed, no mention of Mark, no dual attendance check. Try again.'},
+      {text:'"Perfect. I\'ve got you booked in for tomorrow at 2 PM. Can I also check the address we have is 12 Coral St?"',correct:false,
+        feedback:'Good on the time, but you missed Mark and dual attendance entirely. That\'s the most important checklist item. Try again.'},
+      {text:'"That\'s great. And can I ask — will your husband be able to make it? It\'s really important both decision-makers are there."',correct:false,
+        feedback:'You asked about Mark, but skipped confirming the date and time first. The customer might have the wrong time. Confirm specifics first, then attendance.'}
+    ],
+    tip:'💡 Time → both names → dual attendance. In that order, every time.'
+  },
+
+  // STEP 3 — TYPING: Assessment value opening line
+  {
+    type:'typing',
+    label:'Step 3 — Value of the Assessment',
+    chat:[
+      {t:'cust',text:'"Yes, that\'s right! Mark will definitely be there — we cleared the afternoon for it."'},
+    ],
+    taskLabel:'✍️ TYPE FROM MEMORY',
+    prompt:'Sarah\'s engaged and keen. Before you explain the assessment, you need to set the scene. Type the line that transitions into the assessment explanation.',
+    hint:'It starts with "I\'ll quickly..." and tells the customer what you\'re about to do.',
+    keywords:['quickly','run you through','expect','clear','nice'],
+    minKeywords:3,
+    modelAnswer:'"I\'ll quickly run you through what to expect so everything is nice and clear."',
+    okFeedback:'Exactly right. This line signals to the customer that you\'re organised and about to give them useful information — not just rambling.',
+    partialFeedback:'Close, but some key phrases are missing. The full line signals preparation and sets a calm expectation. See the model answer above.',
+    response:{t:'cust',text:'"That would be great — yes please."'},
+    followUp:{
+      chat:[{t:'narration',text:'Good. Now continue with the full assessment explanation.'}],
+      type:'choice',
+      prompt:'Pick the best explanation of what the specialist will do:',
+      choices:[
+        {text:'"The specialist\'s role is to first make sure solar is actually suitable for your home — they\'ll assess your roof, meter box, and compliance. From there, they\'ll go through your power usage and habits to design a system that works best for you both. As it\'s a tailored approach, allow around 60 to 90 minutes."',correct:true,
+          feedback:'Complete. Specialist role → tailored process → time commitment. All three checklist items covered.',
+          response:{t:'cust',text:'"Oh, I didn\'t realise it was that thorough! That sounds really worthwhile."'}},
+        {text:'"The specialist will come and chat with you about solar. It should only take about an hour."',correct:false,
+          feedback:'"Chat about solar" doesn\'t build confidence. Explain the specific process — roof, meter box, tailored design. Try again.'},
+        {text:'"It\'s basically a consultation where they\'ll give you a quote based on your usage."',correct:false,
+          feedback:'Framing it as "just a quote" puts price before value. The script leads with suitability and tailoring. Try again.'},
+        {text:'"The specialist will go through everything with you on the day — it\'s pretty comprehensive. About 60 to 90 minutes."',correct:false,
+          feedback:'Too vague. The customer needs to know what "everything" means — roof, meter box, compliance. Be specific. Try again.'}
+      ],
+      tip:'💡 Specialist role → suitability check → tailored system design → 60–90 minutes. Don\'t shortcut any part.'
+    }
+  },
+
+  // STEP 4 — Multiple choice + drag sort (voicemail)
+  {
+    type:'choice',
+    label:'Step 4 — Zoom Protocol & Documents',
+    chat:[
+      {t:'cust',text:'"Oh, I didn\'t realise it was that thorough! That sounds really worthwhile."'},
+    ],
+    prompt:'Cover the Zoom details. Remember — Sarah\'s electricity bill hasn\'t been sent through yet.',
+    choices:[
+      {text:'"This will be done via Zoom — you\'ll receive a link about 15 minutes before the appointment. Just keep an eye on your spam or junk folder, and if you can, jump on a few minutes early to test the link and audio. Also, before the appointment we\'ll need a recent electricity bill and a clear photo of your meter box — have you been able to send those through yet?"',correct:true,
+        feedback:'All three Zoom checklist items covered, plus the document request with a direct follow-up question. You checked the CRM notes and acted on them. Perfect.',
+        response:{t:'cust',text:'"Oh! I completely forgot about the electricity bill. I\'ll send it through today."'}},
+      {text:'"You\'ll get a Zoom link before the meeting. Make sure you have your electricity bill ready."',correct:false,
+        feedback:'Skipped the 15-minute timing, spam folder, and test link advice. Three checklist items missed. Try again.'},
+      {text:'"The Zoom link will be emailed to you. Just check your inbox and you\'ll have everything you need."',correct:false,
+        feedback:'No timing, no spam folder, no test link, and no document request at all. Try again — be specific.'},
+      {text:'"So this is on Zoom. You\'ll get a link 15 minutes before — keep an eye on spam. Can you also send through your power bill and meter box photo today?"',correct:false,
+        feedback:'Good effort — but you skipped asking Sarah to test the link early. That\'s on the checklist. Try again.'}
+    ],
+    tip:'💡 15 min before → spam folder → test early → bill + meter box → ask if sent.',
+    postChoice:{
+      type:'drag',
+      dragLabel:'🔀 SORT ACTIVITY',
+      prompt:'Good — now let\'s make sure you know the voicemail script cold. One of these calls goes unanswered. Put the voicemail parts in the correct order.',
+      hint:'Drag each piece into the correct slot below.',
+      chips:[
+        {id:'a',text:'"Hi [Customer Name], this is [Your Name] from RESINC Solar..."'},
+        {id:'b',text:'"...calling regarding your upcoming solar assessment with us tomorrow at [Time]."'},
+        {id:'c',text:'"Could you please give us a call back on 0489 910 768..."'},
+        {id:'d',text:'"...to confirm your assessment. Thank you."'},
+      ],
+      correctOrder:['a','b','c','d'],
+      slotLabels:['Part 1 — Who you are','Part 2 — Why you\'re calling','Part 3 — What to do','Part 4 — Sign off'],
+      okFeedback:'Spot on. That\'s the exact voicemail structure — name/company → reason → callback number → confirm & close.',
+      partialFeedback:'Not quite the right order. The voicemail follows: introduce yourself → explain why → give the callback number → close. Try again.'
+    }
+  },
+
+  // STEP 5 — Typing: Close from memory
+  {
+    type:'typing',
+    label:'Step 5 — Wrap Up & Close',
+    chat:[
+      {t:'cust',text:'"Oh! I completely forgot about the electricity bill. I\'ll send it through today."'},
+    ],
+    taskLabel:'✍️ TYPE FROM MEMORY',
+    prompt:'Sarah\'s sorted the bill. Now close the call. Type your closing line — don\'t copy the script, write it naturally from memory.',
+    hint:'A strong close: restates the time, mentions both names, leaves the door open, and signs off warmly. Include Mark\'s name and the 2 PM time.',
+    keywords:['2','mark','questions','forward','day'],
+    minKeywords:3,
+    modelAnswer:'"Perfect — that\'s everything from me. You\'re all set for tomorrow at 2 PM. If anything changes or you have any questions before then, feel free to reach out. We look forward to speaking with yourself and Mark — have a great rest of your day!"',
+    okFeedback:'Strong close. You restated the time, named Mark, left the door open, and signed off warmly — exactly what the script calls for.',
+    partialFeedback:'You got the general shape right but missed some key elements. A strong close always names both attendees, restates the time, and invites questions.',
+    response:{t:'cust',text:'"Wonderful — thank you so much! We\'ll see you tomorrow!"'}
+  }
+];
+
+function startRoleplay(){
+  document.getElementById('rp-section').style.display='block';
+  document.getElementById('rp-section').scrollIntoView({behavior:'smooth',block:'start'});
+  renderStep();
+}
+
+function updateTracker(){
+  for(let i=0;i<5;i++){
+    const el=document.getElementById('st-'+i);
+    el.classList.remove('active','done');
+    if(i<currentStep) el.classList.add('done');
+    if(i===currentStep) el.classList.add('active');
+  }
+}
+
+function renderStep(){
+  updateTracker();
+  const step=STEPS[currentStep];
+  stepAnswered=false;
+  const stage=document.getElementById('rp-stage');
+  stage.innerHTML='';
+
+  let html='';
+
+  // Chat
+  html+='<div class="chat-wrap" id="chat-wrap">';
+  html+=`<div style="text-align:center;font-size:9px;letter-spacing:.18em;font-weight:700;color:var(--sky);margin-bottom:4px;">${step.label.toUpperCase()}</div>`;
+  step.chat.forEach(m=>{ html+=bubbleHTML(m); });
+  html+='</div>';
+
+  if(step.type==='choice'){
+    html+=choiceBlockHTML(step,'main');
+    html+=`<div class="feedback" id="feedback-main"></div>`;
+  } else if(step.type==='typing'){
+    totalQuestions++;
+    html+=typingHTML(step,'main');
+  }
+  html+=`<div id="next-btn-wrap"></div>`;
+  stage.innerHTML=html;
+}
+
+function bubbleHTML(m){
+  if(m.t==='narration') return `<div class="bubble-row"><div class="bubble narration">${m.text}</div></div>`;
+  if(m.t==='cust') return `<div class="bubble-row customer"><div class="bubble-avatar cust">👤</div><div><div class="speaker-name">SARAH</div><div class="bubble cust">${m.text}</div></div></div>`;
+  if(m.t==='conf') return `<div class="bubble-row"><div class="bubble-avatar conf">📞</div><div><div class="speaker-name">YOU</div><div class="bubble conf">${m.text}</div></div></div>`;
+  return '';
+}
+
+function choiceBlockHTML(step, id){
+  let h=`<div class="choices-wrap"><div class="choices-label">YOUR TURN — ${step.prompt}</div><div class="choices" id="choices-${id}">`;
+  step.choices.forEach((c,i)=>{
+    h+=`<div class="choice" onclick="pick('${id}',${i})" id="choice-${id}-${i}"><div class="choice-dot"></div><div class="choice-text">${c.text}</div></div>`;
+  });
+  h+=`</div></div>`;
+  if(step.tip) h+=`<div style="font-size:11.5px;color:var(--muted);background:var(--sky-bg);border-radius:8px;padding:10px 14px;margin-bottom:16px;border-left:3px solid var(--sky);">${step.tip}</div>`;
+  return h;
+}
+
+function typingHTML(step, id){
+  return `<div class="typing-activity">
+    <div class="typing-label">${step.taskLabel}</div>
+    <div class="typing-prompt">${step.prompt}</div>
+    <div class="typing-hint">Hint: <em>${step.hint}</em></div>
+    <textarea class="typing-input" id="typing-input-${id}" placeholder="Type your response here..."></textarea>
+    <button class="typing-check-btn" onclick="checkTyping('${id}')">Check my answer ✓</button>
+    <div class="typing-result" id="typing-result-${id}"></div>
+  </div>`;
+}
+
+function dragHTML(step, id){
+  const shuffled=[...step.chips].sort(()=>Math.random()-.5);
+  let h=`<div class="drag-activity" id="drag-activity-${id}">
+    <div class="drag-label">${step.dragLabel}</div>
+    <div class="drag-prompt">${step.prompt}</div>
+    <div class="drag-hint">${step.hint}</div>
+    <div class="drag-pool" id="drag-pool-${id}">`;
+  shuffled.forEach(c=>{
+    h+=`<div class="drag-chip" id="chip-${id}-${c.id}" draggable="true"
+      ondragstart="dragStart('${id}','${c.id}')"
+      ondragend="dragEnd('${id}','${c.id}')">
+      <div class="drag-chip-num">⠿</div>${c.text}</div>`;
+  });
+  h+=`</div><div class="drop-slots" id="drop-slots-${id}">`;
+  step.slotLabels.forEach((lbl,i)=>{
+    h+=`<div><div class="slot-label">${lbl}</div>
+      <div class="drop-zone" id="slot-${id}-${i}"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="dropChip('${id}',${i},event)">Drop here</div></div>`;
+  });
+  h+=`</div>
+    <button class="drag-check-btn" onclick="checkDrag('${id}')">Check order ✓</button>
+    <div class="drag-result" id="drag-result-${id}"></div>
+  </div>`;
+  return h;
+}
+
+// CHOICE LOGIC
+const wrongChoices={};
+function pick(id, i){
+  const step=id==='main'?STEPS[currentStep]:currentFollowUp;
+  const choice=step.choices[i];
+  const fb=document.getElementById('feedback-'+id);
+  const isFirstAttempt=!wrongChoices[id+'-'+i];
+
+  if(choice.correct){
+    // Lock all
+    step.choices.forEach((_,j)=>{
+      const el=document.getElementById('choice-'+id+'-'+j);
+      if(j===i){ el.classList.add('correct'); el.querySelector('.choice-dot').textContent='✓'; }
+      else { el.classList.add(wrongChoices[id+'-'+j]?'wrong-locked':'disabled'); }
+    });
+    fb.className='feedback show ok';
+    fb.innerHTML='✅  '+choice.feedback+(step.tip?'<br><br><em>'+step.tip+'</em>':'');
+
+    if(!stepAnswered || id!=='main'){
+      if(id==='main'){ stepAnswered=true; totalQuestions++; if(isFirstAttempt) correctFirstAttempt++; }
+    }
+
+    // Add bubbles
+    const chatWrap=document.getElementById('chat-wrap');
+    const confRow=document.createElement('div');
+    confRow.className='bubble-row';
+    confRow.innerHTML=`<div class="bubble-avatar conf">📞</div><div><div class="speaker-name">YOU</div><div class="bubble conf">${choice.text}</div></div>`;
+    chatWrap.appendChild(confRow);
+    if(choice.response){
+      setTimeout(()=>{
+        const cr=document.createElement('div');
+        cr.className='bubble-row customer';
+        cr.innerHTML=`<div class="bubble-avatar cust">👤</div><div><div class="speaker-name">SARAH</div><div class="bubble cust">${choice.response.text}</div></div>`;
+        chatWrap.appendChild(cr);
+        cr.scrollIntoView({behavior:'smooth',block:'nearest'});
+      },600);
+    }
+
+    // Show next or follow-up content
+    setTimeout(()=>{
+      if(id==='main' && STEPS[currentStep].postChoice){
+        showPostChoice();
+      } else if(id==='main' && STEPS[currentStep].followUp){
+        showFollowUp();
+      } else {
+        moveNextBtn(currentStep>=STEPS.length-1?'Finish call ✓':'Continue →');
+      }
+    }, 800);
+
+  } else {
+    // Wrong — mark red but allow retry
+    const el=document.getElementById('choice-'+id+'-'+i);
+    el.classList.add('wrong');
+    el.querySelector('.choice-dot').textContent='✗';
+    wrongChoices[id+'-'+i]=true;
+    fb.className='feedback show bad';
+    fb.innerHTML='❌  '+choice.feedback+' <strong>Try again.</strong>';
+    fb.scrollIntoView({behavior:'smooth',block:'nearest'});
+
+    // Re-enable after 1.5s
+    setTimeout(()=>{
+      el.classList.remove('wrong');
+      el.classList.add('wrong-locked');
+      el.style.pointerEvents='none';
+    },1500);
+  }
+}
+
+// TYPING LOGIC
+function checkTyping(id){
+  const step=id==='main'?STEPS[currentStep]:null;
+  const input=document.getElementById('typing-input-'+id);
+  const result=document.getElementById('typing-result-'+id);
+  const val=input.value.toLowerCase().trim();
+  if(!val){ result.className='typing-result show partial'; result.textContent='Please type something first.'; return; }
+
+  const hits=step.keywords.filter(k=>val.includes(k.toLowerCase())).length;
+  const isFirstAttempt=!input.dataset.checked;
+  input.dataset.checked='1';
+
+  if(hits>=step.minKeywords){
+    input.classList.add('ok');
+    result.className='typing-result show ok';
+    result.innerHTML='✅  '+step.okFeedback+'<div class="typing-ref"><strong>Model answer:</strong> '+step.modelAnswer+'</div>';
+    if(isFirstAttempt){ correctFirstAttempt++; }
+    // Add customer response
+    if(step.response){
+      setTimeout(()=>{
+        const chatWrap=document.getElementById('chat-wrap');
+        const cr=document.createElement('div');
+        cr.className='bubble-row customer';
+        cr.innerHTML=`<div class="bubble-avatar cust">👤</div><div><div class="speaker-name">SARAH</div><div class="bubble cust">${step.response.text}</div></div>`;
+        chatWrap.appendChild(cr);
+        cr.scrollIntoView({behavior:'smooth',block:'nearest'});
+      },600);
+    }
+    setTimeout(()=>{
+      if(step.followUp){
+        showFollowUp();
+      } else {
+        moveNextBtn(currentStep>=STEPS.length-1?'Finish call ✓':'Continue →');
+      }
+    },800);
+  } else {
+    input.classList.add('bad');
+    result.className='typing-result show partial';
+    result.innerHTML='⚠️  '+step.partialFeedback+'<div class="typing-ref"><strong>Key phrases to include:</strong> '+step.keywords.join(', ')+'</div>';
+    setTimeout(()=>{ input.classList.remove('bad'); },1500);
+  }
+}
+
+// DRAG LOGIC
+let dragId=null;
+let dragSlots={};
+function dragStart(id,chipId){ dragId=chipId; document.getElementById('chip-'+id+'-'+chipId).classList.add('dragging'); }
+function dragEnd(id,chipId){ document.getElementById('chip-'+id+'-'+chipId).classList.remove('dragging'); }
+function dropChip(id,slotIdx,e){
+  e.preventDefault();
+  const zone=document.getElementById('slot-'+id+'-'+slotIdx);
+  zone.classList.remove('over');
+  if(!dragId) return;
+  // If slot already has a chip, return it
+  if(dragSlots[id+'-'+slotIdx]){
+    const prev=dragSlots[id+'-'+slotIdx];
+    const pool=document.getElementById('drag-pool-'+id);
+    const prevChip=document.getElementById('chip-'+id+'-'+prev);
+    prevChip.classList.remove('placed','placed-wrong');
+    pool.appendChild(prevChip);
+  }
+  dragSlots[id+'-'+slotIdx]=dragId;
+  const chip=document.getElementById('chip-'+id+'-'+dragId);
+  chip.classList.add('placed');
+  zone.className='drop-zone filled';
+  zone.innerHTML='';
+  zone.appendChild(chip);
+  dragId=null;
+}
+
+function checkDrag(id){
+  const step=STEPS[currentStep].postChoice;
+  const result=document.getElementById('drag-result-'+id);
+  let correct=0;
+  step.correctOrder.forEach((chipId,i)=>{
+    const placed=dragSlots[id+'-'+i];
+    const zone=document.getElementById('slot-'+id+'-'+i);
+    if(placed===chipId){
+      correct++;
+      zone.classList.add('filled');
+      zone.style.borderColor='var(--green)';
+    } else {
+      zone.style.borderColor='var(--red)';
+      if(placed){
+        const chip=document.getElementById('chip-'+id+'-'+placed);
+        chip.classList.add('placed-wrong');
+      }
+    }
+  });
+  const isFirst=!document.getElementById('drag-activity-'+id).dataset.checked;
+  document.getElementById('drag-activity-'+id).dataset.checked='1';
+
+  if(correct===step.correctOrder.length){
+    result.className='drag-result show ok';
+    result.innerHTML='✅  '+step.okFeedback;
+    if(isFirst) correctFirstAttempt++;
+    setTimeout(()=>{
+      moveNextBtn('Continue →');
+    },600);
+  } else {
+    result.className='drag-result show partial';
+    result.innerHTML='⚠️  '+step.partialFeedback+' Try rearranging.';
+    // Reset wrong slots
+    setTimeout(()=>{
+      step.correctOrder.forEach((chipId,i)=>{
+        const placed=dragSlots[id+'-'+i];
+        if(placed!==chipId){
+          const zone=document.getElementById('slot-'+id+'-'+i);
+          zone.style.borderColor='';
+          if(placed){
+            const chip=document.getElementById('chip-'+id+'-'+placed);
+            chip.classList.remove('placed','placed-wrong');
+            document.getElementById('drag-pool-'+id).appendChild(chip);
+            zone.className='drop-zone';
+            zone.innerHTML='Drop here';
+            delete dragSlots[id+'-'+i];
+          }
+        }
+      });
+    },1500);
+  }
+}
+
+let currentFollowUp=null;
+
+function showFollowUp(){
+  const step=STEPS[currentStep];
+  const fu=step.followUp;
+  currentFollowUp=fu;
+  totalQuestions++;
+  const stage=document.getElementById('rp-stage');
+  let extra='<div style="margin-top:20px;">';
+  if(fu.chat) fu.chat.forEach(m=>{ extra+=bubbleHTML(m); });
+  extra+=choiceBlockHTML(fu,'followup');
+  extra+=`<div class="feedback" id="feedback-followup"></div>`;
+  extra+='</div>';
+  stage.innerHTML+=extra;
+  moveNextBtn(currentStep>=STEPS.length-1?'Finish call ✓':'Continue →');
+  stage.lastElementChild.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function showPostChoice(){
+  const step=STEPS[currentStep];
+  const pc=step.postChoice;
+  totalQuestions++;
+  const stage=document.getElementById('rp-stage');
+  let extra='<div style="margin-top:20px;">'+dragHTML(pc,'voicemail')+'</div>';
+  stage.innerHTML+=extra;
+  moveNextBtn('Continue →');
+  stage.lastElementChild.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function moveNextBtn(label){
+  const wrap=document.getElementById('next-btn-wrap');
+  if(!wrap) return;
+  wrap.innerHTML=`<button class="next-btn show" style="margin-top:8px;" onclick="nextStep()">${label}</button>`;
+  setTimeout(()=>wrap.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+}
+
+function nextStep(){
+  currentStep++;
+  if(currentStep>=STEPS.length){
+    showChecklist();
+  } else {
+    renderStep();
+    document.getElementById('step-tracker').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+}
+
+function showChecklist(){
+  document.getElementById('rp-section').style.display='none';
+  document.getElementById('checklist-section').style.display='block';
+  document.getElementById('checklist-section').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+const TOTAL_ITEMS=11;
+let checkedItems=0;
+function tickItem(el){
+  el.classList.toggle('checked');
+  el.querySelector('.checklist-box').textContent=el.classList.contains('checked')?'✓':'';
+  checkedItems=document.querySelectorAll('.checklist-item.checked').length;
+  document.getElementById('cl-count').textContent=checkedItems+' / '+TOTAL_ITEMS;
+  document.getElementById('cl-bar').style.width=(checkedItems/TOTAL_ITEMS*100)+'%';
+  const btn=document.getElementById('complete-btn');
+  if(checkedItems===TOTAL_ITEMS){ btn.classList.add('show'); btn.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+  else { btn.classList.remove('show'); }
+}
+
+function showComplete(){
+  document.getElementById('checklist-section').style.display='none';
+  document.getElementById('complete-section').style.display='block';
+  const pct=totalQuestions>0?Math.round(correctFirstAttempt/totalQuestions*100):0;
+  document.getElementById('final-correct').textContent=correctFirstAttempt;
+  document.getElementById('final-total').textContent=totalQuestions;
+  document.getElementById('final-pct').textContent=pct+'%';
+  const tip=document.getElementById('final-tip');
+  if(pct===100) tip.innerHTML='<strong>100% first attempts.</strong> Flawless. You knew the script, you knew the structure, and you delivered it clean. That\'s the standard.';
+  else if(pct>=75) tip.innerHTML='<strong>Strong performance.</strong> You got the critical beats right. Review the steps you missed — they\'re usually the moments that prevent day-of cancellations.';
+  else if(pct>=50) tip.innerHTML='<strong>Getting there.</strong> Read through the script reference below carefully, then run this roleplay again. The repetition is the point.';
+  else tip.innerHTML='<strong>More practice needed.</strong> Work through the script reference below before your first live call. Run this roleplay again — it\'ll feel much more natural the second time.';
+  document.getElementById('complete-section').scrollIntoView({behavior:'smooth',block:'start'});
+}
+</script>
+</body>
+</html>
