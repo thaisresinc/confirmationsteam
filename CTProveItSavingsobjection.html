@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Prove It | Savings & Guarantee</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0A3542;--navy2:#071F28;--navy3:#0D4558;
+  --sky:#00AEEF;--sky2:#0090C4;--sky-lt:#EAF6FD;
+  --green:#0B7A4E;--green-lt:#E3F5EC;
+  --red:#B5251B;--red-lt:#FDECEB;
+  --orange:#D4620A;--orange-lt:#FEF3EB;
+  --gold:#D4940A;--gold-lt:#FEF3CD;
+  --purple:#6B4FBB;
+  --body:#1A2A32;--muted:#5A6E78;--light:#F4F8FB;
+  --border:#C8DDE8;--line:#E2EEF4;
+  --font:'DM Sans',system-ui,sans-serif;
+  --serif:'DM Serif Display',Georgia,serif;
+  --max:820px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--navy2);color:#fff;min-height:100vh;}
+
+/* ═══ INTRO ═══ */
+#intro-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;position:relative;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;}
+.intro-inner{max-width:560px;text-align:center;position:relative;z-index:1;}
+.intro-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,174,239,.12);border:1.5px solid rgba(0,174,239,.25);border-radius:20px;padding:7px 18px;margin-bottom:24px;font-size:10px;font-weight:700;letter-spacing:.2em;color:var(--sky);}
+.intro-title{font-family:var(--serif);font-size:clamp(48px,8vw,72px);color:#fff;line-height:.95;margin-bottom:14px;}
+.intro-title em{color:var(--sky);font-style:italic;display:block;}
+.intro-sub{color:rgba(255,255,255,.5);font-size:15px;line-height:1.7;max-width:440px;margin:0 auto 28px;}
+.intro-scenario{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:20px 24px;margin-bottom:28px;text-align:left;}
+.intro-scenario-label{font-size:9px;font-weight:700;letter-spacing:.2em;color:var(--sky);margin-bottom:10px;}
+.intro-scenario-text{font-size:13.5px;color:rgba(255,255,255,.7);line-height:1.7;}
+.intro-scenario-text strong{color:#fff;}
+.intro-how{display:flex;flex-direction:column;gap:10px;margin-bottom:32px;text-align:left;}
+.intro-how-item{display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:12px 16px;}
+.intro-how-ico{font-size:20px;flex-shrink:0;}
+.intro-how-text{font-size:13px;color:rgba(255,255,255,.65);line-height:1.5;}
+.intro-how-text strong{color:#fff;}
+.start-btn{background:var(--sky);color:#fff;border:none;border-radius:14px;padding:18px 52px;font-family:var(--font);font-size:16px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 8px 32px rgba(0,174,239,.4);}
+.start-btn:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,174,239,.5);}
+
+/* ═══ GAME ═══ */
+#game-screen{display:none;min-height:100vh;padding-bottom:80px;}
+
+/* HUD */
+.hud{position:sticky;top:0;z-index:50;background:rgba(7,31,40,.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06);padding:10px 20px;}
+.hud-inner{max-width:var(--max);margin:0 auto;display:flex;align-items:center;gap:14px;}
+.hud-round{font-size:9px;font-weight:700;letter-spacing:.16em;color:rgba(255,255,255,.35);}
+.hud-title{font-size:13px;font-weight:700;color:#fff;flex:1;}
+.skeptic-wrap{display:flex;align-items:center;gap:8px;}
+.skeptic-label{font-size:9px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.35);}
+.skeptic-bar-bg{width:120px;height:8px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden;}
+.skeptic-fill{height:100%;border-radius:4px;transition:width .6s ease,background .6s ease;background:var(--red);}
+.skeptic-val{font-size:11px;font-weight:700;min-width:40px;text-align:right;}
+
+/* SCENE */
+.scene-wrap{max-width:var(--max);margin:0 auto;padding:28px 20px 0;}
+.round-tag{font-size:9px;font-weight:700;letter-spacing:.2em;color:var(--sky);opacity:.7;margin-bottom:10px;}
+
+/* CUSTOMER CARD */
+.customer-card{background:var(--navy);border-radius:20px;padding:22px;margin-bottom:20px;border:1.5px solid rgba(255,255,255,.06);position:relative;overflow:hidden;}
+.customer-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red),var(--orange));}
+.customer-top{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
+.customer-av{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#2A3E4A,#1A2E3A);border:2px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.customer-name{font-size:11px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.08em;}
+.customer-mood{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;margin-top:3px;}
+.mood-skeptic{background:rgba(181,37,27,.2);color:#F87171;}
+.mood-curious{background:rgba(212,148,10,.2);color:#FCD34D;}
+.mood-open{background:rgba(11,122,78,.2);color:#4ADE80;}
+.objection-tag{font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--orange);margin-bottom:8px;}
+.objection-bubble{background:rgba(255,255,255,.05);border-radius:0 16px 16px 16px;padding:16px 18px;font-size:15px;color:#fff;line-height:1.65;border:1px solid rgba(255,255,255,.07);font-style:italic;animation:bubIn .4s cubic-bezier(.34,1.56,.64,1);}
+@keyframes bubIn{from{opacity:0;transform:translateY(-8px)scale(.97);}to{opacity:1;transform:none;}}
+
+/* RESPONSE BUILDER */
+.builder-wrap{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:20px;margin-bottom:20px;}
+.builder-label{font-size:9px;font-weight:700;letter-spacing:.18em;color:var(--sky);margin-bottom:6px;}
+.builder-desc{font-size:12.5px;color:rgba(255,255,255,.45);margin-bottom:16px;line-height:1.5;}
+.response-display{background:var(--navy);border-radius:12px;min-height:80px;padding:14px 16px;margin-bottom:16px;border:1.5px dashed rgba(0,174,239,.2);display:flex;flex-direction:column;gap:8px;transition:border-color .3s;}
+.response-display.has-items{border-style:solid;border-color:rgba(0,174,239,.3);}
+.placed-piece{background:rgba(0,174,239,.12);border:1px solid rgba(0,174,239,.25);border-radius:8px;padding:9px 12px;font-size:13px;color:rgba(255,255,255,.85);display:flex;align-items:center;gap:10px;animation:pieceIn .25s cubic-bezier(.34,1.56,.64,1);}
+@keyframes pieceIn{from{opacity:0;transform:scale(.9);}to{opacity:1;transform:none;}}
+.placed-piece.wrong{background:rgba(181,37,27,.12);border-color:rgba(181,37,27,.3);color:#FCA5A5;}
+.placed-piece.correct{background:rgba(11,122,78,.12);border-color:rgba(11,122,78,.3);color:#A3F0C8;}
+.placed-num{width:20px;height:20px;border-radius:50%;background:rgba(0,174,239,.2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--sky);flex-shrink:0;}
+.placed-piece.wrong .placed-num{background:rgba(181,37,27,.2);color:#F87171;}
+.placed-piece.correct .placed-num{background:rgba(11,122,78,.2);color:#4ADE80;}
+.remove-piece{background:none;border:none;color:rgba(255,255,255,.25);cursor:pointer;font-size:16px;margin-left:auto;padding:0 4px;line-height:1;}
+.remove-piece:hover{color:#F87171;}
+.response-empty{color:rgba(255,255,255,.2);font-size:13px;font-style:italic;align-self:center;margin:auto;}
+
+/* EVIDENCE POOL */
+.evidence-label{font-size:9px;font-weight:700;letter-spacing:.16em;color:rgba(255,255,255,.35);margin-bottom:10px;}
+.evidence-pool{display:flex;flex-direction:column;gap:8px;}
+.evidence-card{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.09);border-radius:12px;padding:13px 16px;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:12px;}
+.evidence-card:hover:not(.used):not(.wrong-pick){background:rgba(0,174,239,.08);border-color:rgba(0,174,239,.3);transform:translateX(4px);}
+.evidence-card.used{opacity:.3;pointer-events:none;}
+.evidence-card.wrong-pick{background:rgba(181,37,27,.08);border-color:rgba(181,37,27,.25);animation:wrongShake .3s ease;}
+@keyframes wrongShake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);};}
+.evidence-ico{font-size:18px;flex-shrink:0;margin-top:1px;}
+.evidence-text{font-size:13px;color:rgba(255,255,255,.75);line-height:1.5;flex:1;}
+.evidence-tag{font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:20px;flex-shrink:0;margin-top:2px;}
+.evidence-tag.fact{background:rgba(0,174,239,.15);color:var(--sky);}
+.evidence-tag.guarantee{background:rgba(11,122,78,.15);color:#4ADE80;}
+.evidence-tag.reframe{background:rgba(212,148,10,.15);color:#FCD34D;}
+.evidence-tag.wrong{background:rgba(181,37,27,.12);color:#F87171;}
+
+/* SUBMIT BTN */
+.submit-wrap{margin-top:16px;display:flex;align-items:center;gap:12px;}
+.submit-btn{background:var(--sky);color:#fff;border:none;border-radius:10px;padding:12px 24px;font-family:var(--font);font-size:13.5px;font-weight:700;cursor:pointer;transition:all .18s;box-shadow:0 4px 14px rgba(0,174,239,.3);}
+.submit-btn:hover{background:var(--sky2);transform:translateY(-1px);}
+.submit-btn:disabled{opacity:.3;cursor:not-allowed;transform:none;}
+.submit-hint{font-size:11.5px;color:rgba(255,255,255,.3);}
+
+/* CUSTOMER REACT */
+.react-wrap{background:var(--navy);border-radius:14px;padding:16px 18px;margin-bottom:20px;border:1.5px solid;display:none;animation:fadeUp .35s ease;}
+.react-wrap.show{display:block;}
+.react-wrap.positive{border-color:rgba(11,122,78,.3);}
+.react-wrap.negative{border-color:rgba(181,37,27,.3);}
+.react-wrap.neutral{border-color:rgba(212,148,10,.3);}
+.react-label{font-size:9px;font-weight:700;letter-spacing:.14em;margin-bottom:8px;}
+.react-wrap.positive .react-label{color:#4ADE80;}
+.react-wrap.negative .react-label{color:#F87171;}
+.react-wrap.neutral .react-label{color:#FCD34D;}
+.react-text{font-size:13.5px;color:rgba(255,255,255,.8);line-height:1.65;font-style:italic;}
+.react-score{font-size:11.5px;font-weight:700;margin-top:8px;}
+.react-wrap.positive .react-score{color:#4ADE80;}
+.react-wrap.negative .react-score{color:#F87171;}
+
+/* FEEDBACK */
+.feedback{border-radius:12px;padding:14px 16px;font-size:13px;line-height:1.65;margin-bottom:16px;display:none;animation:fadeUp .3s ease;}
+.feedback.show{display:block;}
+.feedback.ok{background:rgba(11,122,78,.1);border-left:4px solid var(--green);color:#A3F0C8;}
+.feedback.bad{background:rgba(181,37,27,.1);border-left:4px solid var(--red);color:#FCA5A5;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+/* NEXT BTN */
+#next-btn-wrap{margin-top:8px;}
+.next-btn{background:var(--sky);color:#fff;border:none;border-radius:12px;padding:13px 28px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(0,174,239,.35);}
+.next-btn:hover{transform:translateY(-2px);}
+
+/* SCORE FLASH */
+.score-flash{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:200;font-family:var(--serif);font-size:52px;font-weight:700;animation:scoreAnim 1s ease forwards;}
+.score-flash.good{color:#4ADE80;text-shadow:0 0 30px rgba(74,222,128,.6);}
+.score-flash.bad{color:#F87171;text-shadow:0 0 30px rgba(248,113,113,.6);}
+@keyframes scoreAnim{0%{opacity:1;transform:translate(-50%,-50%) scale(1);}100%{opacity:0;transform:translate(-50%,-120%) scale(1.4);}}
+
+/* END */
+#end-screen{display:none;min-height:100vh;align-items:center;justify-content:center;padding:40px 20px;}
+#end-screen.show{display:flex;}
+.end-inner{max-width:600px;width:100%;text-align:center;}
+.end-icon{font-size:72px;margin-bottom:16px;animation:bounceIn .6s cubic-bezier(.34,1.56,.64,1);}
+@keyframes bounceIn{from{opacity:0;transform:scale(.4);}to{opacity:1;transform:scale(1);}}
+.end-title{font-family:var(--serif);font-size:52px;color:#fff;line-height:1;margin-bottom:8px;}
+.end-title em{color:var(--sky);font-style:italic;}
+.end-sub{color:rgba(255,255,255,.5);font-size:14px;margin-bottom:28px;line-height:1.6;}
+.end-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+.end-stat{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px 12px;}
+.end-stat-n{font-family:var(--serif);font-size:36px;font-weight:700;color:var(--sky);margin-bottom:4px;}
+.end-stat-l{font-size:9.5px;color:rgba(255,255,255,.35);letter-spacing:.1em;}
+.end-feedback{background:rgba(0,174,239,.06);border:1px solid rgba(0,174,239,.12);border-radius:14px;padding:18px 22px;margin-bottom:24px;font-size:13.5px;color:rgba(255,255,255,.65);line-height:1.7;text-align:left;}
+.end-feedback strong{color:#fff;}
+.script-panel{background:var(--navy);border-radius:16px;margin-top:28px;overflow:hidden;text-align:left;}
+.script-header{padding:14px 20px;background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.06);}
+.script-header-title{font-size:11px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.14em;}
+.script-body{padding:20px;}
+.script-item{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,.05);}
+.script-item:last-child{border:none;margin:0;padding:0;}
+.script-obj{font-size:10px;font-weight:700;color:var(--orange);letter-spacing:.1em;margin-bottom:5px;}
+.script-line{font-size:13px;color:rgba(255,255,255,.7);line-height:1.7;font-style:italic;}
+.script-line strong{color:#fff;font-style:normal;}
+.end-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.replay-btn{background:rgba(255,255,255,.06);color:rgba(255,255,255,.6);border:1.5px solid rgba(255,255,255,.1);border-radius:10px;padding:11px 22px;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;}
+.replay-btn:hover{background:rgba(255,255,255,.1);color:#fff;}
+.restart-btn{background:var(--sky);color:#fff;border:none;border-radius:12px;padding:14px 36px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 6px 20px rgba(0,174,239,.35);}
+.restart-btn:hover{transform:translateY(-2px);}
+</style>
+</head>
+<body>
+
+<!-- ═══ INTRO ═══ -->
+<div id="intro-screen">
+  <div class="orb" style="width:500px;height:500px;background:radial-gradient(rgba(0,174,239,.1),transparent);top:-150px;right:-150px;"></div>
+  <div class="orb" style="width:400px;height:400px;background:radial-gradient(rgba(11,122,78,.08),transparent);bottom:-100px;left:-100px;"></div>
+  <div class="intro-inner">
+    <div class="intro-badge">🔬 PROVE IT</div>
+    <div class="intro-title">Build the<br><em>Case.</em></div>
+    <div class="intro-sub">The customer doesn't believe the savings are real. You need to build your response piece by piece — pick the right evidence, add it in the right order, and watch their skepticism drop in real time.</div>
+    <div class="intro-scenario">
+      <div class="intro-scenario-label">📞 THE SITUATION</div>
+      <div class="intro-scenario-text"><strong>Peter & Sue Walsh</strong> have an appointment tomorrow at 2PM. Peter just called back — he's done some research online and now he's skeptical. He's throwing objections. Your job: build the right response for each one by selecting the correct pieces of evidence.</div>
+    </div>
+    <div class="intro-how">
+      <div class="intro-how-item"><div class="intro-how-ico">🧩</div><div class="intro-how-text"><strong>Pick the right pieces</strong> from the evidence pool below each objection. Wrong pieces make Peter more skeptical.</div></div>
+      <div class="intro-how-item"><div class="intro-how-ico">📊</div><div class="intro-how-text"><strong>Watch the skeptic bar</strong> — it drops when you build a strong response and rises when you get it wrong.</div></div>
+      <div class="intro-how-item"><div class="intro-how-ico">👤</div><div class="intro-how-text"><strong>Peter reacts in real time</strong> — his mood changes based on how well you've built your case.</div></div>
+    </div>
+    <button class="start-btn" onclick="startGame()">Build the case 🔬</button>
+  </div>
+</div>
+
+<!-- ═══ GAME ═══ -->
+<div id="game-screen">
+  <div class="hud">
+    <div class="hud-inner">
+      <div>
+        <div class="hud-round" id="hud-round">OBJECTION 1 / 5</div>
+        <div class="hud-title" id="hud-title">Loading...</div>
+      </div>
+      <div class="skeptic-wrap">
+        <div class="skeptic-label">SKEPTICISM</div>
+        <div class="skeptic-bar-bg"><div class="skeptic-fill" id="skeptic-fill" style="width:80%"></div></div>
+        <div class="skeptic-val" id="skeptic-val" style="color:#F87171;">80%</div>
+      </div>
+    </div>
+  </div>
+  <div class="scene-wrap" id="scene-wrap"></div>
+</div>
+
+<!-- ═══ END ═══ -->
+<div id="end-screen">
+  <div class="end-inner">
+    <div class="end-icon" id="end-icon">🏆</div>
+    <div class="end-title" id="end-title">Peter's <em>convinced.</em></div>
+    <div class="end-sub" id="end-sub"></div>
+    <div class="end-stats">
+      <div class="end-stat"><div class="end-stat-n" id="es-score">0</div><div class="end-stat-l">SCORE</div></div>
+      <div class="end-stat"><div class="end-stat-n" id="es-skeptic">0%</div><div class="end-stat-l">FINAL SKEPTICISM</div></div>
+      <div class="end-stat"><div class="end-stat-n" id="es-perfect">0/5</div><div class="end-stat-l">PERFECT BUILDS</div></div>
+    </div>
+    <div class="end-feedback" id="end-feedback"></div>
+    <div class="end-btns">
+      <button class="restart-btn" onclick="restartGame()">Play again ↺</button>
+      <button class="replay-btn" onclick="toggleScripts()">View scripts 📋</button>
+    </div>
+    <div id="script-panel-wrap" style="display:none;">
+      <div class="script-panel">
+        <div class="script-header"><div class="script-header-title">SAVINGS & GUARANTEE — KEY SCRIPTS</div></div>
+        <div class="script-body" id="script-body"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// ROUNDS DATA
+// Each round: objection + evidence pool (some correct, some wrong)
+// correctPieces: array of IDs in correct ORDER
+// ═══════════════════════════════════════════════
+const ROUNDS=[
+  {
+    id:1,
+    objectionTag:'💰 PAYING THE SAME OBJECTION',
+    objection:'"Look — I\'ve been thinking about this. Aren\'t we just paying the same amount? Like, instead of the power bill we\'re just paying off the solar system. What\'s actually different?"',
+    mood:'skeptic',
+    moodLabel:'Skeptical 🤨',
+    instruction:'Build a response that acknowledges the concern, explains the key difference, and adds the long-term picture. Select pieces in the right order.',
+    correctPieces:['ack-same','explain-rise','explain-lock','reframe-own'],
+    evidence:[
+      {id:'ack-same',ico:'🤝',text:'"Yeah, that\'s a really good question — and in the beginning it can feel quite similar."',tag:'reframe',tagLabel:'Acknowledge'},
+      {id:'explain-rise',ico:'📈',text:'"The key difference is that power prices keep rising — but solar doesn\'t. Your bill goes up every year. Your system doesn\'t."',tag:'fact',tagLabel:'Key fact'},
+      {id:'explain-lock',ico:'🔒',text:'"Once the system is paid off, it\'s yours — and everything after that is pure saving. You\'re not paying the energy company forever."',tag:'guarantee',tagLabel:'Long-term'},
+      {id:'reframe-own',ico:'🏠',text:'"So the longer it runs, the bigger the gap between what you were paying and what you\'re now producing yourself."',tag:'reframe',tagLabel:'Reframe'},
+      {id:'wrong-rebate',ico:'💸',text:'"Plus there are government rebates that can significantly reduce the upfront cost."',tag:'wrong',tagLabel:'❌ Off-topic'},
+      {id:'wrong-quick',text:'"It\'s actually quite a straightforward process — most people are surprised how easy it is."',ico:'😊',tag:'wrong',tagLabel:'❌ Wrong focus'},
+    ],
+    reactPositive:{mood:'curious',moodLabel:'Getting curious 🤔',text:'"Okay... so you\'re saying it starts similar but over time the solar wins because the power bill keeps going up but my repayments don\'t?"',score:'+300'},
+    reactNegative:{mood:'skeptic',moodLabel:'Still skeptical 😒',text:'"I\'m not sure that really answers my question. It still sounds like I\'m just paying the same."',score:'-100'},
+    scriptRef:'"Yeah, that\'s a really good question. The reason people usually ask that is because in the beginning it can feel similar. What we\'ve found though is over time, power prices keep rising — but solar doesn\'t. So the longer it runs, the more difference you start to see between what you were paying and what you\'re now producing yourself."'
+  },
+  {
+    id:2,
+    objectionTag:'🔍 SAVINGS VERIFICATION OBJECTION',
+    objection:'"How do I actually know the savings are going to be real? I\'ve seen other companies promise all sorts of things and it never adds up."',
+    mood:'skeptic',
+    moodLabel:'Skeptical 🤨',
+    instruction:'Peter has been burned before. He needs specifics — not vague reassurance. Build a response that validates his concern and explains exactly how the guarantee works.',
+    correctPieces:['ack-fair','explain-actual','explain-guarantee','explain-covered'],
+    evidence:[
+      {id:'ack-fair',ico:'🤝',text:'"Yeah, that\'s a really fair question — and you\'re right to ask it."',tag:'reframe',tagLabel:'Acknowledge'},
+      {id:'explain-actual',ico:'📊',text:'"What we do is base everything off your actual usage and a proper system design — not generic averages or rough estimates."',tag:'fact',tagLabel:'Specific'},
+      {id:'explain-guarantee',ico:'🛡️',text:'"We back it with a 100% Savings Guarantee — which means if the system doesn\'t deliver the expected performance, we cover the difference."',tag:'guarantee',tagLabel:'Guarantee'},
+      {id:'explain-covered',ico:'✅',text:'"So you\'re not taking the risk on yourself. If there\'s a shortfall in performance, RESINC steps in — you\'re protected either way."',tag:'guarantee',tagLabel:'Protection'},
+      {id:'wrong-trust',ico:'🙏',text:'"You\'ll just have to trust the process — most customers are really happy with the outcome."',tag:'wrong',tagLabel:'❌ Vague'},
+      {id:'wrong-rebate2',ico:'💸',text:'"The government rebates also help make the numbers work better in your favour."',tag:'wrong',tagLabel:'❌ Off-topic'},
+    ],
+    reactPositive:{mood:'curious',moodLabel:'Interested 🤔',text:'"Wait — so there\'s actually a written guarantee? Not just a verbal promise?"',score:'+300'},
+    reactNegative:{mood:'skeptic',moodLabel:'More skeptical 😤',text:'"That sounds like marketing speak to me. Every company says their savings are real."',score:'-150'},
+    scriptRef:'"Yeah, that\'s a really fair question. We offer a 100% Savings Guarantee — which means the system is backed to perform as expected based on your design and usage. And if in the rare case it doesn\'t, we step in and cover the difference. So you\'re not taking the risk on yourself."'
+  },
+  {
+    id:3,
+    objectionTag:'🛡️ "IS THIS JUST MARKETING?" OBJECTION',
+    objection:'"Look, a 100% Savings Guarantee sounds great but honestly it sounds like marketing. Every company has some kind of guarantee. What does it actually mean?"',
+    mood:'skeptic',
+    moodLabel:'Calling you out 😤',
+    instruction:'Peter wants specifics, not spin. Build a response that clarifies what the guarantee actually covers — step by step.',
+    correctPieces:['ack-get','clarify-written','clarify-what','clarify-who'],
+    evidence:[
+      {id:'ack-get',ico:'🤝',text:'"Yeah, I get why it might sound like that at first — it\'s a fair thing to question."',tag:'reframe',tagLabel:'Acknowledge'},
+      {id:'clarify-written',ico:'📄',text:'"This isn\'t just a claim — it\'s a written, performance-backed guarantee tied to how the system is designed and installed."',tag:'fact',tagLabel:'Specific'},
+      {id:'clarify-what',ico:'🔬',text:'"We\'re guaranteeing the expected savings outcome based on your system design and your usage — not just that the panels turn on."',tag:'guarantee',tagLabel:'What it covers'},
+      {id:'clarify-who',ico:'🏢',text:'"If a component fails, the manufacturer warranty handles it. If that impacts your savings, RESINC covers the difference. You\'re protected on both sides."',tag:'guarantee',tagLabel:'Who covers it'},
+      {id:'wrong-common',ico:'🙄',text:'"Most solar companies offer similar guarantees — it\'s pretty standard in the industry."',tag:'wrong',tagLabel:'❌ Undermines you'},
+      {id:'wrong-trust2',ico:'🙏',text:'"I understand the scepticism — you just have to trust that RESINC stands behind its product."',tag:'wrong',tagLabel:'❌ No substance'},
+    ],
+    reactPositive:{mood:'open',moodLabel:'Opening up 😌',text:'"Okay — so it actually covers the financial outcome, not just whether the equipment works. That\'s different to what I expected."',score:'+350'},
+    reactNegative:{mood:'skeptic',moodLabel:'Confirmed skeptic 😤',text:'"See, that\'s exactly what I mean. That\'s just more marketing language."',score:'-200'},
+    scriptRef:'"Yeah, I get why it might sound like that. Let me clarify — this isn\'t just a claim. It\'s a written performance-backed guarantee tied to how the system is designed and installed. We\'re guaranteeing the expected savings outcome based on your system design and usage — not just that the panels work. And if something does go wrong, the manufacturer warranty covers equipment, and RESINC covers any savings shortfall."'
+  },
+  {
+    id:4,
+    objectionTag:'💸 "$0 UPFRONT" OBJECTION',
+    objection:'"Even if the savings are real — we still can\'t really afford anything upfront. We\'re not in a position to make a big financial commitment right now."',
+    mood:'skeptic',
+    moodLabel:'Financially cautious 😟',
+    instruction:'This is the PAYS objection. Build a response that introduces Pay As You Save clearly — acknowledge first, then explain it step by step.',
+    correctPieces:['ack-common','pays-zero','pays-how','pays-own'],
+    evidence:[
+      {id:'ack-common',ico:'🤝',text:'"Yeah, that\'s a really common concern — and completely valid."',tag:'reframe',tagLabel:'Acknowledge'},
+      {id:'pays-zero',ico:'🚫',text:'"With our Pay As You Save option, there\'s literally $0 upfront. The system is installed at no cost."',tag:'fact',tagLabel:'PAYS — $0'},
+      {id:'pays-how',ico:'♻️',text:'"Instead of that money going to the energy company, the savings from your power bill are used to cover the system over time."',tag:'fact',tagLabel:'How it works'},
+      {id:'pays-own',ico:'🏠',text:'"Once it\'s fully paid off, the system is 100% yours — and all the savings after that go straight back in your pocket."',tag:'guarantee',tagLabel:'End result'},
+      {id:'wrong-rebate3',ico:'💸',text:'"There are also rebates available which can reduce the cost significantly."',tag:'wrong',tagLabel:'❌ Not PAYS'},
+      {id:'wrong-invest',ico:'📈',text:'"Think of it as an investment — it will pay itself back over time."',tag:'wrong',tagLabel:'❌ Vague'},
+    ],
+    reactPositive:{mood:'open',moodLabel:'Relieved 😮',text:'"Wait — so there\'s genuinely no upfront cost at all? How does that even work?"',score:'+300'},
+    reactNegative:{mood:'skeptic',moodLabel:'Unconvinced 😒',text:'"I\'m still not hearing how we\'d actually afford this. There must be some cost somewhere."',score:'-150'},
+    scriptRef:'"Yeah, that\'s a really common concern. With our Pay As You Save option, there\'s $0 upfront — the system is installed at no cost. Instead of paying the energy company, the savings from your power bill are used to cover the system over time. Once it\'s paid off, it\'s yours — and all future savings go straight back into your pocket."'
+  },
+  {
+    id:5,
+    objectionTag:'🤷 "WE\'LL THINK ABOUT IT" OBJECTION',
+    objection:'"Look, you\'ve given us a lot to think about. I think we just need some more time. We\'ll think about it."',
+    mood:'curious',
+    moodLabel:'Wavering 🤔',
+    instruction:'This is a soft close — Peter is not hostile, just hesitant. Don\'t push. Build a response that validates, then gives him a reason to keep the appointment rather than cancel.',
+    correctPieces:['ack-sense','reframe-assess','reframe-clarity','keep-open'],
+    evidence:[
+      {id:'ack-sense',ico:'🤝',text:'"Yeah, of course — that makes total sense, and I completely respect that."',tag:'reframe',tagLabel:'Acknowledge'},
+      {id:'reframe-assess',ico:'💡',text:'"The thing is, the assessment itself isn\'t about making a decision — it\'s just about getting clarity on whether solar actually works for your home."',tag:'reframe',tagLabel:'Reframe'},
+      {id:'reframe-clarity',ico:'🔍',text:'"Even if you\'re not ready to move forward, you\'ll walk away understanding your power bills a lot better — and what your options actually are."',tag:'fact',tagLabel:'Value of going'},
+      {id:'keep-open',ico:'🚪',text:'"And if after the session it\'s still not the right time, that\'s completely fine — there\'s no obligation at all."',tag:'reframe',tagLabel:'No pressure'},
+      {id:'wrong-urgency',ico:'⏰',text:'"Just keep in mind that rebates and pricing can change — it might be worth going ahead now."',tag:'wrong',tagLabel:'❌ False urgency'},
+      {id:'wrong-push',ico:'📞',text:'"Maybe I can call you again tomorrow morning to see if you\'ve made a decision?"',tag:'wrong',tagLabel:'❌ Too pushy'},
+    ],
+    reactPositive:{mood:'open',moodLabel:'Reconsidering 😌',text:'"Okay... I suppose if it\'s just about getting information and there\'s no pressure, we could still go ahead tomorrow."',score:'+350'},
+    reactNegative:{mood:'skeptic',moodLabel:'Pulling away 😤',text:'"I feel like you\'re pushing us. We said we need time."',score:'-200'},
+    scriptRef:'"Yeah, of course — that makes sense. The thing is, the assessment isn\'t really about making a decision — it\'s just about clarity. Whether solar makes sense now, or even later. Even if you don\'t move forward, you\'ll walk away understanding your power bills a lot better. And there\'s absolutely no obligation."'
+  }
+];
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let currentRound=0;
+let skepticism=80;
+let score=0;
+let perfectBuilds=0;
+let placedPieces=[];
+let wrongThisRound=0;
+let firstAttemptThisRound=true;
+
+// ═══════════════════════════════════════════════
+// START
+// ═══════════════════════════════════════════════
+function startGame(){
+  document.getElementById('intro-screen').style.display='none';
+  document.getElementById('game-screen').style.display='block';
+  currentRound=0;skepticism=80;score=0;perfectBuilds=0;
+  updateSkeptic();
+  renderRound();
+}
+
+function restartGame(){
+  document.getElementById('end-screen').classList.remove('show');
+  document.getElementById('end-screen').style.display='none';
+  startGame();
+}
+
+// ═══════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════
+function renderRound(){
+  if(currentRound>=ROUNDS.length){ endGame(); return; }
+  const round=ROUNDS[currentRound];
+  placedPieces=[];
+  wrongThisRound=0;
+  firstAttemptThisRound=true;
+
+  document.getElementById('hud-round').textContent=`OBJECTION ${currentRound+1} / ${ROUNDS.length}`;
+  document.getElementById('hud-title').textContent=round.objectionTag;
+
+  const moodClass=round.mood==='skeptic'?'mood-skeptic':round.mood==='curious'?'mood-curious':'mood-open';
+
+  document.getElementById('scene-wrap').innerHTML=`
+    <div class="round-tag">OBJECTION ${currentRound+1} OF ${ROUNDS.length}</div>
+
+    <div class="customer-card" id="customer-card">
+      <div class="customer-top">
+        <div class="customer-av">👨</div>
+        <div>
+          <div class="customer-name">PETER WALSH — CUSTOMER</div>
+          <div class="customer-mood ${moodClass}" id="customer-mood">${round.moodLabel}</div>
+        </div>
+      </div>
+      <div class="objection-tag">${round.objectionTag}</div>
+      <div class="objection-bubble">${round.objection}</div>
+    </div>
+
+    <div class="builder-wrap">
+      <div class="builder-label">BUILD YOUR RESPONSE</div>
+      <div class="builder-desc">${round.instruction}</div>
+      <div class="response-display" id="response-display">
+        <div class="response-empty" id="response-empty">Select pieces from below to build your response →</div>
+      </div>
+      <div class="evidence-label">EVIDENCE POOL — select the pieces that belong in your response</div>
+      <div class="evidence-pool" id="evidence-pool">
+        ${shuffled(round.evidence).map(e=>`
+          <div class="evidence-card" id="ev-${e.id}" onclick="addPiece('${e.id}')">
+            <div class="evidence-ico">${e.ico}</div>
+            <div class="evidence-text">${e.text}</div>
+            <div class="evidence-tag ${e.tag}" id="tag-${e.id}" style="display:none;">${e.tagLabel}</div>
+          </div>`).join('')}
+      </div>
+      <div class="submit-wrap">
+        <button class="submit-btn" id="submit-btn" onclick="submitResponse()" disabled>Submit response →</button>
+        <div class="submit-hint" id="submit-hint">Add at least 2 pieces to submit</div>
+      </div>
+    </div>
+
+    <div class="react-wrap" id="react-wrap"></div>
+    <div class="feedback" id="round-feedback"></div>
+    <div id="next-btn-wrap"></div>`;
+}
+
+function shuffled(arr){ return [...arr].sort(()=>Math.random()-.5); }
+
+// ═══════════════════════════════════════════════
+// ADD PIECE
+// ═══════════════════════════════════════════════
+function addPiece(id){
+  const round=ROUNDS[currentRound];
+  const piece=round.evidence.find(e=>e.id===id);
+  const isCorrect=round.correctPieces.includes(id);
+
+  if(piece.tag==='wrong'||!isCorrect){
+    // Wrong piece
+    wrongThisRound++;
+    firstAttemptThisRound=false;
+    const el=document.getElementById('ev-'+id);
+    el.classList.add('wrong-pick');
+    const tag=document.getElementById('tag-'+id);
+    if(tag) tag.style.display='';
+    skepticism=Math.min(100,skepticism+8);
+    updateSkeptic();
+    showScoreFlash('-Skepticism ↑','bad');
+    setTimeout(()=>el.classList.remove('wrong-pick'),600);
+    // Show brief feedback
+    const fb=document.getElementById('round-feedback');
+    fb.className='feedback show bad';
+    fb.innerHTML='❌ That piece doesn\'t belong in this response — it\'s off-topic or makes the wrong impression. Try again.';
+    setTimeout(()=>{ fb.className='feedback'; },2000);
+    return;
+  }
+
+  // Correct — add to response
+  if(placedPieces.includes(id)) return; // already placed
+  placedPieces.push(id);
+  const el=document.getElementById('ev-'+id);
+  el.classList.add('used');
+  const tag=document.getElementById('tag-'+id);
+  if(tag) tag.style.display='';
+
+  const display=document.getElementById('response-display');
+  document.getElementById('response-empty').style.display='none';
+  display.classList.add('has-items');
+
+  const pieceEl=document.createElement('div');
+  pieceEl.className='placed-piece';
+  pieceEl.id='placed-'+id;
+  pieceEl.innerHTML=`
+    <div class="placed-num">${placedPieces.length}</div>
+    <div style="flex:1;font-size:13px;">${piece.text}</div>
+    <button class="remove-piece" onclick="removePiece('${id}')">✕</button>`;
+  display.appendChild(pieceEl);
+
+  // Update submit button
+  const btn=document.getElementById('submit-btn');
+  const hint=document.getElementById('submit-hint');
+  if(placedPieces.length>=2){
+    btn.disabled=false;
+    hint.textContent=`${placedPieces.length} piece${placedPieces.length>1?'s':''} added — submit when ready`;
+  }
+}
+
+function removePiece(id){
+  placedPieces=placedPieces.filter(p=>p!==id);
+  document.getElementById('placed-'+id).remove();
+  document.getElementById('ev-'+id).classList.remove('used');
+
+  // Re-number
+  document.querySelectorAll('.placed-piece').forEach((el,i)=>{
+    el.querySelector('.placed-num').textContent=i+1;
+  });
+
+  if(placedPieces.length===0){
+    document.getElementById('response-empty').style.display='';
+    document.getElementById('response-display').classList.remove('has-items');
+  }
+  if(placedPieces.length<2){
+    document.getElementById('submit-btn').disabled=true;
+    document.getElementById('submit-hint').textContent='Add at least 2 pieces to submit';
+  }
+}
+
+// ═══════════════════════════════════════════════
+// SUBMIT
+// ═══════════════════════════════════════════════
+function submitResponse(){
+  const round=ROUNDS[currentRound];
+  const correct=round.correctPieces;
+  const placed=placedPieces;
+
+  // Check: all correct pieces present + no extras
+  const hasAll=correct.every(id=>placed.includes(id));
+  const noExtras=placed.every(id=>correct.includes(id));
+  const inOrder=placed.filter(id=>correct.includes(id)).join(',')=== correct.filter(id=>placed.includes(id)).join(',');
+
+  // Calculate score
+  const fb=document.getElementById('round-feedback');
+  const react=document.getElementById('react-wrap');
+
+  if(hasAll&&noExtras){
+    // Perfect build
+    const pts=wrongThisRound===0&&firstAttemptThisRound?400:200;
+    score+=pts;
+    skepticism=Math.max(0,skepticism-25);
+    updateSkeptic();
+    if(wrongThisRound===0) perfectBuilds++;
+    showScoreFlash('+'+pts,'good');
+
+    // Mark all as correct
+    document.querySelectorAll('.placed-piece').forEach(el=>el.classList.add('correct'));
+
+    // Customer reacts positively
+    const r=round.reactPositive;
+    react.className=`react-wrap show positive`;
+    react.innerHTML=`<div class="react-label">👤 PETER REACTS — ${r.moodLabel}</div><div class="react-text">${r.text}</div><div class="react-score">${r.score} skepticism</div>`;
+    document.getElementById('customer-mood').className=`customer-mood ${r.mood==='curious'?'mood-curious':'mood-open'}`;
+    document.getElementById('customer-mood').textContent=r.moodLabel;
+
+    fb.className='feedback show ok';
+    fb.innerHTML=`✅ ${wrongThisRound===0?'<strong>Perfect build.</strong>':'<strong>Good build.</strong>'} ${inOrder?'Right pieces, right order.':'All right pieces — order could be tighter.'} <em>Script: ${round.scriptRef}</em>`;
+
+    setTimeout(()=>{
+      const wrap=document.getElementById('next-btn-wrap');
+      wrap.innerHTML=`<button class="next-btn" onclick="nextRound()">${currentRound<ROUNDS.length-1?'Next objection →':'See final result 🏆'}</button>`;
+      wrap.scrollIntoView({behavior:'smooth',block:'nearest'});
+    },600);
+
+  } else if(hasAll&&!noExtras){
+    // Has correct but also wrong extras
+    score+=100;
+    skepticism=Math.max(0,skepticism-10);
+    updateSkeptic();
+    fb.className='feedback show bad';
+    fb.innerHTML='⚠️ You included the right pieces — but also some that don\'t belong. Remove the wrong ones and resubmit.';
+    // Highlight wrong pieces
+    placed.forEach(id=>{
+      if(!correct.includes(id)) document.getElementById('placed-'+id)?.classList.add('wrong');
+    });
+  } else {
+    // Missing key pieces
+    skepticism=Math.min(100,skepticism+10);
+    updateSkeptic();
+    const missing=correct.filter(id=>!placed.includes(id));
+    fb.className='feedback show bad';
+    fb.innerHTML=`❌ Your response is missing ${missing.length} key piece${missing.length>1?'s':''}. Think about: acknowledge → explain → guarantee → outcome.`;
+    // Show negative customer reaction
+    const r=round.reactNegative;
+    react.className=`react-wrap show negative`;
+    react.innerHTML=`<div class="react-label">👤 PETER REACTS — ${r.moodLabel}</div><div class="react-text">${r.text}</div><div class="react-score">${r.score} points</div>`;
+  }
+  fb.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function nextRound(){
+  currentRound++;
+  if(currentRound>=ROUNDS.length){ endGame(); return; }
+  renderRound();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ═══════════════════════════════════════════════
+// SKEPTIC BAR
+// ═══════════════════════════════════════════════
+function updateSkeptic(){
+  skepticism=Math.max(0,Math.min(100,skepticism));
+  const fill=document.getElementById('skeptic-fill');
+  const val=document.getElementById('skeptic-val');
+  fill.style.width=skepticism+'%';
+  fill.style.background=skepticism>60?'#F87171':skepticism>30?'#FBBF24':'#4ADE80';
+  val.textContent=skepticism+'%';
+  val.style.color=skepticism>60?'#F87171':skepticism>30?'#FBBF24':'#4ADE80';
+}
+
+function showScoreFlash(text,type){
+  const el=document.createElement('div');
+  el.className=`score-flash ${type}`;
+  el.textContent=text;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),1000);
+}
+
+// ═══════════════════════════════════════════════
+// END
+// ═══════════════════════════════════════════════
+function endGame(){
+  document.getElementById('game-screen').style.display='none';
+  const es=document.getElementById('end-screen');
+  es.style.display='flex';
+  es.classList.add('show');
+
+  document.getElementById('es-score').textContent=score.toLocaleString();
+  document.getElementById('es-skeptic').textContent=skepticism+'%';
+  document.getElementById('es-perfect').textContent=perfectBuilds+'/5';
+
+  const won=skepticism<=40;
+  document.getElementById('end-icon').textContent=skepticism<=20?'🏆':won?'✅':'📉';
+  document.getElementById('end-title').innerHTML=won?'Peter\'s <em>convinced.</em>':'Peter\'s still <em>skeptical.</em>';
+  document.getElementById('end-sub').textContent=won?'The appointment is safe. Peter and Sue will be there tomorrow at 2PM.':'Peter\'s not fully convinced. Study the scripts below and try again.';
+
+  const fb={
+    0:'<strong>Peter is completely convinced.</strong> You built every response perfectly — acknowledge first, evidence second, guarantee third. That\'s the formula.',
+    1:'<strong>Nearly perfect.</strong> One response wasn\'t quite right. Review which one and make sure you know the correct structure for next time.',
+    2:'<strong>Decent run.</strong> A couple of responses were incomplete. The pattern you need: acknowledge → specific fact → guarantee → outcome. Always in that order.',
+    3:'<strong>Needs work.</strong> Peter stayed skeptical because the responses lacked substance. Vague answers make customers more suspicious, not less.',
+    4:'<strong>Lots of room to improve.</strong> Study the script panel below carefully — particularly the 100% Savings Guarantee script. That one has a very specific structure.',
+    5:'<strong>Start again.</strong> Peter is not convinced. Read the scripts, understand the guarantee structure, and try again.'
+  };
+  const missCount=5-perfectBuilds;
+  document.getElementById('end-feedback').innerHTML=fb[Math.min(missCount,5)];
+
+  // Script panel
+  document.getElementById('script-body').innerHTML=ROUNDS.map(r=>`
+    <div class="script-item">
+      <div class="script-obj">${r.objectionTag}</div>
+      <div style="font-size:11.5px;color:rgba(255,255,255,.3);font-style:italic;margin-bottom:8px;">${r.objection}</div>
+      <div class="script-line">${r.scriptRef}</div>
+    </div>`).join('');
+
+  es.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function toggleScripts(){
+  const w=document.getElementById('script-panel-wrap');
+  w.style.display=w.style.display==='none'?'block':'none';
+  if(w.style.display==='block') w.scrollIntoView({behavior:'smooth',block:'start'});
+}
+</script>
+</body>
+</html>
