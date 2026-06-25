@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>How to Write CRM Notes | Confirmations Team</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0A3542;--navy2:#071F28;--navy3:#0D4558;
+  --sky:#00AEEF;--sky2:#0090C4;--sky-lt:#EAF6FD;--sky-bg:#F2FAFF;
+  --green:#0B7A4E;--green-lt:#E3F5EC;
+  --red:#B5251B;--red-lt:#FDECEB;
+  --orange:#D4620A;--orange-lt:#FEF3EB;
+  --gold:#D4940A;--gold-lt:#FEF3CD;
+  --body:#1A2A32;--muted:#5A6E78;--light:#F4F8FB;
+  --border:#C8DDE8;--line:#E2EEF4;
+  --font:'DM Sans',system-ui,sans-serif;
+  --serif:'DM Serif Display',Georgia,serif;
+  --shadow:0 1px 3px rgba(10,53,66,.06),0 4px 12px rgba(10,53,66,.08);
+  --shadow-lg:0 4px 16px rgba(10,53,66,.1);
+  --max:860px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--light);color:var(--body);line-height:1.6;}
+#prog{position:fixed;top:0;left:0;right:0;height:3px;background:rgba(0,174,239,.15);z-index:100;}
+#prog-fill{height:100%;background:var(--sky);width:0%;transition:width .4s ease;}
+
+/* HERO */
+.hero{background:var(--navy);padding:60px 20px 50px;position:relative;overflow:hidden;}
+.hero-stripe{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--sky);}
+.hero-inner{max-width:var(--max);margin:0 auto;position:relative;z-index:1;}
+.hero-ey{color:var(--sky);font-size:9px;letter-spacing:.28em;font-weight:600;margin-bottom:16px;}
+.hero-title{color:#fff;font-size:44px;font-weight:700;line-height:1.05;margin-bottom:12px;font-family:var(--serif);}
+.hero-title em{color:var(--sky);font-style:italic;}
+.hero-sub{color:rgba(255,255,255,.6);font-size:14px;line-height:1.7;max-width:560px;margin-bottom:28px;}
+.hero-pills{display:flex;flex-wrap:wrap;gap:8px;}
+.hero-pill{background:rgba(0,174,239,.12);border:1px solid rgba(0,174,239,.25);border-radius:20px;padding:4px 12px;color:var(--sky);font-size:11px;font-weight:600;}
+
+/* SECTIONS */
+.section{padding:40px 20px;}
+.inner{max-width:var(--max);margin:0 auto;}
+.s-label{font-size:8.5px;letter-spacing:.22em;font-weight:700;color:var(--sky);margin-bottom:6px;}
+.s-title{font-family:var(--serif);font-size:28px;color:var(--navy);margin-bottom:6px;}
+.s-bar{width:44px;height:3px;background:var(--sky);border-radius:2px;margin-bottom:20px;}
+.sep{height:1px;background:var(--line);max-width:var(--max);margin:0 auto;}
+.body-text{font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:16px;}
+.body-text strong{color:var(--body);}
+
+/* WHY IT MATTERS */
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:8px;}
+@media(max-width:640px){.why-grid{grid-template-columns:1fr;}}
+.why-card{background:#fff;border-radius:14px;padding:20px;box-shadow:var(--shadow);border:1.5px solid var(--line);}
+.why-card-ico{font-size:28px;margin-bottom:10px;}
+.why-card-title{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:6px;}
+.why-card-text{font-size:12.5px;color:var(--muted);line-height:1.6;}
+
+/* RULE CARD */
+.rule-card{background:var(--navy);border-radius:14px;padding:20px 22px;margin-bottom:14px;display:flex;gap:14px;align-items:flex-start;border-left:4px solid var(--sky);}
+.rule-ico{font-size:22px;flex-shrink:0;}
+.rule-title{font-size:13px;font-weight:700;color:var(--sky);margin-bottom:4px;letter-spacing:.04em;}
+.rule-text{font-size:13px;color:rgba(255,255,255,.75);line-height:1.6;}
+.rule-text strong{color:#fff;}
+
+/* TEMPLATE BLOCK */
+.template-wrap{background:#fff;border-radius:16px;box-shadow:var(--shadow-lg);overflow:hidden;margin-bottom:28px;}
+.template-header{background:var(--navy);padding:16px 22px;display:flex;align-items:center;gap:12px;}
+.template-header-ico{font-size:20px;}
+.template-header-title{font-size:14px;font-weight:700;color:#fff;}
+.template-header-badge{margin-left:auto;background:rgba(0,174,239,.2);border:1px solid rgba(0,174,239,.3);border-radius:20px;padding:3px 12px;font-size:10px;font-weight:700;color:var(--sky);}
+.template-body{padding:22px;}
+
+/* FIELD ROW */
+.field-section-title{font-size:9px;font-weight:700;letter-spacing:.18em;color:var(--sky);margin-bottom:10px;margin-top:20px;padding-bottom:6px;border-bottom:1px solid var(--line);}
+.field-section-title:first-child{margin-top:0;}
+.field-row{display:flex;align-items:flex-start;gap:14px;padding:11px 14px;border-radius:10px;margin-bottom:6px;border:1.5px solid var(--line);background:#fff;transition:background .2s;cursor:pointer;position:relative;}
+.field-row:hover{background:var(--sky-bg);}
+.field-row.open{background:var(--sky-bg);border-color:var(--sky);}
+.field-label{font-size:13px;font-weight:600;color:var(--navy);min-width:240px;flex-shrink:0;}
+.field-type{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;flex-shrink:0;margin-top:2px;}
+.field-type.yn{background:rgba(0,174,239,.12);color:var(--sky2);}
+.field-type.text{background:rgba(212,148,10,.12);color:var(--gold);}
+.field-type.date{background:rgba(107,79,187,.12);color:#6B4FBB;}
+.field-expand{font-size:18px;color:var(--muted);margin-left:auto;transition:transform .2s;flex-shrink:0;}
+.field-row.open .field-expand{transform:rotate(180deg);}
+.field-detail{display:none;padding:12px 14px 4px;margin:-6px 0 6px;background:var(--sky-bg);border-radius:0 0 10px 10px;border:1.5px solid var(--sky);border-top:none;}
+.field-detail.show{display:block;}
+.field-why{font-size:12.5px;color:var(--navy);font-weight:600;margin-bottom:6px;}
+.field-example{font-size:12px;color:var(--muted);line-height:1.6;}
+.field-example .good{color:var(--green);font-weight:600;}
+.field-example .bad{color:var(--red);font-weight:600;}
+
+/* EXAMPLE NOTE — FILLED */
+.example-note{background:var(--navy);border-radius:14px;padding:20px 22px;font-family:monospace;font-size:12.5px;color:rgba(255,255,255,.8);line-height:2;position:relative;overflow:hidden;}
+.example-note::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--sky);}
+.note-section{color:var(--sky);font-weight:700;font-size:11px;letter-spacing:.12em;margin-top:12px;margin-bottom:2px;display:block;}
+.note-field{color:rgba(255,255,255,.5);}
+.note-val{color:#fff;}
+.note-val.good{color:#4ADE80;}
+.note-val.bad{color:#F87171;}
+.note-label{display:inline-block;background:rgba(0,174,239,.15);border-radius:4px;padding:0 6px;font-size:10px;color:var(--sky);vertical-align:middle;margin-left:6px;}
+
+/* BEFORE/AFTER */
+.ba-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+@media(max-width:600px){.ba-grid{grid-template-columns:1fr;}}
+.ba-card{border-radius:14px;overflow:hidden;}
+.ba-header{padding:10px 16px;font-size:11px;font-weight:700;letter-spacing:.12em;}
+.ba-card.bad-note .ba-header{background:var(--red);color:#fff;}
+.ba-card.good-note .ba-header{background:var(--green);color:#fff;}
+.ba-body{padding:16px;font-size:12.5px;line-height:1.8;font-family:monospace;}
+.ba-card.bad-note .ba-body{background:var(--red-lt);color:var(--red);}
+.ba-card.good-note .ba-body{background:var(--green-lt);color:#0A4425;}
+.ba-annotation{font-size:11px;padding:8px 16px;line-height:1.5;}
+.ba-card.bad-note .ba-annotation{background:rgba(181,37,27,.06);color:var(--red);}
+.ba-card.good-note .ba-annotation{background:rgba(11,122,78,.06);color:var(--green);}
+
+/* QUICK REF */
+.qr-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:600px){.qr-grid{grid-template-columns:1fr;}}
+.qr-card{background:#fff;border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);border-top:3px solid;}
+.qr-card.confirm{border-color:var(--sky);}
+.qr-card.inbound{border-color:var(--green);}
+.qr-card-title{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.qr-item{font-size:12px;color:var(--muted);padding:4px 0;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;}
+.qr-item:last-child{border:none;}
+.qr-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.qr-dot.yn{background:var(--sky);}
+.qr-dot.text{background:var(--gold);}
+.qr-dot.date{background:#6B4FBB;}
+
+/* CTA */
+.cta-wrap{background:var(--navy);border-radius:16px;padding:28px;text-align:center;margin-top:8px;}
+.cta-title{font-family:var(--serif);font-size:24px;color:#fff;margin-bottom:8px;}
+.cta-title em{color:var(--sky);font-style:italic;}
+.cta-sub{color:rgba(255,255,255,.5);font-size:13px;margin-bottom:20px;line-height:1.6;}
+.cta-btn{background:var(--sky);color:#fff;border:none;border-radius:10px;padding:12px 28px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;display:inline-block;transition:all .2s;box-shadow:0 4px 14px rgba(0,174,239,.35);}
+.cta-btn:hover{background:var(--sky2);transform:translateY(-1px);}
+</style>
+</head>
+<body>
+<div id="prog"><div id="prog-fill"></div></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-stripe"></div>
+  <div class="hero-inner">
+    <div class="hero-ey">CONFIRMATIONS TEAM · CRM NOTES</div>
+    <div class="hero-title">How to Write<br><em>CRM Notes</em></div>
+    <div class="hero-sub">CRM notes are not admin — they're the handover between you and the specialist. Every field you fill in correctly protects the appointment and sets the specialist up to succeed.</div>
+    <div class="hero-pills">
+      <span class="hero-pill">📋 2 note templates</span>
+      <span class="hero-pill">💡 Field-by-field breakdown</span>
+      <span class="hero-pill">✅ Good vs bad examples</span>
+      <span class="hero-pill">📄 Filled examples</span>
+    </div>
+  </div>
+</div>
+
+<!-- WHY IT MATTERS -->
+<div class="section" style="background:#fff;">
+  <div class="inner">
+    <div class="s-label">WHY THIS MATTERS</div>
+    <div class="s-title">Your notes are someone else's morning.</div>
+    <div class="s-bar"></div>
+    <p class="body-text">The Solar Specialist's entire day is built on what you put in the CRM. Before they walk into a home or join a Zoom call, they read your notes. <strong>What you write — or don't write — directly impacts whether the appointment goes smoothly or falls apart.</strong></p>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-card-ico">🏠</div>
+        <div class="why-card-title">The Specialist relies on you</div>
+        <div class="why-card-text">Before every appointment, the specialist reads your CRM notes to know what to expect — the customer's situation, objections raised, what's been confirmed. Incomplete notes mean a cold start.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-card-ico">🔄</div>
+        <div class="why-card-title">The team picks up where you left off</div>
+        <div class="why-card-text">If you can't reach a customer on Run 2, the Run 3 team needs to know what happened on Run 1. Notes are how that handover works. No notes = wasted calls and frustrated customers.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-card-ico">📊</div>
+        <div class="why-card-title">It protects your KPIs</div>
+        <div class="why-card-text">Incomplete CRM notes contribute to no-shows, cancellations, and missed dual attendance. Everything you fill in properly is one less thing that can go wrong on the day.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- GOLDEN RULES -->
+<div class="section">
+  <div class="inner">
+    <div class="s-label">THE GOLDEN RULES</div>
+    <div class="s-title">Before we look at the templates.</div>
+    <div class="s-bar"></div>
+    <div class="rule-card">
+      <div class="rule-ico">⏱️</div>
+      <div>
+        <div class="rule-title">UPDATE IMMEDIATELY AFTER EVERY CALL</div>
+        <div class="rule-text">Don't batch your CRM updates. Update the record <strong>right after you hang up</strong> — while the call is fresh. Waiting means details get lost or confused with the next call.</div>
+      </div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-ico">📝</div>
+      <div>
+        <div class="rule-title">BE SPECIFIC — NEVER VAGUE</div>
+        <div class="rule-text">"Spoke to customer" is not a note. <strong>"Confirmed with Sarah — husband Mark will attend. Requested electricity bill, not yet received."</strong> is a note. Anyone reading it knows exactly what happened.</div>
+      </div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-ico">✅</div>
+      <div>
+        <div class="rule-title">EVERY FIELD HAS A PURPOSE</div>
+        <div class="rule-text">Y/N fields aren't ticking boxes — they're a <strong>communication protocol</strong> between you and the specialist. If Dual Appointment is blank, the specialist doesn't know whether to expect one person or two.</div>
+      </div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-ico">🚨</div>
+      <div>
+        <div class="rule-title">OBJECTIONS ALWAYS GET NOTED</div>
+        <div class="rule-text">If a customer raised a concern — "60–90 minutes is too long", "my husband might not make it" — <strong>write it in Additional Notes</strong>. The specialist needs to know what they're walking into.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- TEMPLATE 1 — CONFIRMATION CALL -->
+<div class="section" style="background:#fff;">
+  <div class="inner">
+    <div class="s-label">TEMPLATE 1 OF 2</div>
+    <div class="s-title">Confirmation Call Notes</div>
+    <div class="s-bar"></div>
+    <p class="body-text">Used after every confirmation call attempt — whether the customer answered or not. Each field must be completed before moving to the next run. Click any field to understand why it matters.</p>
+
+    <div class="template-wrap">
+      <div class="template-header">
+        <div class="template-header-ico">📞</div>
+        <div class="template-header-title">CONFIRMATION CALL NOTES</div>
+        <div class="template-header-badge">AFTER EVERY CALL</div>
+      </div>
+      <div class="template-body">
+
+        <div class="field-section-title">APPOINTMENT CONFIRMATION</div>
+
+        <div class="field-row" onclick="toggleField(this)">
+          <div class="field-label">Confirmed Appointment Date & Time</div>
+          <div class="field-type yn">Y / N</div>
+          <div class="field-expand">▾</div>
+        </div>
+        <div class="field-detail">
+          <div class="field-why">Why this field exists:</div>
+          <div class="field-example">The specialist needs to know the customer verbally confirmed they know when the appointment is — not just that a time was booked. A booking in the calendar doesn't mean the customer remembers it.<br><br><span class="good">✓ Good:</span> Y — confirmed Thursday 2PM<br><span class="bad">✗ Bad:</span> Y (with no context — which run confirmed it?)</div>
+        </div>
+
+        <div class="field-row" onclick="toggleField(this)">
+          <div class="field-label">Confirmed All Decision Makers Will Be Present</div>
+          <div class="field-type yn">Y / N</div>
+          <div class="field-expand">▾</div>
+        </div>
+        <div class="field-detail">
+          <div class="field-why">Why this field exists:</div>
+          <div class="field-example">If only one decision-maker is coming, the specialist knows before they start that the session may not convert. This field protects dual attendance rates and the specialist's time.<br><br><span class="good">✓ Good:</span> Y — both Sarah and Mark confirmed attending<br><span class="bad">✗ Bad:</span> N (with no explanation — why not? Did they say someone can't make it?)</div>
+        </div>
+
+        <div class="field-row" onclick="toggleField(this)">
+          <div class="field-label">Dual Appointment</div>
+          <div class="field-type yn">Y / N</div>
+          <div class="field-expand">▾</div>
+        </div>
+        <div class="field-detail">
+          <div class="field-why">Why this field exists:</div>
+          <div class="field-example">Tells the specialist whether this is a one-person or two-person appointment. They adjust their presentation accordingly. If this is blank, they're guessing.<br><br><span class="good">✓ Good:</span> Y — Sarah + Mark Thompson<br><span class="bad">✗ Bad:</span> Left blank</div>
+        </div>
+
+        <div class="field-row" onclick="toggleField(this)">
+          <div class="field-label">Specialist Role Explained</div>
+          <div class="field-type yn">Y / N</div>
+          <div class="field-expand">▾</div>
+        </div>
+        <div class="field-detail">
+          <div class="field-why">Why this field exists:</div>
+          <div class="field-example">Did you explain what the specialist actually does — roof check, system design, tailored recommendations? Customers who understand this are less likely to cancel or be surprised on the day.<br><br><span class="good">✓ Good:</span> Y — explained specialist will assess roof, usage, and design system<br><span class="bad">✗ Bad:</span> N (with no note — was it forgotten or intentional?)</div>
+        </div>
+
+        <div class="field-row" onclick="toggleField(this)">
+          <div class="field-label">Duration (60–90 min) Explained</div>
+          <div class="field-type yn">Y / N</div>
+          <div class="field-expand">▾</div>
+        </div>
+        <div class="field-detail">
+          <div class="field-why">Why this field exists:</div>
+          <div class="field-example">A customer who wasn't told the session takes 60–90 minutes is more likely to cut it short or cancel. This field confirms the expectation was set.<br><br><span class="good">✓ Good:</span> Y — customer acknowledged 60–90 min, said that's fine<br><span class="bad">✗ Bad:</span> Y (but customer said it sounded long — not noted in objections)</div>
+        </div>
+
+        <div class="field-section-title">ZOOM & DOCUMENTS</div>
+
+        <div class="field-row" onclick="toggleField(this)">
+          <div class="field-label">Zoom Protocol Explained</div>
+          <div class="field-type yn">Y / N</div>
+          <div class="field-expand">▾</div>
+        </div>
+        <div class="field-detail">
+          <div class="field-why">Why this field exists:</div>
+          <div class="field-example">Covers three things: link arrives 15 min before, check spam folder, test early. If the customer doesn't know to check spam and misses the link, that's a no-show.<br><br><span class="good">✓ Good:</span> Y — covered 15 min prior, spam folder, test link<br><span class="bad">✗ Bad:</span> Y — "told them about Zoom" (which parts? All three?)</div>
+        </div>
+
+        <div class="field-row" onclick="toggleField(this)">
+          <div class="field-label">Electricity Bill & Meter Box Attached & Clear</div>
+          <div class="field-type yn">Y / N</div>
+          <div class="field-expand">▾</div>
+        </div>
+        <div class="field-detail">
+          <div class="field-why">Why this field exists:</div>
+          <div class="field-example">The specialist needs both documents to prepare the system design before the appointment. If they're missing, the specialist goes in blind. This field flags whether they've been received.<br><br><span class="good">✓ Good:</span> N — requested, customer said they'll send before Thursday<br><span class="bad">✗ Bad:</span> N (with no follow-up — were they asked? Are they coming?)</div>
+        </div>
+
+        <div class="field-section-title">ADDITIONAL NOTES</div>
+
+        <div class="field-row" onclick="toggleField(this)">
+          <div class="field-label">Additional Notes / Objections</div>
+          <div class="field-type text">FREE TEXT</div>
+          <div class="field-expand">▾</div>
+        </div>
+        <div class="field-detail">
+          <div class="field-why">Why this field exists:</div>
+          <div class="field-example">This is where the real context lives. Any objection raised, any uncertainty expressed, any change to the situation — it goes here. Don't summarise; be specific.<br><br>
+          <span class="good">✓ Good:</span> "Customer mentioned husband might be late — will join 15 min into session. Customer concerned about 60–90 min duration — explained value, she said OK. Bill not received — said she'd send today."<br><br>
+          <span class="bad">✗ Bad:</span> "Spoke to customer. All good." or left blank.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FILLED EXAMPLE — CONFIRMATION -->
+    <div class="s-label" style="margin-top:8px;">FILLED EXAMPLE</div>
+    <div class="s-title" style="font-size:20px;">What a complete note looks like</div>
+    <div class="s-bar"></div>
+    <div class="example-note">
+      <span class="note-section">CONFIRMATION CALL NOTES</span>
+      <span class="note-field">Confirmed Appointment Date & Time: </span><span class="note-val good">Y</span><br>
+      <span class="note-field">Confirmed All Decision Makers Will Be Present: </span><span class="note-val good">Y</span><br>
+      <span class="note-field">Dual Appointment: </span><span class="note-val good">Y</span><br>
+      <span class="note-field">Specialist Role Explained: </span><span class="note-val good">Y</span><br>
+      <span class="note-field">Duration (60–90 min) Explained: </span><span class="note-val good">Y</span><br>
+      <span class="note-field">Zoom Protocol Explained: </span><span class="note-val good">Y</span><br>
+      <span class="note-field">Electricity Bill & Meter Box Attached & Clear: </span><span class="note-val bad">N</span><span class="note-label">↓ see notes</span><br>
+      <br>
+      <span class="note-field">Additional Notes / Objections: </span><span class="note-val">"Spoke with Sarah — confirmed Thurs 2PM. Mark (husband) will also attend. Explained specialist role, 60–90 min duration and Zoom link process. Customer happy. Electricity bill not yet received — Sarah said she'll send through this afternoon. Meter box photo also outstanding — reminded her. No objections raised."</span>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-top:8px;line-height:1.6;">💡 Note how the N on electricity bill is explained in the additional notes. Anyone reading this knows exactly what happened, what's outstanding, and what to follow up on.</p>
+
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- BEFORE / AFTER -->
+<div class="section">
+  <div class="inner">
+    <div class="s-label">GOOD VS BAD</div>
+    <div class="s-title">Spot the difference.</div>
+    <div class="s-bar"></div>
+    <p class="body-text">Same call. Same outcome. Two very different notes. Read both and ask yourself: which specialist would you rather be?</p>
+
+    <div class="ba-grid">
+      <div class="ba-card bad-note">
+        <div class="ba-header">❌ POOR NOTE</div>
+        <div class="ba-body">Confirmed Appointment: Y<br>Decision Makers: Y<br>Dual: Y<br>Role: Y<br>Duration: Y<br>Zoom: Y<br>Docs: N<br><br>Called. All good.</div>
+        <div class="ba-annotation">What does the specialist know? Nothing useful. "All good" — is the bill coming? Did anyone raise concerns? When were they confirmed? This note is useless to everyone who reads it after you.</div>
+      </div>
+      <div class="ba-card good-note">
+        <div class="ba-header">✅ STRONG NOTE</div>
+        <div class="ba-body">Confirmed Appointment: Y<br>Decision Makers: Y — both Tom + Rachel<br>Dual: Y<br>Role: Y — specialist role explained<br>Duration: Y — customer acknowledged<br>Zoom: Y — 15min link, spam, test early<br>Docs: N — requested, Tom to send today<br><br>Tom confirmed Fri 11AM. Rachel (wife) attending. Tom asked about PAYS — explained $0 upfront, he seemed relieved. Bill + meter box not yet received, reminded him. No other objections.</div>
+        <div class="ba-annotation">The specialist knows: who's coming, what was discussed, what's outstanding, and that PAYS was raised. They can prepare. That's what a note is for.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- TEMPLATE 2 — INBOUND JOT FORM -->
+<div class="section" style="background:#fff;">
+  <div class="inner">
+    <div class="s-label">TEMPLATE 2 OF 2</div>
+    <div class="s-title">Inbound JOT Form Notes</div>
+    <div class="s-bar"></div>
+    <p class="body-text">Used when a customer calls in directly — whether responding to a voicemail, SMS, or finding RESINC online. This note builds the customer's full profile in the CRM and sets up the specialist with everything they need.</p>
+
+    <div class="template-wrap">
+      <div class="template-header">
+        <div class="template-header-ico">📥</div>
+        <div class="template-header-title">INBOUND JOT FORM NOTES</div>
+        <div class="template-header-badge">INBOUND CALLS</div>
+      </div>
+      <div class="template-body">
+
+        <div class="field-section-title">CUSTOMER DETAILS</div>
+
+        <div class="field-row" onclick="toggleField(this)">
+          <div class="field-label">Name</div>
+          <div class="field-type text">FREE TEXT</div>
+          <div class="field-expand">▾</div>
+        </div>
+        <div class="field-detail">
+          <div class="field-why">Why this field exists:</div>
+          <div class="field-example">Full name of the primary contact. Always ask them to spell it.<br><br><span class="good">✓ Good:</span> Sarah Thompson<br><span class="bad">✗ Bad:</span> Sarah T. / Sarah (no surname)</div>
+        </div>
+
+        <div class="field-row" onclick="toggleField(this)">
+          <div class="field-label">Partner</div>
+          <div class="field-type text">FREE TEXT</div>
+          <div class="field-expand">▾</div>
+        </div>
+        <div class="field-detail">
+          <div class="field-why">Why this field exists:</div>
+          <div class="field-example">Partner or co-owner name. Critical for dual attendance — the specialist needs to know who else will be in the room.<br><br><span class="good">✓ Good:</span> Mark Thompson (husband)<br><span class="bad">✗ Bad:</span> Left blank (even if she mentioned her husband)</div>
+        </div>
+
+        <div class="field-row" onclick="toggleField(this)">
+          <div class="field-label">Email / Phone / Address</div>
+          <div class="field-type text">FREE TEXT</div>
+          <div class="field-expand">▾</div>
+        </div>
+        <div class="field-detail">
+          <div class="field-why">Why this field exists:</div>
+          <div class="field-example">Always ask them to spell the email. Confirm the full address including suburb. The Zoom link and SMS go to these details — one wrong character means a missed link.<br><br><span class="good">✓ Good:</span> sarah.thompson@gmail.com | 0412 555 890 | 14 Coral St, Cronulla NSW 2230<br><span class="bad">✗ Bad:</span> sarahthompson@gmail (missing domain, no suburb)</div>
+        </div>
+
+        <div class="field-section-title">CURRENT SYSTEM & SITUATION</div>
+
+        <div class="field-row" onclick="toggleField(this)">
+          <div class="field-label">Existing Solar</div>
+          <div class="field-type text">FREE TEXT</div>
+          <div class="field-expand">▾</div>
+        </div>
+        <div class="field-detail">
+          <div class="field-why">Why this field exists:</div>
+          <div class="field-example">Whether they have solar already determines the appointment type. No solar = Full Solar+Battery Zoom. Existing solar = potentially Battery Only.<br><br><span class="good">✓ Good:</span> No existing solar<br><span class="good">✓ Good:</span> Yes — 6.6kW system, approx 4 years old, currently exporting ~10kWh/day</div>
+        </div>
+
+        <div class="field-row" onclick="toggleField(this)">
+          <div class="field-label">Interest</div>
+          <div class="field-type text">FREE TEXT</div>
+          <div class="field-expand">▾</div>
+        </div>
+        <div class="field-detail">
+          <div class="field-why">Why this field exists:</div>
+          <div class="field-example">Solar, battery, or both — and what's driving the interest. This helps the specialist understand the customer's mindset before they start.<br><br><span class="good">✓ Good:</span> Solar + battery — wants to reduce bills and get energy independence<br><span class="bad">✗ Bad:</span> Solar (no motivation noted)</div>
+        </div>
+
+        <div class="field-row" onclick="toggleField(this)">
+          <div class="field-label">Roof Check</div>
+          <div class="field-type text">FREE TEXT</div>
+          <div class="field-expand">▾</div>
+        </div>
+        <div class="field-detail">
+          <div class="field-why">Why this field exists:</div>
+          <div class="field-example">What did you see when you pulled up the property? The specialist needs to know before they start designing a system.<br><br><span class="good">✓ Good:</span> North-facing, no shading, solid roof — good solar candidate<br><span class="bad">✗ Bad:</span> Looks ok</div>
+        </div>
+
+        <div class="field-section-title">USAGE & HOUSEHOLD INSIGHTS</div>
+
+        <div class="field-row" onclick="toggleField(this)">
+          <div class="field-label">Household</div>
+          <div class="field-type text">FREE TEXT</div>
+          <div class="field-expand">▾</div>
+        </div>
+        <div class="field-detail">
+          <div class="field-why">Why this field exists:</div>
+          <div class="field-example">Number of people and their situation. More people = higher usage = better ROI on solar.<br><br><span class="good">✓ Good:</span> 4 people — couple + 2 teenagers. Own home, planning to stay long-term.</div>
+        </div>
+
+        <div class="field-row" onclick="toggleField(this)">
+          <div class="field-label">Current Usage</div>
+          <div class="field-type text">FREE TEXT</div>
+          <div class="field-expand">▾</div>
+        </div>
+        <div class="field-detail">
+          <div class="field-why">Why this field exists:</div>
+          <div class="field-example">Heavy appliances mean higher solar ROI. The specialist needs to know what's driving the bill.<br><br><span class="good">✓ Good:</span> Ducted AC, pool pump, electric oven. Heavy daytime usage.</div>
+        </div>
+
+        <div class="field-row" onclick="toggleField(this)">
+          <div class="field-label">Future Plans</div>
+          <div class="field-type text">FREE TEXT</div>
+          <div class="field-expand">▾</div>
+        </div>
+        <div class="field-detail">
+          <div class="field-why">Why this field exists:</div>
+          <div class="field-example">EV, electrification, planned appliances — all increase the ROI case for solar. Planning to move within 2 years is a red flag.<br><br><span class="good">✓ Good:</span> Considering EV in next 12 months. No plans to move.</div>
+        </div>
+
+        <div class="field-section-title">ENERGY & BILL INSIGHTS</div>
+
+        <div class="field-row" onclick="toggleField(this)">
+          <div class="field-label">Electricity Retailer</div>
+          <div class="field-type text">FREE TEXT</div>
+          <div class="field-expand">▾</div>
+        </div>
+        <div class="field-detail">
+          <div class="field-why">Why this field exists:</div>
+          <div class="field-example">Helps the specialist understand the customer's current tariff structure and potential savings.<br><br><span class="good">✓ Good:</span> AGL — on a time-of-use tariff</div>
+        </div>
+
+        <div class="field-row" onclick="toggleField(this)">
+          <div class="field-label">Estimated Bill</div>
+          <div class="field-type text">FREE TEXT</div>
+          <div class="field-expand">▾</div>
+        </div>
+        <div class="field-detail">
+          <div class="field-why">Why this field exists:</div>
+          <div class="field-example">Minimum $400/qtr for a Full Solar appointment. This field confirms qualification and gives the specialist the ROI baseline.<br><br><span class="good">✓ Good:</span> ~$550/qtr — has pool and AC<br><span class="bad">✗ Bad:</span> High (not a number — useless to the specialist)</div>
+        </div>
+
+        <div class="field-row" onclick="toggleField(this)">
+          <div class="field-label">Usage Pattern</div>
+          <div class="field-type text">FREE TEXT</div>
+          <div class="field-expand">▾</div>
+        </div>
+        <div class="field-detail">
+          <div class="field-why">Why this field exists:</div>
+          <div class="field-example">When they use power affects system design. Daytime heavy = excellent solar candidate. Night heavy = battery more important.<br><br><span class="good">✓ Good:</span> Home during day (retired) — high daytime usage. AC runs most of the afternoon.</div>
+        </div>
+
+        <div class="field-section-title">APPOINTMENT DETAILS</div>
+
+        <div class="field-row" onclick="toggleField(this)">
+          <div class="field-label">Type</div>
+          <div class="field-type text">FREE TEXT</div>
+          <div class="field-expand">▾</div>
+        </div>
+        <div class="field-detail">
+          <div class="field-why">Why this field exists:</div>
+          <div class="field-example">Full Solar + Battery Zoom (2hr) or Battery Only Zoom (1hr). This determines which specialist and how much time is blocked.<br><br><span class="good">✓ Good:</span> Full Solar + Battery — 2hr Zoom<br><span class="bad">✗ Bad:</span> Zoom (which type? How long?)</div>
+        </div>
+
+        <div class="field-row" onclick="toggleField(this)">
+          <div class="field-label">Date / Time / Specialist</div>
+          <div class="field-type date">DATE/TEXT</div>
+          <div class="field-expand">▾</div>
+        </div>
+        <div class="field-detail">
+          <div class="field-why">Why this field exists:</div>
+          <div class="field-example">Must match exactly what was booked in the calendar. Any discrepancy between CRM and calendar = potential no-show.<br><br><span class="good">✓ Good:</span> Thursday 12 June, 2:00PM — James Reeve</div>
+        </div>
+
+        <div class="field-row" onclick="toggleField(this)">
+          <div class="field-label">All Decision Makers Committed</div>
+          <div class="field-type yn">Y / N</div>
+          <div class="field-expand">▾</div>
+        </div>
+        <div class="field-detail">
+          <div class="field-why">Why this field exists:</div>
+          <div class="field-example">Did both decision-makers confirm they'll attend? This is the final dual attendance check before handing off to the specialist.<br><br><span class="good">✓ Good:</span> Y — Sarah and Mark both confirmed on the call<br><span class="bad">✗ Bad:</span> Y (but only spoke to Sarah — Mark wasn't confirmed)</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FILLED EXAMPLE — INBOUND -->
+    <div class="s-label" style="margin-top:8px;">FILLED EXAMPLE</div>
+    <div class="s-title" style="font-size:20px;">Complete inbound JOT form note</div>
+    <div class="s-bar"></div>
+    <div class="example-note">
+      <span class="note-section">INBOUND JOT FORM NOTES</span>
+      <span class="note-section" style="color:rgba(255,255,255,.4);font-size:10px;">CUSTOMER DETAILS</span>
+      <span class="note-field">Name: </span><span class="note-val">Sarah Thompson</span><br>
+      <span class="note-field">Partner: </span><span class="note-val">Mark Thompson (husband)</span><br>
+      <span class="note-field">Email: </span><span class="note-val">sarah.thompson@gmail.com</span><br>
+      <span class="note-field">Phone: </span><span class="note-val">0412 555 890</span><br>
+      <span class="note-field">Address: </span><span class="note-val">14 Coral St, Cronulla NSW 2230</span><br>
+      <span class="note-section" style="color:rgba(255,255,255,.4);font-size:10px;">CURRENT SYSTEM & SITUATION</span>
+      <span class="note-field">Existing Solar: </span><span class="note-val">No</span><br>
+      <span class="note-field">Interest: </span><span class="note-val">Solar + battery — wants to reduce bills, worried about rising prices</span><br>
+      <span class="note-field">Roof Check: </span><span class="note-val good">North-facing, no shading visible, solid roof — strong candidate</span><br>
+      <span class="note-section" style="color:rgba(255,255,255,.4);font-size:10px;">USAGE & HOUSEHOLD INSIGHTS</span>
+      <span class="note-field">Household: </span><span class="note-val">4 people — couple + 2 kids. Own home, plan to stay long-term.</span><br>
+      <span class="note-field">Current Usage: </span><span class="note-val">Ducted AC, pool pump, electric hot water. High daytime usage.</span><br>
+      <span class="note-field">Future Plans: </span><span class="note-val">Considering EV in next 12–18 months. No relocation planned.</span><br>
+      <span class="note-section" style="color:rgba(255,255,255,.4);font-size:10px;">ENERGY & BILL INSIGHTS</span>
+      <span class="note-field">Electricity Retailer: </span><span class="note-val">Origin Energy</span><br>
+      <span class="note-field">Estimated Bill: </span><span class="note-val good">~$620/qtr</span><br>
+      <span class="note-field">Usage Pattern: </span><span class="note-val">Home during day. High AC use afternoon. Evening cooking + TV.</span><br>
+      <span class="note-section" style="color:rgba(255,255,255,.4);font-size:10px;">APPOINTMENT DETAILS</span>
+      <span class="note-field">Type: </span><span class="note-val">Full Solar + Battery — 2hr Zoom</span><br>
+      <span class="note-field">Date: </span><span class="note-val">Thursday 12 June, 2:00PM</span><br>
+      <span class="note-field">Specialist: </span><span class="note-val">James Reeve</span><br>
+      <span class="note-field">All Decision Makers Committed: </span><span class="note-val good">Y — both Sarah and Mark confirmed on the call</span><br>
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- QUICK REF -->
+<div class="section">
+  <div class="inner">
+    <div class="s-label">QUICK REFERENCE</div>
+    <div class="s-title">Both templates at a glance.</div>
+    <div class="s-bar"></div>
+    <div class="qr-grid">
+      <div class="qr-card confirm">
+        <div class="qr-card-title">📞 Confirmation Call Notes</div>
+        <div class="qr-item"><div class="qr-dot yn"></div>Confirmed Appointment Date & Time</div>
+        <div class="qr-item"><div class="qr-dot yn"></div>Confirmed All Decision Makers Present</div>
+        <div class="qr-item"><div class="qr-dot yn"></div>Dual Appointment</div>
+        <div class="qr-item"><div class="qr-dot yn"></div>Specialist Role Explained</div>
+        <div class="qr-item"><div class="qr-dot yn"></div>Duration (60–90 min) Explained</div>
+        <div class="qr-item"><div class="qr-dot yn"></div>Zoom Protocol Explained</div>
+        <div class="qr-item"><div class="qr-dot yn"></div>Electricity Bill & Meter Box Attached</div>
+        <div class="qr-item"><div class="qr-dot text"></div>Additional Notes / Objections</div>
+      </div>
+      <div class="qr-card inbound">
+        <div class="qr-card-title">📥 Inbound JOT Form Notes</div>
+        <div class="qr-item"><div class="qr-dot text"></div>Name + Partner + Email + Phone + Address</div>
+        <div class="qr-item"><div class="qr-dot text"></div>Existing Solar + Interest + Roof Check</div>
+        <div class="qr-item"><div class="qr-dot text"></div>Household + Current Usage + Future Plans</div>
+        <div class="qr-item"><div class="qr-dot text"></div>Electricity Retailer + Estimated Bill</div>
+        <div class="qr-item"><div class="qr-dot text"></div>Usage Pattern</div>
+        <div class="qr-item"><div class="qr-dot text"></div>Appointment Type + Date + Time + Specialist</div>
+        <div class="qr-item"><div class="qr-dot yn"></div>All Decision Makers Committed</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;font-size:11px;color:var(--muted);">
+      <div style="display:flex;align-items:center;gap:6px;"><div class="qr-dot yn" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--sky);flex-shrink:0;"></div> Y / N field</div>
+      <div style="display:flex;align-items:center;gap:6px;"><div class="qr-dot text" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--gold);flex-shrink:0;"></div> Free text field</div>
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- CTA -->
+<div class="section" style="background:#fff;">
+  <div class="inner">
+    <div class="cta-wrap">
+      <div class="cta-title">Ready to <em>practise?</em></div>
+      <div class="cta-sub">Now that you know the templates, try the CRM Note Builder — you'll receive a completed call scenario and fill in the notes yourself.</div>
+      <div class="cta-btn">Next: CRM Note Builder →</div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('prog-fill').style.width=Math.min(p,100)+'%';
+});
+
+function toggleField(row){
+  const isOpen=row.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.field-row.open').forEach(r=>{
+    r.classList.remove('open');
+    const next=r.nextElementSibling;
+    if(next&&next.classList.contains('field-detail')) next.classList.remove('show');
+  });
+  // Open clicked if it was closed
+  if(!isOpen){
+    row.classList.add('open');
+    const detail=row.nextElementSibling;
+    if(detail&&detail.classList.contains('field-detail')) detail.classList.add('show');
+    setTimeout(()=>row.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+  }
+}
+</script>
+</body>
+</html>
