@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>RESINC vs Alpha Hippo | Confirmations Team</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0A3542;--navy2:#071F28;--sky:#00AEEF;--sky2:#0090C4;
+  --sky-lt:#EAF6FD;--sky-bg:#F2FAFF;--green:#0B7A4E;--green-lt:#E3F5EC;
+  --orange:#D4620A;--orange-lt:#FEF3EB;--red:#B5251B;--red-lt:#FDECEB;
+  --purple:#6B4FBB;--body:#1A2A32;--muted:#5A6E78;--light:#F4F8FB;
+  --border:#C8DDE8;--line:#E2EEF4;
+  --font:'DM Sans',system-ui,sans-serif;--serif:'DM Serif Display',Georgia,serif;
+  --shadow:0 1px 3px rgba(10,53,66,.06),0 4px 12px rgba(10,53,66,.08);
+  --shadow-lg:0 4px 16px rgba(10,53,66,.1),0 12px 32px rgba(10,53,66,.1);
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--light);color:var(--body);}
+#prog{position:fixed;top:0;left:0;right:0;height:3px;background:rgba(0,174,239,.15);z-index:100;}
+#prog-fill{height:100%;background:var(--sky);width:0%;transition:width .3s;}
+section{padding:52px 20px;}
+.inner{max-width:860px;margin:0 auto;}
+.eyebrow{font-size:8.5px;letter-spacing:.26em;font-weight:600;color:var(--sky);margin-bottom:8px;}
+.s-title{font-size:30px;font-weight:700;color:var(--navy);line-height:1.15;margin-bottom:6px;font-family:var(--serif);}
+.s-bar{width:44px;height:3px;background:var(--sky);border-radius:2px;margin-bottom:24px;}
+.sep{height:1px;background:var(--line);max-width:860px;margin:0 auto;}
+
+/* HERO */
+#hero{background:var(--navy);padding:60px 20px 52px;position:relative;overflow:hidden;}
+.hero-deco{position:absolute;border-radius:50%;border:1px solid rgba(0,174,239,.07);pointer-events:none;}
+.hero-stripe{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--sky);}
+.hero-inner{max-width:860px;margin:0 auto;position:relative;z-index:1;}
+.hero-ey{color:var(--sky);font-size:9px;letter-spacing:.28em;font-weight:600;margin-bottom:16px;}
+.hero-title{color:#fff;font-size:44px;font-weight:700;line-height:1.08;margin-bottom:12px;font-family:var(--serif);}
+.hero-title strong{color:var(--sky);font-family:var(--font);font-size:17px;font-weight:600;display:block;margin-top:6px;letter-spacing:.04em;}
+.hero-sub{color:rgba(255,255,255,.6);font-size:14px;line-height:1.7;max-width:520px;margin-bottom:10px;}
+.hero-scroll{display:flex;align-items:center;gap:8px;color:rgba(0,174,239,.5);font-size:11px;font-weight:500;letter-spacing:.08em;}
+.scroll-dot{width:26px;height:26px;border-radius:50%;border:1px solid rgba(0,174,239,.3);display:flex;align-items:center;justify-content:center;font-size:11px;animation:bob 2s infinite;}
+@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(4px);}}
+
+/* COMPANY SPLIT */
+#companies{background:#fff;}
+.company-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+.company-card{border-radius:16px;padding:24px 24px;box-shadow:var(--shadow-lg);}
+.company-card.resinc{background:var(--navy);}
+.company-card.ah{background:var(--sky-bg);border:1.5px solid var(--border);}
+.cc-tag{font-size:8px;letter-spacing:.22em;font-weight:700;margin-bottom:8px;}
+.company-card.resinc .cc-tag{color:rgba(0,174,239,.7);}
+.company-card.ah .cc-tag{color:var(--sky2);}
+.cc-name{font-size:22px;font-weight:700;margin-bottom:8px;font-family:var(--serif);}
+.company-card.resinc .cc-name{color:#fff;}
+.company-card.ah .cc-name{color:var(--navy);}
+.cc-role{font-size:13px;line-height:1.7;margin-bottom:14px;}
+.company-card.resinc .cc-role{color:rgba(255,255,255,.65);}
+.company-card.ah .cc-role{color:var(--muted);}
+.cc-items{display:flex;flex-direction:column;gap:7px;}
+.cc-item{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;line-height:1.5;}
+.company-card.resinc .cc-item{color:rgba(255,255,255,.75);}
+.company-card.ah .cc-item{color:var(--body);}
+.cc-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:6px;}
+.company-card.resinc .cc-dot{background:var(--sky);}
+.company-card.ah .cc-dot{background:var(--sky);}
+.analogy-card{background:var(--navy);border-radius:14px;padding:20px 24px;display:flex;align-items:center;gap:18px;box-shadow:var(--shadow-lg);}
+.analogy-icon{font-size:32px;flex-shrink:0;}
+.analogy-text{color:rgba(255,255,255,.75);font-size:13.5px;line-height:1.65;}
+.analogy-text em{color:#fff;font-style:normal;font-weight:600;}
+
+/* FLOWCHART */
+#flow{background:var(--light);}
+.flow-chain{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding:4px 0 16px;}
+.flow-chain::-webkit-scrollbar{height:4px;}
+.flow-chain::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.fc-step{display:flex;flex-direction:column;align-items:center;min-width:130px;flex:1;}
+.fc-box{
+  border-radius:12px;padding:13px 14px;text-align:center;
+  width:100%;box-shadow:var(--shadow);transition:transform .2s;cursor:default;
+}
+.fc-box:hover{transform:translateY(-2px);}
+.fc-box.d2d{background:var(--navy);}
+.fc-box.reschedule{background:#FEF3EB;border:1.5px solid rgba(212,98,10,.25);}
+.fc-box.team{background:var(--sky);color:#fff;}
+.fc-box.booked{background:var(--green-lt);border:1.5px solid rgba(11,122,78,.25);}
+.fc-box.confirm{background:var(--sky-lt);border:1.5px solid rgba(0,174,239,.3);}
+.fc-box.specialist{background:var(--navy);}
+.fc-icon{font-size:20px;margin-bottom:6px;}
+.fc-label{font-size:11.5px;font-weight:700;line-height:1.3;margin-bottom:3px;}
+.fc-box.d2d .fc-label,.fc-box.team .fc-label,.fc-box.specialist .fc-label{color:#fff;}
+.fc-box.reschedule .fc-label{color:var(--orange);}
+.fc-box.booked .fc-label{color:var(--green);}
+.fc-box.confirm .fc-label{color:var(--sky2);}
+.fc-sub{font-size:10px;line-height:1.4;}
+.fc-box.d2d .fc-sub,.fc-box.team .fc-sub,.fc-box.specialist .fc-sub{color:rgba(255,255,255,.65);}
+.fc-box.reschedule .fc-sub{color:var(--orange);}
+.fc-box.booked .fc-sub{color:var(--green);}
+.fc-box.confirm .fc-sub{color:var(--sky2);}
+.fc-arrow{display:flex;align-items:center;justify-content:center;padding:0 6px;color:var(--border);font-size:18px;flex-shrink:0;padding-top:20px;}
+
+/* STATS */
+.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px;}
+.stat-card{background:#fff;border-radius:14px;padding:18px 20px;text-align:center;border:1.5px solid var(--line);box-shadow:var(--shadow);transition:transform .2s;cursor:default;}
+.stat-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);}
+.stat-val{font-size:32px;font-weight:700;color:var(--sky);font-family:var(--serif);line-height:1;margin-bottom:5px;}
+.stat-lbl{font-size:11.5px;color:var(--muted);line-height:1.5;}
+.stat-lbl strong{color:var(--navy);display:block;}
+
+/* KEY CARDS */
+#key{background:#fff;}
+.key-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.key-card{border-radius:14px;padding:20px 22px;box-shadow:var(--shadow);}
+.key-card:nth-child(1){background:var(--navy);}
+.key-card:nth-child(2){background:var(--sky-bg);border:1.5px solid var(--border);}
+.key-card-tag{font-size:8px;letter-spacing:.2em;font-weight:700;margin-bottom:8px;}
+.key-card:nth-child(1) .key-card-tag{color:rgba(0,174,239,.7);}
+.key-card:nth-child(2) .key-card-tag{color:var(--sky2);}
+.key-card-title{font-size:15px;font-weight:700;margin-bottom:8px;line-height:1.3;}
+.key-card:nth-child(1) .key-card-title{color:#fff;}
+.key-card:nth-child(2) .key-card-title{color:var(--navy);}
+.key-card-body{font-size:12.5px;line-height:1.7;}
+.key-card:nth-child(1) .key-card-body{color:rgba(255,255,255,.65);}
+.key-card:nth-child(2) .key-card-body{color:var(--muted);}
+
+/* TEAMS */
+#teams{background:var(--light);}
+.teams-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.team-card{background:#fff;border-radius:14px;padding:20px 22px;border-top:4px solid;box-shadow:var(--shadow);}
+.team-card:nth-child(1){border-top-color:var(--sky);}
+.team-card:nth-child(2){border-top-color:var(--green);}
+.team-name{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:5px;}
+.team-role{font-size:11px;font-weight:700;letter-spacing:.14em;margin-bottom:10px;}
+.team-card:nth-child(1) .team-role{color:var(--sky2);}
+.team-card:nth-child(2) .team-role{color:var(--green);}
+.team-items{display:flex;flex-direction:column;gap:7px;}
+.ti{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;color:var(--body);line-height:1.5;}
+.ti-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:6px;}
+.team-card:nth-child(1) .ti-dot{background:var(--sky);}
+.team-card:nth-child(2) .ti-dot{background:var(--green);}
+.teams-goal{background:var(--navy);border-radius:12px;padding:14px 20px;margin-top:14px;display:flex;align-items:center;justify-content:center;gap:10px;}
+.tg-txt{color:#fff;font-size:14px;font-weight:600;}
+.tg-txt span{color:var(--sky);}
+
+/* QUIZ */
+#quiz{background:#fff;}
+.quiz-intro{background:var(--navy);border-radius:14px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow);}
+.qi-ico{font-size:28px;flex-shrink:0;}
+.qi-txt{color:rgba(255,255,255,.75);font-size:13px;line-height:1.6;}
+.qi-txt strong{color:#fff;}
+.q-num{font-size:9px;color:var(--sky);font-weight:600;letter-spacing:.16em;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.q-num::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--sky);flex-shrink:0;}
+.q-text{font-size:16px;font-weight:700;color:var(--navy);line-height:1.45;margin-bottom:14px;}
+.q-opts{display:flex;flex-direction:column;gap:8px;}
+.q-opt{display:flex;align-items:center;gap:12px;padding:12px 15px;border-radius:10px;border:1.5px solid var(--line);background:#fff;cursor:pointer;transition:all .18s;user-select:none;}
+.q-opt:hover:not(.correct):not(.wrong):not(.disabled){border-color:var(--sky);background:var(--sky-lt);transform:translateX(3px);}
+.q-opt.correct{border-color:var(--green);background:var(--green-lt);pointer-events:none;}
+.q-opt.wrong{border-color:var(--red);background:var(--red-lt);pointer-events:none;}
+.q-opt.disabled{pointer-events:none;opacity:.4;}
+.q-dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;transition:all .18s;}
+.q-opt.correct .q-dot{background:var(--green);border-color:var(--green);}
+.q-opt.wrong .q-dot{background:var(--red);border-color:var(--red);}
+.q-opt-text{font-size:12.5px;color:var(--body);line-height:1.4;flex:1;}
+.q-opt.correct .q-opt-text{color:#0A4425;font-weight:600;}
+.q-opt.wrong .q-opt-text{color:#7A1010;}
+.q-feedback{border-radius:10px;padding:12px 15px;font-size:13px;line-height:1.65;margin-top:10px;display:none;}
+.q-feedback.show{display:block;}
+.q-feedback.ok{background:var(--green-lt);border-left:4px solid var(--green);color:#0A4425;}
+.q-feedback.bad{background:var(--red-lt);border-left:4px solid var(--red);color:#7A1010;}
+.q-retry{font-size:12px;color:var(--red);font-weight:600;margin-top:6px;display:none;}
+.q-retry.show{display:block;}
+.quiz-done{text-align:center;padding:24px;background:#fff;border-radius:16px;box-shadow:var(--shadow-lg);}
+.qd-icon{font-size:44px;margin-bottom:12px;}
+.qd-score{font-size:24px;font-weight:700;color:var(--navy);margin-bottom:5px;font-family:var(--serif);}
+.qd-sub{font-size:13px;color:var(--muted);margin-bottom:16px;}
+.qd-rows{display:flex;flex-direction:column;gap:7px;max-width:500px;margin:0 auto 18px;}
+.qd-row{display:flex;align-items:center;gap:10px;padding:9px 13px;border-radius:9px;font-size:12px;font-weight:600;}
+.qd-row.ok{background:var(--green-lt);border:1.5px solid rgba(11,122,78,.2);color:#0A4425;}
+.qd-row.bad{background:var(--red-lt);border:1.5px solid rgba(181,37,27,.2);color:#7A1010;}
+
+/* COMPLETE */
+#complete{display:none;background:var(--navy2);padding:52px 20px;text-align:center;}
+.cpl-inner{max-width:480px;margin:0 auto;}
+.cpl-badge{display:inline-flex;align-items:center;gap:8px;background:var(--green);border-radius:30px;padding:7px 18px;margin-bottom:16px;font-size:11.5px;font-weight:700;color:#fff;letter-spacing:.06em;}
+.cpl-title{color:#fff;font-size:28px;font-weight:700;margin-bottom:8px;font-family:var(--serif);}
+.cpl-title span{color:var(--sky);font-style:italic;}
+.cpl-body{color:rgba(255,255,255,.6);font-size:13px;line-height:1.7;margin-bottom:18px;}
+.cpl-next{background:rgba(0,174,239,.12);border:1.5px solid rgba(0,174,239,.25);border-radius:12px;padding:14px 22px;}
+.cpl-next-lbl{font-size:8px;color:rgba(0,174,239,.6);letter-spacing:.2em;font-weight:600;margin-bottom:4px;}
+.cpl-next-txt{color:#fff;font-size:13px;font-weight:500;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+<div id="prog"><div id="prog-fill"></div></div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-deco" style="width:380px;height:380px;right:-80px;top:-80px;"></div>
+  <div class="hero-deco" style="width:210px;height:210px;right:20px;top:20px;"></div>
+  <div class="hero-stripe"></div>
+  <div class="hero-inner">
+    <div class="hero-ey">CONFIRMATIONS TEAM · DAY 1</div>
+    <div class="hero-title">RESINC vs Alpha Hippo<strong>Two brands. One team. Know the difference.</strong></div>
+    <div class="hero-sub">Alpha Hippo is not a separate company — it's a division within RESINC, with its own D2D team, connectors, and specialists. As a Confirmations Specialist, you'll confirm appointments from both brands. Know how they work — because the customer always hears RESINC.</div>
+    <div class="hero-scroll"><div class="scroll-dot">↓</div> Scroll to explore</div>
+  </div>
+</section>
+
+<!-- COMPANIES -->
+<section id="companies" style="background:#fff;">
+  <div class="inner">
+    <div class="eyebrow">THE STRUCTURE</div>
+    <div class="s-title">RESINC is the brand. Alpha Hippo is a division within it.</div>
+    <div class="s-bar"></div>
+    <div class="company-grid">
+      <div class="company-card resinc">
+        <div class="cc-tag">THE BRAND & INSTALLATION COMPANY</div>
+        <div class="cc-name">RESINC Solar & Batteries</div>
+        <div class="cc-role">The brand the customer knows. The company on the invoice. RESINC has its own team of specialists, its own door knockers, and its own marketing — operating independently of Alpha Hippo.</div>
+        <div class="cc-items">
+          <div class="cc-item"><div class="cc-dot"></div><span>In-home and Zoom consultations</span></div>
+          <div class="cc-item"><div class="cc-dot"></div><span>System design and installation</span></div>
+          <div class="cc-item"><div class="cc-dot"></div><span>Own door knockers → feed the Appointment Setter team</span></div>
+          <div class="cc-item"><div class="cc-dot"></div><span>25-year customer relationship</span></div>
+        </div>
+      </div>
+      <div class="company-card ah">
+        <div class="cc-tag">A DIVISION WITHIN RESINC</div>
+        <div class="cc-name">Alpha Hippo</div>
+        <div class="cc-role">A separate division within RESINC with its own D2D team, connectors, and solar specialists. Alpha Hippo D2D reps and connectors book appointments — those appointments come to the Confirmations Team (you) for confirmation the day before.</div>
+        <div class="cc-items">
+          <div class="cc-item"><div class="cc-dot"></div><span>Own door knockers → book to AH specialists</span></div>
+          <div class="cc-item"><div class="cc-dot"></div><span>Reschedules & cancels → come to Connectors</span></div>
+          <div class="cc-item"><div class="cc-dot"></div><span>CQA for Alpha Hippo: Olivia Belither</span></div>
+          <div class="cc-item"><div class="cc-dot"></div><span>On calls: always RESINC Solar — never Alpha Hippo</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="analogy-card">
+      <div class="analogy-icon">💡</div>
+      <div class="analogy-text"><em>Think of Alpha Hippo as a division within RESINC.</em> Same brand, same product — but its own D2D team, its own connectors, and its own specialists. Your team confirms appointments from both pipelines.</div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- FLOW -->
+<section id="flow">
+  <div class="inner">
+    <div class="eyebrow">HOW LEADS FLOW</div>
+    <div class="s-title">From Alpha Hippo booking to your confirmation call</div>
+    <div class="s-bar"></div>
+    <div class="flow-chain">
+      <div class="fc-step">
+        <div class="fc-box d2d"><div class="fc-icon">🚪</div><div class="fc-label">Alpha Hippo D2D / Connector</div><div class="fc-sub">Books appointment into calendar</div></div>
+      </div>
+      <div class="fc-arrow">→</div>
+      <div class="fc-step">
+        <div class="fc-box specialist"><div class="fc-icon">☀️</div><div class="fc-label">Solar Specialist</div><div class="fc-sub">Sits with customer — sells RESINC</div></div>
+      </div>
+      <div class="fc-arrow">↩</div>
+      <div class="fc-step">
+        <div class="fc-box reschedule"><div class="fc-icon">↩️</div><div class="fc-label">~50% reschedule</div><div class="fc-sub">Cancel, reschedule, or unreachable</div></div>
+      </div>
+      <div class="fc-arrow">→</div>
+      <div class="fc-step">
+        <div class="fc-box team"><div class="fc-icon">📞</div><div class="fc-label">Confirmations Team (You)</div><div class="fc-sub">Confirms appointment the day before</div></div>
+      </div>
+      <div class="fc-arrow">→</div>
+      <div class="fc-step">
+        <div class="fc-box booked"><div class="fc-icon">✅</div><div class="fc-label">Appointment re-booked</div><div class="fc-sub">Back to AH specialist calendar</div></div>
+      </div>
+      <div class="fc-arrow">→</div>
+      <div class="fc-step">
+        <div class="fc-box confirm"><div class="fc-icon">📋</div><div class="fc-label">Confirmation Team</div><div class="fc-sub">Confirms day before</div></div>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-val">50%</div><div class="stat-lbl">Target confirmation rate<strong>appointments confirmed day-before</strong></div></div>
+      <div class="stat-card"><div class="stat-val">60–70%</div><div class="stat-lbl">Target net sit rate<strong>specialists actually meeting customers</strong></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- KEY FACTS -->
+<section id="key" style="background:#fff;">
+  <div class="inner">
+    <div class="eyebrow">KEY FACTS ABOUT YOUR LEADS</div>
+    <div class="s-title">What makes these leads different</div>
+    <div class="s-bar"></div>
+    <div class="key-grid">
+      <div class="key-card">
+        <div class="key-card-tag">LEAD SOURCE</div>
+        <div class="key-card-title">Alpha Hippo bookings land in your confirmation queue</div>
+        <div class="key-card-body">Alpha Hippo D2D reps and connectors book appointments directly into the specialists' calendar. Those bookings land in the Confirmations Team queue for next-day confirmation — just like RESINC bookings. The process is identical. The only difference is the brand that sourced the lead.</div>
+      </div>
+      <div class="key-card">
+        <div class="key-card-tag">WHY YOUR LEADS ARE DIFFERENT</div>
+        <div class="key-card-title">Every lead has already been spoken to face-to-face</div>
+        <div class="key-card-body">No cold internet leads. No mixed sources. Every lead you work has already had a real conversation with one of our own door knockers and showed enough interest to book. That's your advantage on every call.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- TEAMS -->
+<section id="teams">
+  <div class="inner">
+    <div class="eyebrow">THE TWO TEAMS</div>
+    <div class="s-title">Who books what — and who you answer to</div>
+    <div class="s-bar"></div>
+    <div class="teams-grid">
+      <div class="team-card">
+        <div class="team-name">Your Team — Re-booking</div>
+        <div class="team-role">THIS IS YOU</div>
+        <div class="team-items">
+          <div class="ti"><div class="ti-dot"></div><span>Re-engage reschedule leads loaded into the dialler</span></div>
+          <div class="ti"><div class="ti-dot"></div><span>Qualify customers against the criteria</span></div>
+          <div class="ti"><div class="ti-dot"></div><span>Book qualified appointments back into the calendar</span></div>
+          <div class="ti"><div class="ti-dot"></div><span>Leave complete booking notes in the CRM</span></div>
+        </div>
+      </div>
+      <div class="team-card">
+        <div class="team-name">Confirmation Team</div>
+        <div class="team-role">SEPARATE TEAM — NOT RE-BOOKING</div>
+        <div class="team-items">
+          <div class="ti"><div class="ti-dot"></div><span>Call customers the day before their appointment</span></div>
+          <div class="ti"><div class="ti-dot"></div><span>Confirm the appointment is still happening</span></div>
+          <div class="ti"><div class="ti-dot"></div><span>Use your CRM booking notes to prepare</span></div>
+          <div class="ti"><div class="ti-dot"></div><span>If a customer reschedules, it may come back to your team</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="teams-goal">
+      <div class="tg-txt">Different teams — <span>same goal:</span> making sure every specialist has confirmed, quality appointments every single day.</div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- QUIZ -->
+<section id="quiz" style="background:var(--light);">
+  <div class="inner">
+    <div class="eyebrow">KNOWLEDGE CHECK</div>
+    <div class="s-title">3 questions — all must be correct</div>
+    <div class="s-bar"></div>
+    <div class="quiz-intro"><div class="qi-ico">🎯</div><div class="qi-txt"><strong>Three questions.</strong> Get each right to complete this module.</div></div>
+    <div id="quiz-body"></div>
+  </div>
+</section>
+
+<div id="complete">
+  <div class="cpl-inner">
+    <div class="cpl-badge">✓ COMPLETE</div>
+    <div class="cpl-title">You know <span>where you fit.</span></div>
+    <div class="cpl-body">You understand how RESINC and Alpha Hippo work together, where your appointments come from, and why you always represent RESINC — regardless of which brand sourced the lead.</div>
+    <div class="cpl-next"><div class="cpl-next-lbl">NEXT UP</div><div class="cpl-next-txt">Customer Journey</div></div>
+  </div>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;document.getElementById('prog-fill').style.width=Math.min(p,100)+'%';});
+
+const QUIZ=[
+  {q:"When you call a customer to confirm an Alpha Hippo booking, which brand do you represent on the call?",
+   opts:["Alpha Hippo — because that's who booked the appointment","Either — depending on who the specialist is","RESINC Solar — always, regardless of which brand sourced the lead","The brand on the CRM record"],
+   c:2,fb:"Always RESINC Solar — that's the brand the customer knows. Alpha Hippo is an internal division. On every call, you are RESINC."},
+  {q:"Where do the leads your team works come from?",
+   opts:["Online enquiries submitted through the RESINC website","Referrals from existing RESINC customers","Cold leads purchased from a third-party database","Door-to-door appointments that rescheduled, cancelled, or became unreachable"],
+   c:3,fb:"These are warm leads — the customer already had a face-to-face conversation and showed interest. That's your advantage."},
+  {q:"What is the confirmation team responsible for?",
+   opts:["Re-booking appointments that have fallen off the calendar","Calling customers the day before to confirm their appointment and update the CRM","Qualifying leads before they're passed to specialists","Managing the Alpha Hippo calendar and specialist roster"],
+   c:1,fb:"Two separate teams, two separate roles. Your team re-books. The confirmation team confirms. Good CRM notes from you make their job easier."},
+];
+let qIdx=0;const qOk=[false,false,false];const qAns=[false,false,false];const qSel=[-1,-1,-1];
+
+function renderQuiz(){
+  const b=document.getElementById('quiz-body');if(!b)return;
+  if(qIdx>=QUIZ.length){b.innerHTML=qDone();return;}
+  const q=QUIZ[qIdx];const a=qAns[qIdx];
+  b.innerHTML=`<div class="q-num">QUESTION ${qIdx+1} OF ${QUIZ.length}</div>
+  <div class="q-text">${q.q}</div>
+  <div class="q-opts">${q.opts.map((o,i)=>{
+    let c='';if(a){if(i===q.c)c='correct';else if(i===qSel[qIdx]&&!qOk[qIdx])c='wrong';else c='disabled';}
+    return`<div class="q-opt ${c}" onclick="pick(${i})"><div class="q-dot">${a&&i===q.c?'✓':a&&i===qSel[qIdx]&&i!==q.c?'✗':''}</div><div class="q-opt-text">${o}</div></div>`;
+  }).join('')}</div>
+  <div class="q-feedback ${a?'show':''} ${a?(qOk[qIdx]?'ok':'bad'):''}">
+    ${a?(qOk[qIdx]?'✅  ':'❌  ')+q.fb:''}</div>
+  ${a&&!qOk[qIdx]?'<div class="q-retry show">Select the correct answer to continue.</div>':''}`;
+}
+function pick(i){
+  if(qAns[qIdx]&&qOk[qIdx])return;
+  qSel[qIdx]=i;const ok=i===QUIZ[qIdx].c;
+  if(ok){qAns[qIdx]=true;qOk[qIdx]=true;renderQuiz();setTimeout(()=>{if(qIdx<QUIZ.length-1){qIdx++;renderQuiz();}else{document.getElementById('quiz-body').innerHTML=qDone();}},2500);}
+  else{qAns[qIdx]=true;renderQuiz();setTimeout(()=>{qAns[qIdx]=false;renderQuiz();},3000);}
+}
+function qDone(){
+  const sc=qOk.filter(Boolean).length;
+  setTimeout(()=>{const c=document.getElementById('complete');c.style.display='block';c.scrollIntoView({behavior:'smooth',block:'start'});},800);
+  return`<div class="quiz-done"><div class="qd-icon">🎯</div><div class="qd-score">${sc}/${QUIZ.length} correct</div><div class="qd-sub">Module complete.</div><div class="qd-rows">${QUIZ.map((q,i)=>`<div class="qd-row ${qOk[i]?'ok':'bad'}"><span style="font-size:16px">${qOk[i]?'✅':'❌'}</span><span>${q.q.substring(0,58)}…</span></div>`).join('')}</div></div>`;
+}
+renderQuiz();
+</script>
+</body>
+</html>
