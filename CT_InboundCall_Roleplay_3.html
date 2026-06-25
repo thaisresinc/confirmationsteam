@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Inbound Call Roleplay | Confirmations Team</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0A3542;--navy2:#071F28;--navy3:#0D4558;
+  --sky:#00AEEF;--sky2:#0090C4;--sky-lt:#EAF6FD;--sky-bg:#F2FAFF;
+  --green:#0B7A4E;--green-lt:#E3F5EC;
+  --red:#B5251B;--red-lt:#FDECEB;
+  --orange:#D4620A;--orange-lt:#FEF3EB;
+  --teal:#00796B;--teal-lt:#E0F4F7;
+  --body:#1A2A32;--muted:#5A6E78;--light:#F4F8FB;
+  --border:#C8DDE8;--line:#E2EEF4;
+  --font:'DM Sans',system-ui,sans-serif;
+  --serif:'DM Serif Display',Georgia,serif;
+  --shadow:0 1px 3px rgba(10,53,66,.06),0 4px 12px rgba(10,53,66,.08);
+  --max:820px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--light);color:var(--body);line-height:1.6;}
+#prog{position:fixed;top:0;left:0;right:0;height:3px;background:rgba(0,174,239,.15);z-index:100;}
+#prog-fill{height:100%;background:var(--sky);width:0%;transition:width .4s ease;}
+
+/* HERO */
+.hero{background:var(--navy);padding:60px 20px 50px;position:relative;overflow:hidden;}
+.hero-stripe{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--teal);}
+.hero-deco{position:absolute;border-radius:50%;border:1px solid rgba(0,174,239,.06);pointer-events:none;}
+.hero-inner{max-width:var(--max);margin:0 auto;position:relative;z-index:1;}
+.hero-ey{color:var(--teal);font-size:9px;letter-spacing:.28em;font-weight:600;margin-bottom:16px;filter:brightness(1.4);}
+.hero-title{color:#fff;font-size:44px;font-weight:700;line-height:1.05;margin-bottom:12px;font-family:var(--serif);}
+.hero-title em{color:var(--sky);font-style:italic;}
+.hero-sub{color:rgba(255,255,255,.6);font-size:14px;line-height:1.7;max-width:520px;margin-bottom:28px;}
+.hero-pills{display:flex;flex-wrap:wrap;gap:8px;}
+.hero-pill{background:rgba(0,174,239,.12);border:1px solid rgba(0,174,239,.25);border-radius:20px;padding:4px 12px;color:var(--sky);font-size:11px;font-weight:600;}
+
+/* SCENARIO SELECTOR */
+.section{padding:40px 20px;}
+.inner{max-width:var(--max);margin:0 auto;}
+.s-label{font-size:8.5px;letter-spacing:.22em;font-weight:700;color:var(--teal);margin-bottom:6px;}
+.s-title{font-family:var(--serif);font-size:26px;color:var(--navy);margin-bottom:6px;}
+.s-bar{width:44px;height:3px;background:var(--teal);border-radius:2px;margin-bottom:20px;}
+.sep{height:1px;background:var(--line);max-width:var(--max);margin:0 auto;}
+
+.scenario-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:8px;}
+@media(max-width:600px){.scenario-cards{grid-template-columns:1fr;}}
+.scenario-card{background:#fff;border-radius:16px;padding:24px;box-shadow:var(--shadow);border:2px solid var(--line);cursor:pointer;transition:all .2s;}
+.scenario-card:hover{border-color:var(--sky);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,174,239,.15);}
+.scenario-card.active{border-color:var(--teal);background:var(--teal-lt);}
+.sc-ico{font-size:36px;margin-bottom:12px;}
+.sc-name{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:6px;font-family:var(--serif);}
+.sc-desc{font-size:12.5px;color:var(--muted);line-height:1.6;}
+.sc-tag{display:inline-block;margin-top:10px;background:rgba(0,174,239,.1);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;color:var(--teal);}
+
+/* STEP TRACKER */
+.step-tracker{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:28px;max-width:var(--max);margin-left:auto;margin-right:auto;padding:0 20px;}
+.st-step{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;position:relative;}
+.st-step:not(:last-child)::after{content:'';position:absolute;top:14px;left:calc(50% + 14px);right:calc(-50% + 14px);height:2px;background:var(--line);z-index:0;}
+.st-step.done::after{background:var(--teal);}
+.st-circle{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--muted);position:relative;z-index:1;transition:all .3s;}
+.st-step.active .st-circle{background:var(--teal);border-color:var(--teal);color:#fff;}
+.st-step.done .st-circle{background:var(--green);border-color:var(--green);color:#fff;}
+.st-label{font-size:9px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-align:center;line-height:1.3;}
+.st-step.active .st-label{color:var(--teal);}
+.st-step.done .st-label{color:var(--green);}
+
+/* CHAT */
+.chat-wrap{display:flex;flex-direction:column;gap:14px;margin-bottom:24px;}
+.bubble-row{display:flex;gap:10px;align-items:flex-start;}
+.bubble-row.customer{flex-direction:row-reverse;}
+.bubble-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.bubble-avatar.conf{background:var(--teal);}
+.bubble-avatar.cust{background:var(--navy);}
+.bubble{border-radius:16px;padding:13px 16px;max-width:78%;font-size:13.5px;line-height:1.65;}
+.bubble.conf{background:var(--teal);color:#fff;border-radius:16px 16px 16px 4px;}
+.bubble.cust{background:var(--navy);color:rgba(255,255,255,.88);border-radius:16px 16px 4px 16px;}
+.bubble.narration{background:var(--light);border:1.5px solid var(--border);color:var(--muted);font-style:italic;font-size:12.5px;border-radius:10px;max-width:100%;text-align:center;}
+.speaker-name{font-size:9.5px;font-weight:700;letter-spacing:.08em;margin-bottom:4px;color:var(--muted);}
+.bubble-row.customer .speaker-name{text-align:right;}
+
+/* CHOICES */
+.choices-wrap{margin-bottom:20px;}
+.choices-label{font-size:9px;letter-spacing:.18em;font-weight:700;color:var(--teal);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.choices-label::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--teal);display:inline-block;}
+.choices{display:flex;flex-direction:column;gap:9px;}
+.choice{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer;transition:all .18s;display:flex;align-items:flex-start;gap:12px;font-size:13px;line-height:1.5;color:var(--body);}
+.choice:hover:not(.correct):not(.wrong):not(.wrong-locked):not(.disabled){border-color:var(--teal);background:var(--teal-lt);transform:translateX(3px);}
+.choice.correct{border-color:var(--green);background:var(--green-lt);pointer-events:none;}
+.choice.wrong{border-color:var(--red);background:var(--red-lt);}
+.choice.wrong-locked{border-color:var(--red);background:var(--red-lt);pointer-events:none;opacity:.45;}
+.choice.disabled{pointer-events:none;opacity:.35;}
+.choice-dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;margin-top:1px;}
+.choice.correct .choice-dot{background:var(--green);border-color:var(--green);color:#fff;}
+.choice.wrong .choice-dot,.choice.wrong-locked .choice-dot{background:var(--red);border-color:var(--red);color:#fff;}
+.choice-text{flex:1;}
+
+/* TYPING */
+.typing-activity{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px;}
+.typing-label{font-size:9px;letter-spacing:.2em;font-weight:700;color:var(--orange);margin-bottom:6px;}
+.typing-prompt{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:6px;line-height:1.4;}
+.typing-hint{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5;}
+.typing-hint em{color:var(--teal);font-style:normal;font-weight:600;}
+.typing-input{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;font-family:var(--font);font-size:13.5px;color:var(--body);resize:vertical;min-height:80px;transition:border-color .18s;outline:none;}
+.typing-input:focus{border-color:var(--teal);}
+.typing-input.ok{border-color:var(--green);background:var(--green-lt);}
+.typing-input.bad{border-color:var(--red);background:var(--red-lt);}
+.typing-check-btn{margin-top:10px;background:var(--navy);color:#fff;border:none;border-radius:8px;padding:10px 20px;font-family:var(--font);font-size:12.5px;font-weight:600;cursor:pointer;}
+.typing-result{margin-top:10px;font-size:12.5px;line-height:1.65;display:none;border-radius:8px;padding:10px 14px;}
+.typing-result.show{display:block;}
+.typing-result.ok{background:var(--green-lt);color:#0A4425;}
+.typing-result.partial{background:var(--orange-lt);color:#7A2E00;}
+.typing-ref{background:rgba(0,121,107,.06);border:1px solid rgba(0,121,107,.2);border-radius:8px;padding:10px 14px;margin-top:8px;font-size:12.5px;color:var(--muted);line-height:1.6;}
+.typing-ref strong{color:var(--navy);}
+
+/* FEEDBACK */
+.feedback{border-radius:12px;padding:14px 16px;font-size:13px;line-height:1.65;margin-bottom:16px;display:none;animation:fadeUp .3s ease;}
+.feedback.show{display:block;}
+.feedback.ok{background:var(--green-lt);border-left:4px solid var(--green);color:#0A4425;}
+.feedback.bad{background:var(--red-lt);border-left:4px solid var(--red);color:#7A1010;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+.tip-inline{font-size:11.5px;color:var(--muted);background:var(--teal-lt);border-radius:8px;padding:10px 14px;margin-bottom:16px;border-left:3px solid var(--teal);}
+
+/* NEXT BTN */
+#next-btn-wrap{margin-top:8px;}
+.next-btn{background:var(--teal);color:#fff;border:none;border-radius:10px;padding:12px 26px;font-family:var(--font);font-size:13.5px;font-weight:600;cursor:pointer;transition:all .18s;box-shadow:0 4px 14px rgba(0,121,107,.3);}
+.next-btn:hover{opacity:.9;transform:translateY(-1px);}
+
+/* SCORE */
+.score-panel{background:var(--navy);border-radius:16px;padding:32px 26px;text-align:center;margin-bottom:24px;}
+.score-icon{font-size:52px;margin-bottom:12px;}
+.score-title{font-family:var(--serif);font-size:28px;color:#fff;margin-bottom:6px;}
+.score-title em{color:var(--sky);font-style:italic;}
+.score-sub{color:rgba(255,255,255,.55);font-size:13px;margin-bottom:22px;line-height:1.6;}
+.score-nums{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;}
+.score-num{background:rgba(0,174,239,.1);border:1.5px solid rgba(0,174,239,.25);border-radius:12px;padding:14px 24px;}
+.score-n{font-family:var(--serif);font-size:36px;font-weight:700;color:var(--sky);}
+.score-l{font-size:9.5px;color:rgba(255,255,255,.45);letter-spacing:.12em;margin-top:2px;}
+.tip-box{background:rgba(0,174,239,.08);border:1px solid rgba(0,174,239,.2);border-radius:10px;padding:12px 16px;font-size:12.5px;color:rgba(255,255,255,.7);line-height:1.6;}
+.tip-box strong{color:var(--sky);}
+
+/* SCRIPT REF */
+.script-ref{background:var(--navy);border-radius:14px;padding:20px 22px;margin-bottom:14px;position:relative;overflow:hidden;}
+.script-ref::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--teal);}
+.script-ref-label{color:#5CCFDB;font-size:8px;letter-spacing:.2em;font-weight:700;margin-bottom:8px;padding-left:14px;}
+.script-ref-text{color:rgba(255,255,255,.82);font-size:13px;line-height:1.75;padding-left:14px;font-style:italic;}
+.script-ref-text strong{color:#fff;font-style:normal;}
+
+.rp-stage{max-width:var(--max);margin:0 auto;padding:0 20px;}
+</style>
+</head>
+<body>
+<div id="prog"><div id="prog-fill"></div></div>
+
+<div class="hero">
+  <div class="hero-deco" style="width:380px;height:380px;right:-80px;top:-80px;"></div>
+  <div class="hero-stripe"></div>
+  <div class="hero-inner">
+    <div class="hero-ey">CONFIRMATIONS TEAM · ROLEPLAY</div>
+    <div class="hero-title">Inbound Call<br><em>Roleplay</em></div>
+    <div class="hero-sub">A customer is calling in. You need to qualify them, gather their details, and book the appointment — all in one smooth call. Two scenarios: sole owner and dual party.</div>
+    <div class="hero-pills">
+      <span class="hero-pill">📞 2 scenarios</span>
+      <span class="hero-pill">🎭 Branching responses</span>
+      <span class="hero-pill">✍️ Type from memory</span>
+      <span class="hero-pill">🏆 Score at the end</span>
+    </div>
+  </div>
+</div>
+
+<!-- SCENARIO SELECT -->
+<div class="section" style="background:#fff;">
+  <div class="inner">
+    <div class="s-label">CHOOSE YOUR SCENARIO</div>
+    <div class="s-title">Which call is coming in?</div>
+    <div class="s-bar"></div>
+    <div class="scenario-cards">
+      <div class="scenario-card" id="sc-sole" onclick="selectScenario('sole')">
+        <div class="sc-ico">👤</div>
+        <div class="sc-name">Sole Owner</div>
+        <div class="sc-desc">Single decision-maker. Lives alone or partner isn't involved in the decision. Simpler booking flow.</div>
+        <div class="sc-tag">Scenario 1</div>
+      </div>
+      <div class="scenario-card" id="sc-dual" onclick="selectScenario('dual')">
+        <div class="sc-ico">👫</div>
+        <div class="sc-name">Dual Party</div>
+        <div class="sc-desc">Two decision-makers. Partner is co-owner. Dual attendance required — more steps, more critical.</div>
+        <div class="sc-tag">Scenario 2</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px;">
+      <button class="next-btn" id="start-btn" style="display:none;" onclick="startRoleplay()">Start the call ☎️</button>
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- ROLEPLAY SECTION -->
+<div class="section" id="rp-section" style="display:none;">
+  <div class="inner">
+    <div class="step-tracker" id="step-tracker"></div>
+    <div class="rp-stage" id="rp-stage"></div>
+  </div>
+</div>
+
+<!-- COMPLETE -->
+<div class="section" id="complete-section" style="display:none;">
+  <div class="inner">
+    <div class="score-panel">
+      <div class="score-icon">🏆</div>
+      <div class="score-title">Call <em>Complete.</em></div>
+      <div class="score-sub">Score is based on first attempts only.</div>
+      <div class="score-nums">
+        <div class="score-num"><div class="score-n" id="final-correct">0</div><div class="score-l">FIRST-ATTEMPT CORRECT</div></div>
+        <div class="score-num"><div class="score-n" id="final-total">0</div><div class="score-l">TOTAL QUESTIONS</div></div>
+        <div class="score-num"><div class="score-n" id="final-pct">0%</div><div class="score-l">SCORE</div></div>
+      </div>
+      <div class="tip-box" id="final-tip"></div>
+    </div>
+
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:40px;">
+      <button class="next-btn" onclick="tryOtherScenario()" id="other-scenario-btn">Try the other scenario →</button>
+      <button class="next-btn" style="background:var(--navy);" onclick="restartSame()">Replay this scenario ↺</button>
+    </div>
+
+    <div class="s-label">SCRIPT REFERENCE</div>
+    <div class="s-title">Key Lines to Know</div>
+    <div class="s-bar"></div>
+
+    <div class="script-ref"><div class="script-ref-label">WARM OPENING</div><div class="script-ref-text">"Hi, thanks for calling RESINC Solar, you're speaking with <strong>[Your Name]</strong> — how can I help you today?"</div></div>
+    <div class="script-ref"><div class="script-ref-label">GATHER DETAILS</div><div class="script-ref-text">"Let's get your details sorted first so I can build your profile properly and check your home for suitability — is that okay?"</div></div>
+    <div class="script-ref"><div class="script-ref-label">ROOF CHECK</div><div class="script-ref-text">"I'm just going to quickly pull up your property now and take a look at the roof... Yeah, that actually looks like a really solid roof for solar."</div></div>
+    <div class="script-ref"><div class="script-ref-label">BOOKING — SOLE OWNER</div><div class="script-ref-text">"So the next step is a solar assessment with one of our specialists. This will be done via Zoom and takes around 60 to 90 minutes. I've locked that in for you — you'll receive an email and SMS with all the details. Our confirmation team will call you the day before to make sure you're all set."</div></div>
+    <div class="script-ref"><div class="script-ref-label">BOOKING — DUAL PARTY</div><div class="script-ref-text">"This appointment is booked for all decision-makers to attend together. The reason for that is because we go through everything — savings, system design, costs — and it's really important all decision-makers are there so you can make a fully informed joint decision. I've locked that in for both yourself and <strong>[Partner's Name]</strong>."</div></div>
+    <div class="script-ref"><div class="script-ref-label">PRE-APPOINTMENT REQUIREMENTS</div><div class="script-ref-text">"Before the appointment, we just need a recent electricity bill showing usage, and a clear photo of your meter box. Would you be able to send those through before the appointment?"</div></div>
+    <div class="script-ref"><div class="script-ref-label">CLOSE</div><div class="script-ref-text">"Perfect — that's everything from me. You're all set in the system now. We're looking forward to helping you get your electricity costs down. Thanks again for your time — have a great day!"</div></div>
+  </div>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('prog-fill').style.width=Math.min(p,100)+'%';
+});
+
+let selectedScenario=null;
+let currentStep=0;
+let correctFirstAttempt=0;
+let totalQuestions=0;
+const wrongChoices={};
+
+// ═══════════════════════════════════════════════
+// SCENARIOS
+// ═══════════════════════════════════════════════
+const SCENARIOS={
+  sole:{
+    steps:[
+      // STEP 1 — Opening
+      {
+        type:'choice',
+        label:'Step 1 — Warm Opening',
+        chat:[
+          {t:'narration',text:'📞 The phone rings. You pick up.'},
+        ],
+        prompt:'How do you answer the inbound call?',
+        choices:[
+          {text:'"Hi, thanks for calling RESINC Solar — you\'re speaking with [Your Name]. How can I help?"',correct:true,
+            feedback:'Perfect opener. You named the company, introduced yourself, and invited them to share why they\'re calling. Professional and warm.',
+            response:{t:'cust',text:'"Oh hi — yes, I saw your ad online and I\'m interested in finding out about solar for my home."'}},
+          {text:'"RESINC Solar, how can I help?"',correct:false,
+            feedback:'You skipped your name. The customer doesn\'t know who they\'re speaking with — always include your name in the opening.'},
+          {text:'"Hello, thanks for calling RESINC Solar — how can I help you today?"',correct:false,
+            feedback:'Too abrupt. No name, no warmth, no invitation for the customer to share. Try again.'},
+          {text:'"Hi, you\'ve reached RESINC Solar — what can I help you with today?"',correct:false,
+            feedback:'You didn\'t mention RESINC Solar. The customer needs to know they\'ve reached the right company. Try again.'}
+        ],
+        tip:'💡 Opening formula: "Hi, thanks for calling RESINC Solar, you\'re speaking with [Your Name] — how can I help you today?"'
+      },
+      // STEP 2 — Purpose + details setup
+      {
+        type:'choice',
+        label:'Step 2 — Set Up & Qualify',
+        chat:[
+          {t:'cust',text:'"Oh hi — yes, I saw your ad online and I\'m interested in finding out about solar for my home."'},
+        ],
+        prompt:'You\'ve confirmed they\'re interested. What\'s the right next move?',
+        choices:[
+          {text:'"Perfect — I can definitely help you with that. Let\'s get your details sorted first so I can build your profile properly and check your home for suitability — is that okay?"',correct:true,
+            feedback:'Exactly right. You confirmed you can help, set expectations that you need their details, and got a micro-yes before starting. Clean transition into the qualification flow.',
+            response:{t:'cust',text:'"Sure, that sounds fine."'}},
+          {text:'"Great — and just to confirm, is this property in your name? Let me grab a few details and we\'ll go from there."',correct:false,
+            feedback:'Too abrupt — you jumped straight into data collection without setting any context. The customer doesn\'t know what they\'re signing up for. Set up the reason first.'},
+          {text:'"That\'s great to hear! Before we get started, can I ask — is this for a residential or commercial property, and are you looking at solar, battery, or both?"',correct:false,
+            feedback:'Wrong. This is your call to handle — you qualify and book. Don\'t transfer.'},
+          {text:'"Perfect — I\'d love to help. Can I grab your name and address first so I can check your home for suitability and see what we\'re working with?"',correct:false,
+            feedback:'Getting ahead of yourself. Before any qualification questions, you need to set up the process — get their details first.'}
+        ],
+        tip:'💡 Always get a micro-yes before starting data collection: "...is that okay?"'
+      },
+      // STEP 3 — Typing: key qualification questions
+      {
+        type:'typing',
+        label:'Step 3 — Key Qualification Questions',
+        chat:[
+          {t:'cust',text:'"Sure, that sounds fine."'},
+          {t:'narration',text:'You run through: residential/commercial, solar/battery/both, existing solar, name, number, email, address, how they found you, household size, bill amount, electricity provider.'},
+          {t:'cust',text:'"It\'s residential, just solar, no existing system. It\'s Margaret Collins. 0412 555 890. margaret.collins@email.com. 14 Palm Ave, Cronulla. I found you on Facebook. Two of us live here — just me and my daughter. My bill is about $480 a quarter. We\'re with AGL."'},
+        ],
+        taskLabel:'✍️ TYPE FROM MEMORY',
+        prompt:'You\'ve gathered the details. Now do the roof check. Type what you say to Margaret.',
+        hint:'Tell her you\'re pulling up her property, confirm the address, and give a positive reaction to the roof.',
+        keywords:['pull up','property','14','cronulla','solid','roof'],
+        minKeywords:4,
+        modelAnswer:'"I\'m just going to quickly pull up your property now and take a look at the roof... Just confirming — I\'ve got 14 Palm Ave, Cronulla, is that correct? Yeah, that actually looks like a really solid roof for solar."',
+        okFeedback:'Great. You checked the property, confirmed the address, and gave a positive signal about the roof. This builds confidence.',
+        partialFeedback:'Missing some key elements. The roof check needs: pulling up the property, confirming the address, and giving a positive reaction.',
+        response:{t:'cust',text:'"Yes that\'s right. Oh good — that\'s reassuring!"'}
+      },
+      // STEP 4 — Booking flow
+      {
+        type:'choice',
+        label:'Step 4 — Book the Appointment',
+        chat:[
+          {t:'cust',text:'"Yes that\'s right. Oh good — that\'s reassuring!"'},
+          {t:'narration',text:'You\'ve confirmed suitability. Margaret is a sole owner — no partner involved.'},
+        ],
+        prompt:'Time to book. How do you introduce the next step?',
+        choices:[
+          {text:'"The next step is a solar assessment via Zoom — around 60 to 90 minutes. The specialist goes through your roof, usage, savings, and designs a system specifically for your home. What date and time works best?"',correct:true,
+            feedback:'Complete. You named the format (Zoom), the duration (60–90 min), and what\'s covered — all before asking for a time. The customer knows exactly what they\'re agreeing to.',
+            response:{t:'cust',text:'"That sounds great — how about Thursday at 2PM?"'}},
+          {text:'"Perfect — so the next step is to get you booked in with one of our solar specialists for an assessment. They\'ll go through everything with you. When are you available?"',correct:false,
+            feedback:'You didn\'t explain what the appointment involves. Customers who don\'t know what to expect are more likely to cancel. Always explain before asking for a time.'},
+          {text:'"The next step is a Zoom appointment with one of our specialists — it\'s usually around 45 minutes to an hour, they go through your home and usage. What time works best?"',correct:false,
+            feedback:'"Shouldn\'t take too long" is vague and undersells the assessment. It takes 60–90 minutes for a reason — say so and explain why.'},
+          {text:'"So what I\'ll do is have one of our specialists reach out to you directly to lock in a time — they\'ll walk you through the assessment process when they call."',correct:false,
+            feedback:'Wrong — you book the appointment now, on this call. Don\'t defer to a callback.'}
+        ],
+        tip:'💡 Sole owner booking: format → duration → what\'s covered → ask for a time. In that order.'
+      },
+      // STEP 5 — Typing: close the call
+      {
+        type:'typing',
+        label:'Step 5 — Pre-Appointment Requirements & Close',
+        chat:[
+          {t:'cust',text:'"That sounds great — how about Thursday at 2PM?"'},
+          {t:'narration',text:'You\'ve locked in Thursday 2PM. Now wrap up: confirm the booking, request documents, and close.'},
+        ],
+        taskLabel:'✍️ TYPE FROM MEMORY',
+        prompt:'Lock in the booking, request the documents, and close the call professionally. Type it out from memory.',
+        hint:'Confirm the booking → mention email/SMS confirmation → mention confirmation team call → request electricity bill + meter box photo → close warmly.',
+        keywords:['locked','email','sms','confirmation','bill','meter','day'],
+        minKeywords:5,
+        modelAnswer:'"Perfect — I\'ve locked that in for you on Thursday at 2PM. You\'ll receive an email and SMS shortly with all the details. Our confirmation team will also give you a call the day before just to run through everything and make sure you\'re all set. Before the appointment, we\'ll just need a recent electricity bill showing your usage, and a clear photo of your meter box. Would you be able to send those through? That\'s everything from me — we\'re looking forward to helping you get your electricity costs down. Have a great day!"',
+        okFeedback:'Clean close. You confirmed the booking, set expectations for the confirmation call, requested the documents, and signed off warmly.',
+        partialFeedback:'Missing some elements. A complete close covers: booking confirmed → email/SMS → confirmation team call → electricity bill + meter box → warm sign-off.',
+        response:{t:'cust',text:'"Perfect — thank you so much! I\'ll send those through today."'}
+      }
+    ]
+  },
+  dual:{
+    steps:[
+      // STEP 1 — Opening
+      {
+        type:'choice',
+        label:'Step 1 — Warm Opening',
+        chat:[
+          {t:'narration',text:'📞 The phone rings. You pick up.'},
+        ],
+        prompt:'How do you answer?',
+        choices:[
+          {text:'"Hi, thanks for calling RESINC Solar, you\'re speaking with [Your Name] — how can I help you today?"',correct:true,
+            feedback:'Perfect. Name → company → invitation. Every inbound call starts the same way.',
+            response:{t:'cust',text:'"Hi yes — my wife and I have been thinking about solar for a while and we wanted to find out more."'}},
+          {text:'"Hi, RESINC Solar here — thanks for calling. What can I help you with today?"',correct:false,
+            feedback:'No name. The customer doesn\'t know who they\'re speaking with. Always introduce yourself.'},
+          {text:'"Hi there, thanks for your call — how can I help you today?"',correct:false,
+            feedback:'You didn\'t say RESINC Solar. The customer needs to confirm they\'ve reached the right place.'},
+          {text:'"Good morning, you\'ve reached RESINC Solar — how can I help you today?"',correct:false,
+            feedback:'No personal name. The script is clear — always give your name. Try again.'}
+        ],
+        tip:'💡 Every inbound: "Hi, thanks for calling RESINC Solar, you\'re speaking with [Your Name] — how can I help you today?"'
+      },
+      // STEP 2 — Partner identified early
+      {
+        type:'choice',
+        label:'Step 2 — Spot the Dual Party Signal',
+        chat:[
+          {t:'cust',text:'"Hi yes — my wife and I have been thinking about solar for a while and we wanted to find out more."'},
+        ],
+        prompt:'The customer mentioned "my wife and I" — a dual party signal. What\'s your next move?',
+        choices:[
+          {text:'"Perfect — I can definitely help you with that. Let\'s get your details sorted first so I can build your profile and check your home for suitability — is that okay?"',correct:true,
+            feedback:'Right move. You\'ve noted the dual party signal mentally — you\'ll confirm the partner details and book for both later. For now, set up the qualification flow.',
+            response:{t:'cust',text:'"Yes, of course."'}},
+          {text:'"Perfect — and since you mentioned your wife, would it be worth having her on the line for this call too so she can hear everything firsthand?"',correct:false,
+            feedback:'Too early. You don\'t need both people on a qualification call — you just need both at the appointment. Note the signal and proceed with qualification.'},
+          {text:'"That\'s great — just so I can set things up correctly, would this be a joint decision between yourself and your wife, or are you the main person making the call on this?"',correct:false,
+            feedback:'Unnecessary friction at this stage. Proceed with the qualification flow — you\'ll confirm both decision-makers when you book.'},
+          {text:'"That\'s wonderful — and before we get into the details, it would be great to grab your wife\'s name too so I can make sure both of you are captured in the system from the start."',correct:false,
+            feedback:'Getting ahead of the process. Customer details come first — you\'ll capture the partner name in the booking flow.'}
+        ],
+        tip:'💡 Note dual party signals early — but don\'t act on them until the booking step.'
+      },
+      // STEP 3 — Typing: qualify and roof check
+      {
+        type:'typing',
+        label:'Step 3 — Qualify & Roof Check',
+        chat:[
+          {t:'cust',text:'"Yes, of course."'},
+          {t:'narration',text:'You run through the qualification flow: residential, solar + battery, no existing solar. James Morrison. 0411 222 333. james.morrison@email.com. 22 Harbour Rd, Kirrawee. Referred by a friend. 4 people in the home. $550/qtr. Origin Energy.'},
+          {t:'cust',text:'"That\'s all correct."'},
+        ],
+        taskLabel:'✍️ TYPE FROM MEMORY',
+        prompt:'Details are in. Do the roof check — pull up the property, confirm the address, give a positive reaction.',
+        hint:'Pull up property → confirm address (22 Harbour Rd, Kirrawee) → positive roof reaction.',
+        keywords:['pull up','property','22','kirrawee','solid','roof'],
+        minKeywords:4,
+        modelAnswer:'"I\'m just going to quickly pull up your property now... Just confirming — I\'ve got 22 Harbour Rd, Kirrawee, is that correct? Yeah, that actually looks like a really solid roof for solar."',
+        okFeedback:'Clean roof check. Property pulled up, address confirmed, positive signal given. James is engaged.',
+        partialFeedback:'Missing elements. Pull up the property, confirm the exact address, and give a clear positive reaction to the roof.',
+        response:{t:'cust',text:'"Yes that\'s right — great to hear!"'}
+      },
+      // STEP 4 — Dual attendance booking
+      {
+        type:'choice',
+        label:'Step 4 — Book for Both Decision-Makers',
+        chat:[
+          {t:'cust',text:'"Yes that\'s right — great to hear!"'},
+          {t:'narration',text:'Suitability confirmed. Now book — and this is a dual party. Both James and his wife need to attend.'},
+        ],
+        prompt:'How do you introduce the booking and handle the dual attendance requirement?',
+        choices:[
+          {text:'"The next step is a solar assessment via Zoom — around 60 to 90 minutes. This is booked for all decision-makers together, because we cover savings, system design, and costs, and it\'s important both of you can make a fully informed joint decision. Just confirming — your wife is the other decision-maker as well?"',correct:true,
+            feedback:'Complete. You explained the format, duration, and dual attendance requirement with the reason — not as a rule, as a benefit. Then confirmed the partner\'s involvement.',
+            response:{t:'cust',text:'"Yes, that\'s right — Sarah. We both want to be involved."'}},
+          {text:'"Great — so the next step is to get a Zoom appointment locked in with one of our solar specialists. They\'ll go through your home, your bills, and put together a system design. What time works best for you both?"',correct:false,
+            feedback:'You skipped the dual attendance requirement entirely. In a dual party situation, this is the most critical step. Don\'t rush past it.'},
+          {text:'"The next step is a specialist appointment. It will need both you and your wife to attend — it\'s a requirement. What time suits you both?"',correct:false,
+            feedback:'"It\'s a requirement" sounds like a rule. The script explains WHY — savings, system design, joint decision. Lead with the benefit, not the rule.'},
+          {text:'"Perfect — let me lock that in for you now. I\'ll just need to check that your wife is available at the same time, since it\'s important both of you are there for the full session."',correct:false,
+            feedback:'You didn\'t explain the appointment format, duration, or why both people need to be there. James doesn\'t know what he\'s agreeing to yet.'}
+        ],
+        tip:'💡 Dual attendance: explain the reason (joint decision, full picture) before asking for confirmation.'
+      },
+      // STEP 5 — Typing: confirm both names + close
+      {
+        type:'typing',
+        label:'Step 5 — Lock In Both & Close',
+        chat:[
+          {t:'cust',text:'"Yes, that\'s right — Sarah. We both want to be involved."'},
+          {t:'narration',text:'James confirmed Sarah as the second decision-maker. They\'ve agreed on Friday at 11AM.'},
+        ],
+        taskLabel:'✍️ TYPE FROM MEMORY',
+        prompt:'Confirm the booking for both James and Sarah, request the documents, and close the call.',
+        hint:'Locked in for both James and Sarah → email/SMS → confirmation team call → electricity bill + meter box → close warmly.',
+        keywords:['james','sarah','email','sms','confirmation','bill','meter'],
+        minKeywords:5,
+        modelAnswer:'"Perfect — I\'ve locked that in for both yourself and Sarah on Friday at 11AM. You\'ll both receive an email and SMS shortly with all the details. Our confirmation team will also give you a call the day before just to run through everything and make sure you\'re both all set. Before the appointment, we\'ll just need a recent electricity bill and a clear photo of your meter box — would you be able to send those through? That\'s everything from me — we\'re really looking forward to helping you both. Have a great day!"',
+        okFeedback:'Excellent. You named both James and Sarah, mentioned the confirmation team call, requested both documents, and closed warmly. Clean finish.',
+        partialFeedback:'Missing some elements. Make sure you: name BOTH people, mention email/SMS, mention the confirmation team call, request the documents, and close warmly.',
+        response:{t:'cust',text:'"Wonderful — thank you so much! We\'ll get those sent through."'}
+      }
+    ]
+  }
+};
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+
+function selectScenario(id){
+  selectedScenario=id;
+  document.getElementById('sc-sole').classList.toggle('active',id==='sole');
+  document.getElementById('sc-dual').classList.toggle('active',id==='dual');
+  document.getElementById('start-btn').style.display='inline-block';
+}
+
+function startRoleplay(){
+  currentStep=0; correctFirstAttempt=0; totalQuestions=0;
+  Object.keys(wrongChoices).forEach(k=>delete wrongChoices[k]);
+  document.querySelector('.section').style.display='none';
+  document.getElementById('rp-section').style.display='block';
+  buildTracker();
+  renderStep();
+  document.getElementById('rp-section').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function tryOtherScenario(){
+  selectedScenario=selectedScenario==='sole'?'dual':'sole';
+  document.getElementById('complete-section').style.display='none';
+  document.querySelector('.section').style.display='block';
+  document.getElementById('sc-sole').classList.toggle('active',selectedScenario==='sole');
+  document.getElementById('sc-dual').classList.toggle('active',selectedScenario==='dual');
+  document.getElementById('start-btn').style.display='inline-block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function restartSame(){
+  document.getElementById('complete-section').style.display='none';
+  startRoleplay();
+}
+
+function buildTracker(){
+  const steps=SCENARIOS[selectedScenario].steps;
+  const tracker=document.getElementById('step-tracker');
+  tracker.innerHTML=steps.map((s,i)=>`
+    <div class="st-step" id="st-${i}">
+      <div class="st-circle">${i+1}</div>
+      <div class="st-label">${s.label.replace('Step '+(i+1)+' — ','').split(' ').slice(0,2).join(' ')}</div>
+    </div>`).join('');
+}
+
+function updateTracker(){
+  const steps=SCENARIOS[selectedScenario].steps;
+  for(let i=0;i<steps.length;i++){
+    const el=document.getElementById('st-'+i);
+    el.classList.remove('active','done');
+    if(i<currentStep) el.classList.add('done');
+    if(i===currentStep) el.classList.add('active');
+  }
+}
+
+function renderStep(){
+  updateTracker();
+  const step=SCENARIOS[selectedScenario].steps[currentStep];
+  const stage=document.getElementById('rp-stage');
+  stage.innerHTML='';
+  let html='';
+
+  // Chat
+  html+='<div class="chat-wrap" id="chat-wrap">';
+  html+=`<div style="text-align:center;font-size:9px;letter-spacing:.18em;font-weight:700;color:var(--teal);margin-bottom:4px;">${step.label.toUpperCase()}</div>`;
+  step.chat.forEach(m=>{html+=bubbleHTML(m);});
+  html+='</div>';
+
+  if(step.type==='choice'){
+    html+=choiceBlockHTML(step,'main');
+    html+=`<div class="feedback" id="feedback-main"></div>`;
+  } else if(step.type==='typing'){
+    totalQuestions++;
+    html+=typingHTML(step,'main');
+  }
+  html+=`<div id="next-btn-wrap"></div>`;
+  stage.innerHTML=html;
+}
+
+function bubbleHTML(m){
+  if(m.t==='narration') return `<div class="bubble-row"><div class="bubble narration">${m.text}</div></div>`;
+  if(m.t==='cust') return `<div class="bubble-row customer"><div class="bubble-avatar cust">👤</div><div><div class="speaker-name">CUSTOMER</div><div class="bubble cust">${m.text}</div></div></div>`;
+  if(m.t==='conf') return `<div class="bubble-row"><div class="bubble-avatar conf">📞</div><div><div class="speaker-name">YOU</div><div class="bubble conf">${m.text}</div></div></div>`;
+  return '';
+}
+
+function choiceBlockHTML(step,id){
+  let h=`<div class="choices-wrap"><div class="choices-label">YOUR TURN — ${step.prompt}</div><div class="choices" id="choices-${id}">`;
+  step.choices.forEach((c,i)=>{
+    h+=`<div class="choice" onclick="pick('${id}',${i})" id="choice-${id}-${i}"><div class="choice-dot"></div><div class="choice-text">${c.text}</div></div>`;
+  });
+  h+=`</div></div>`;
+  if(step.tip) h+=`<div class="tip-inline">${step.tip}</div>`;
+  return h;
+}
+
+function typingHTML(step,id){
+  return `<div class="typing-activity">
+    <div class="typing-label">${step.taskLabel}</div>
+    <div class="typing-prompt">${step.prompt}</div>
+    <div class="typing-hint">Write it as a spoken line — include the key elements: <em>${step.hint}</em></div>
+    <textarea class="typing-input" id="typing-input-${id}" placeholder="Type what you say..."></textarea>
+    <button class="typing-check-btn" onclick="checkTyping('${id}')">Check my answer ✓</button>
+    <div class="typing-result" id="typing-result-${id}"></div>
+  </div>`;
+}
+
+function moveNextBtn(label){
+  const wrap=document.getElementById('next-btn-wrap');
+  if(!wrap) return;
+  wrap.innerHTML=`<button class="next-btn" onclick="nextStep()">${label}</button>`;
+  setTimeout(()=>wrap.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+}
+
+// CHOICE LOGIC
+function pick(id,i){
+  const step=SCENARIOS[selectedScenario].steps[currentStep];
+  const choice=step.choices[i];
+  const fb=document.getElementById('feedback-'+id);
+  const isFirst=!wrongChoices[id+'-'+i];
+
+  if(choice.correct){
+    totalQuestions++;
+    if(isFirst) correctFirstAttempt++;
+    step.choices.forEach((_,j)=>{
+      const el=document.getElementById('choice-'+id+'-'+j);
+      if(j===i){el.classList.add('correct');el.querySelector('.choice-dot').textContent='✓';}
+      else{el.classList.add(wrongChoices[id+'-'+j]?'wrong-locked':'disabled');}
+    });
+    fb.className='feedback show ok';
+    fb.innerHTML='✅  '+choice.feedback+(step.tip?'<br><br><em>'+step.tip+'</em>':'');
+    // Add bubbles
+    const chatWrap=document.getElementById('chat-wrap');
+    const confRow=document.createElement('div');
+    confRow.className='bubble-row';
+    confRow.innerHTML=`<div class="bubble-avatar conf">📞</div><div><div class="speaker-name">YOU</div><div class="bubble conf">${choice.text}</div></div>`;
+    chatWrap.appendChild(confRow);
+    if(choice.response){
+      setTimeout(()=>{
+        const cr=document.createElement('div');
+        cr.className='bubble-row customer';
+        cr.innerHTML=`<div class="bubble-avatar cust">👤</div><div><div class="speaker-name">CUSTOMER</div><div class="bubble cust">${choice.response.text}</div></div>`;
+        chatWrap.appendChild(cr);
+        cr.scrollIntoView({behavior:'smooth',block:'nearest'});
+      },600);
+    }
+    const steps=SCENARIOS[selectedScenario].steps;
+    setTimeout(()=>moveNextBtn(currentStep<steps.length-1?'Continue →':'Finish call ✓'),800);
+  } else {
+    wrongChoices[id+'-'+i]=true;
+    const el=document.getElementById('choice-'+id+'-'+i);
+    el.classList.add('wrong');
+    el.querySelector('.choice-dot').textContent='✗';
+    fb.className='feedback show bad';
+    fb.innerHTML='❌  '+choice.feedback+' <strong>Try again.</strong>';
+    fb.scrollIntoView({behavior:'smooth',block:'nearest'});
+    setTimeout(()=>{el.classList.remove('wrong');el.classList.add('wrong-locked');el.style.pointerEvents='none';},1500);
+  }
+}
+
+// TYPING LOGIC
+function checkTyping(id){
+  const step=SCENARIOS[selectedScenario].steps[currentStep];
+  const input=document.getElementById('typing-input-'+id);
+  const result=document.getElementById('typing-result-'+id);
+  const val=input.value.toLowerCase().trim();
+  if(!val){result.className='typing-result show partial';result.textContent='Please type something first.';return;}
+  const hits=step.keywords.filter(k=>val.includes(k.toLowerCase())).length;
+  const isFirst=!input.dataset.checked;
+  input.dataset.checked='1';
+  const steps=SCENARIOS[selectedScenario].steps;
+  // Reject if too short (copy-paste of hint) or missing quotation marks (not written as dialogue)
+  const minLen=60;
+  if(val.length < minLen){
+    result.className='typing-result show partial';
+    result.innerHTML='⚠️ Your response is too short — write it out as a full spoken line, not just keywords.';
+    setTimeout(()=>{input.classList.remove('bad');},100);
+    input.classList.add('bad');
+    setTimeout(()=>{input.classList.remove('bad');},1500);
+    return;
+  }
+
+  if(hits>=step.minKeywords){
+    input.classList.add('ok');
+    result.className='typing-result show ok';
+    result.innerHTML='✅  '+step.okFeedback+'<div class="typing-ref"><strong>Model answer:</strong> '+step.modelAnswer+'</div>';
+    if(isFirst) correctFirstAttempt++;
+    if(step.response){
+      setTimeout(()=>{
+        const chatWrap=document.getElementById('chat-wrap');
+        const cr=document.createElement('div');
+        cr.className='bubble-row customer';
+        cr.innerHTML=`<div class="bubble-avatar cust">👤</div><div><div class="speaker-name">CUSTOMER</div><div class="bubble cust">${step.response.text}</div></div>`;
+        chatWrap.appendChild(cr);
+        cr.scrollIntoView({behavior:'smooth',block:'nearest'});
+      },600);
+    }
+    setTimeout(()=>moveNextBtn(currentStep<steps.length-1?'Continue →':'Finish call ✓'),800);
+  } else {
+    input.classList.add('bad');
+    result.className='typing-result show partial';
+    result.innerHTML='⚠️  '+step.partialFeedback+'<div class="typing-ref"><strong>Key elements:</strong> '+step.hint+'</div>';
+    setTimeout(()=>{input.classList.remove('bad');},1500);
+  }
+}
+
+function nextStep(){
+  currentStep++;
+  const steps=SCENARIOS[selectedScenario].steps;
+  if(currentStep>=steps.length){
+    showComplete();
+  } else {
+    renderStep();
+    document.getElementById('step-tracker').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+}
+
+function showComplete(){
+  document.getElementById('rp-section').style.display='none';
+  document.getElementById('complete-section').style.display='block';
+  const pct=totalQuestions>0?Math.round(correctFirstAttempt/totalQuestions*100):0;
+  document.getElementById('final-correct').textContent=correctFirstAttempt;
+  document.getElementById('final-total').textContent=totalQuestions;
+  document.getElementById('final-pct').textContent=pct+'%';
+  const tip=document.getElementById('final-tip');
+  const other=selectedScenario==='sole'?'dual party':'sole owner';
+  if(pct===100) tip.innerHTML=`<strong>Perfect.</strong> Clean call from open to close. Now try the ${other} scenario.`;
+  else if(pct>=75) tip.innerHTML=`<strong>Strong run.</strong> Review the steps you missed, then try the ${other} scenario.`;
+  else if(pct>=50) tip.innerHTML=`<strong>Getting there.</strong> Study the script reference below and run this again before trying the ${other} scenario.`;
+  else tip.innerHTML=`<strong>Needs more practice.</strong> Work through the script reference below carefully. Run this scenario again before moving on.`;
+  const btn=document.getElementById('other-scenario-btn');
+  btn.textContent='Try the '+(selectedScenario==='sole'?'Dual Party':'Sole Owner')+' scenario →';
+  document.getElementById('complete-section').scrollIntoView({behavior:'smooth',block:'start'});
+}
+</script>
+</body>
+</html>
