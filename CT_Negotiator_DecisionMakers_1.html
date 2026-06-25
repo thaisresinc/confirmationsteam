@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>The Negotiator | Decision Makers</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0A3542;--navy2:#071F28;
+  --sky:#00AEEF;--sky2:#0090C4;
+  --green:#0B7A4E;
+  --red:#B5251B;
+  --orange:#D4620A;
+  --gold:#D4940A;
+  --font:'DM Sans',system-ui,sans-serif;
+  --serif:'DM Serif Display',Georgia,serif;
+  --max:780px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--navy2);color:#fff;min-height:100vh;}
+
+/* INTRO */
+#intro{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;position:relative;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;}
+.i-inner{max-width:560px;text-align:center;position:relative;z-index:1;}
+.i-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(212,148,10,.12);border:1.5px solid rgba(212,148,10,.25);border-radius:20px;padding:7px 18px;margin-bottom:24px;font-size:10px;font-weight:700;letter-spacing:.2em;color:var(--gold);}
+.i-title{font-family:var(--serif);font-size:clamp(48px,8vw,68px);color:#fff;line-height:.95;margin-bottom:14px;}
+.i-title em{color:var(--gold);font-style:italic;display:block;}
+.i-sub{color:rgba(255,255,255,.5);font-size:15px;line-height:1.7;max-width:440px;margin:0 auto 28px;}
+.i-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:20px 24px;margin-bottom:24px;text-align:left;}
+.i-box-lbl{font-size:9px;font-weight:700;letter-spacing:.2em;color:var(--gold);margin-bottom:10px;}
+.i-box-txt{font-size:13.5px;color:rgba(255,255,255,.7);line-height:1.7;}
+.i-box-txt strong{color:#fff;}
+.i-rules{display:flex;flex-direction:column;gap:8px;margin-bottom:28px;text-align:left;}
+.i-rule{display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:12px 16px;}
+.i-rule-ico{font-size:18px;flex-shrink:0;}
+.i-rule-txt{font-size:13px;color:rgba(255,255,255,.65);line-height:1.5;}
+.i-rule-txt strong{color:#fff;}
+.start-btn{background:var(--gold);color:var(--navy2);border:none;border-radius:14px;padding:18px 52px;font-family:var(--font);font-size:16px;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 8px 32px rgba(212,148,10,.4);}
+.start-btn:hover{transform:translateY(-3px);}
+
+/* HUD */
+#game{display:none;min-height:100vh;padding-bottom:60px;transition:background .5s ease;}
+#game.s3{background:linear-gradient(180deg,#1A1000 0%,var(--navy2) 100%);}
+#game.s5{background:linear-gradient(180deg,#2A1800 0%,var(--navy2) 60%);}
+.streak-fire{position:fixed;top:0;left:0;right:0;height:3px;z-index:60;opacity:0;transition:opacity .4s;}
+.streak-fire.f3{background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:1;animation:sfp 1s infinite;}
+.streak-fire.f5{background:linear-gradient(90deg,transparent,#F87171,var(--gold),#F87171,transparent);opacity:1;animation:sfp .5s infinite;}
+@keyframes sfp{0%,100%{opacity:.6;}50%{opacity:1;}}
+.hud{position:sticky;top:0;z-index:50;background:rgba(7,31,40,.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06);}
+.hud-bar{max-width:var(--max);margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:14px;}
+.hud-rnd{font-size:9px;font-weight:700;letter-spacing:.16em;color:rgba(255,255,255,.35);}
+.hud-ttl{font-size:13px;font-weight:700;color:#fff;flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.hud-streak{font-size:12px;font-weight:700;color:var(--gold);}
+.hud-streak.h3{animation:sg 1s infinite;}
+.hud-streak.h5{color:#F87171;animation:sg .5s infinite;}
+@keyframes sg{0%,100%{text-shadow:none;}50%{text-shadow:0 0 10px currentColor;}}
+.hud-score{font-size:13px;font-weight:700;color:var(--sky);}
+.timer-bar{height:4px;background:rgba(255,255,255,.08);}
+.timer-fill{height:100%;background:var(--gold);transition:width .1s linear;}
+
+/* SCENE */
+.scene{max-width:var(--max);margin:0 auto;padding:24px 20px;}
+.pips{display:flex;gap:6px;justify-content:center;margin-bottom:20px;}
+.pip{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.1);transition:all .3s;}
+.pip.active{background:var(--gold);transform:scale(1.3);}
+.pip.ok{background:#4ADE80;}
+.pip.fail{background:#F87171;}
+
+/* FLASH CARD */
+.fcard{background:var(--navy);border-radius:20px;padding:22px;margin-bottom:20px;border:1.5px solid rgba(255,255,255,.06);position:relative;overflow:hidden;animation:cdin .35s cubic-bezier(.34,1.56,.64,1);}
+@keyframes cdin{from{opacity:0;transform:translateY(-12px)scale(.97);}to{opacity:1;transform:none;}}
+.fcard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--orange));}
+.fcard-top{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px;}
+.fcard-av-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;}
+.fcard-av{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#2A3E4A,#1A2E3A);border:2px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:24px;transition:all .4s ease;}
+.fcard-av.imp{border-color:rgba(212,98,10,.5);box-shadow:0 0 16px rgba(212,98,10,.3);}
+.fcard-av.ang{border-color:rgba(181,37,27,.6);box-shadow:0 0 24px rgba(181,37,27,.4);animation:avshake .3s infinite;}
+@keyframes avshake{0%,100%{transform:rotate(0);}25%{transform:rotate(-4deg);}75%{transform:rotate(4deg);}}
+.fcard-mood{font-size:9px;font-weight:700;white-space:nowrap;transition:color .4s;}
+.fcard-mood.neu{color:rgba(255,255,255,.3);}
+.fcard-mood.imp{color:var(--orange);}
+.fcard-mood.ang{color:#F87171;}
+.fcard-info{flex:1;}
+.fcard-name{font-size:11px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.08em;}
+.fcard-tag{display:inline-block;background:rgba(212,148,10,.15);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;color:var(--gold);margin-top:3px;}
+.fcard-timer{text-align:right;}
+.timer-num{font-family:var(--serif);font-size:30px;font-weight:700;color:var(--gold);line-height:1;transition:color .3s;}
+.timer-num.urg{color:#F87171;animation:tp .4s infinite;}
+@keyframes tp{0%,100%{transform:scale(1);}50%{transform:scale(1.1);}}
+.timer-suf{font-size:9px;color:rgba(255,255,255,.3);margin-top:2px;}
+.fcard-obj-lbl{font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--orange);margin-bottom:8px;}
+.fcard-obj{background:rgba(255,255,255,.05);border-radius:0 16px 16px 16px;padding:16px 18px;font-size:15px;color:#fff;line-height:1.65;border:1px solid rgba(255,255,255,.07);font-style:italic;}
+
+/* OPTIONS */
+.opt-lbl{font-size:9px;font-weight:700;letter-spacing:.18em;color:rgba(255,255,255,.35);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.opt-lbl::before{content:'▶';font-size:7px;color:var(--gold);}
+.opts{display:flex;flex-direction:column;gap:8px;}
+.opt{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.08);border-radius:14px;padding:14px 16px;cursor:pointer;transition:all .18s;display:flex;align-items:flex-start;gap:12px;font-size:13px;line-height:1.55;color:rgba(255,255,255,.8);}
+.opt:hover:not(.ok):not(.fail):not(.dim){background:rgba(212,148,10,.08);border-color:rgba(212,148,10,.3);transform:translateX(4px);}
+.opt.ok{background:rgba(11,122,78,.15);border-color:rgba(11,122,78,.4);pointer-events:none;}
+.opt.fail{background:rgba(181,37,27,.12);border-color:rgba(181,37,27,.3);}
+.opt.dim{opacity:.25;pointer-events:none;}
+.opt-dot{width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,.15);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;margin-top:1px;}
+.opt.ok .opt-dot{background:var(--green);border-color:var(--green);color:#fff;}
+.opt.fail .opt-dot{background:var(--red);border-color:var(--red);color:#fff;}
+.spd{font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;flex-shrink:0;margin-top:2px;display:none;}
+.spd.show{display:block;background:rgba(212,148,10,.2);color:var(--gold);}
+
+/* FEEDBACK */
+.fb{border-radius:12px;padding:12px 16px;font-size:13px;line-height:1.65;margin-top:14px;display:none;}
+.fb.show{display:block;}
+.fb.ok{background:rgba(11,122,78,.1);border-left:4px solid var(--green);color:#A3F0C8;}
+.fb.fail{background:rgba(181,37,27,.1);border-left:4px solid var(--red);color:#FCA5A5;}
+
+/* NEXT BTN */
+.next-btn{background:var(--gold);color:var(--navy2);border:none;border-radius:12px;padding:13px 28px;font-family:var(--font);font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(212,148,10,.35);margin-top:12px;}
+.next-btn:hover{transform:translateY(-2px);}
+
+/* SCORE FLASH */
+.sflash{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:200;font-family:var(--serif);font-size:52px;font-weight:700;animation:sfa 1s ease forwards;}
+.sflash.good{color:#4ADE80;text-shadow:0 0 30px rgba(74,222,128,.6);}
+.sflash.bad{color:#F87171;text-shadow:0 0 30px rgba(248,113,113,.6);}
+@keyframes sfa{0%{opacity:1;transform:translate(-50%,-50%)scale(1);}100%{opacity:0;transform:translate(-50%,-130%)scale(1.4);}}
+
+/* TIMEOUT */
+.to-overlay{position:fixed;inset:0;z-index:100;background:rgba(181,37,27,.3);display:flex;align-items:center;justify-content:center;pointer-events:none;animation:tofa .6s ease forwards;}
+@keyframes tofa{0%{opacity:1;}100%{opacity:0;}}
+.to-txt{font-family:var(--serif);font-size:64px;color:#fff;text-shadow:0 4px 20px rgba(0,0,0,.5);}
+
+/* REMATCH */
+#rematch{display:none;min-height:100vh;padding-bottom:60px;}
+.rm-header{background:rgba(181,37,27,.1);border-bottom:1px solid rgba(181,37,27,.2);padding:28px 20px;text-align:center;}
+.rm-inner{max-width:var(--max);margin:0 auto;}
+.rm-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(181,37,27,.15);border:1.5px solid rgba(181,37,27,.3);border-radius:20px;padding:6px 16px;font-size:10px;font-weight:700;letter-spacing:.18em;color:#F87171;margin-bottom:12px;}
+.rm-title{font-family:var(--serif);font-size:32px;color:#fff;margin-bottom:6px;}
+.rm-title em{color:#F87171;font-style:italic;}
+.rm-sub{font-size:13px;color:rgba(255,255,255,.5);line-height:1.6;max-width:420px;margin:0 auto;}
+.rm-pips{display:flex;gap:6px;justify-content:center;margin-top:14px;}
+.rm-pip{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.1);transition:all .3s;}
+.rm-pip.active{background:#F87171;transform:scale(1.3);}
+.rm-pip.done{background:#4ADE80;}
+.rm-body{max-width:var(--max);margin:0 auto;padding:24px 20px;}
+
+/* RESULTS */
+#results{display:none;min-height:100vh;padding:0 0 60px;}
+.res-inner{max-width:var(--max);margin:0 auto;padding:32px 20px;}
+.res-title-block{text-align:center;margin-bottom:28px;}
+.res-icon{font-size:64px;margin-bottom:12px;animation:bci .6s cubic-bezier(.34,1.56,.64,1);}
+@keyframes bci{from{opacity:0;transform:scale(.4);}to{opacity:1;transform:scale(1);}}
+.res-title{font-family:var(--serif);font-size:48px;color:#fff;line-height:1;margin-bottom:6px;}
+.res-title em{color:var(--gold);font-style:italic;}
+.res-sub{color:rgba(255,255,255,.5);font-size:14px;line-height:1.6;}
+.res-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+.rs{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px 12px;text-align:center;}
+.rs-n{font-family:var(--serif);font-size:36px;font-weight:700;color:var(--sky);margin-bottom:4px;}
+.rs-l{font-size:9.5px;color:rgba(255,255,255,.35);letter-spacing:.1em;}
+.res-fb{background:rgba(212,148,10,.06);border:1px solid rgba(212,148,10,.15);border-radius:14px;padding:18px 22px;margin-bottom:24px;font-size:13.5px;color:rgba(255,255,255,.65);line-height:1.7;text-align:left;}
+.res-fb strong{color:#fff;}
+.review-wrap{display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
+.rev-card{background:var(--navy);border-radius:14px;padding:16px 18px;border:1.5px solid;}
+.rev-card.ok{border-color:rgba(11,122,78,.3);}
+.rev-card.fail{border-color:rgba(181,37,27,.2);}
+.rev-card.to{border-color:rgba(212,98,10,.25);}
+.rev-lbl{font-size:9px;font-weight:700;letter-spacing:.14em;margin-bottom:6px;}
+.rev-card.ok .rev-lbl{color:#4ADE80;}
+.rev-card.fail .rev-lbl,.rev-card.to .rev-lbl{color:#F87171;}
+.rev-obj{font-size:12px;color:rgba(255,255,255,.45);font-style:italic;margin-bottom:8px;line-height:1.5;}
+.rev-ans{font-size:12.5px;margin-bottom:6px;line-height:1.5;}
+.rev-card.ok .rev-ans{color:#A3F0C8;}
+.rev-card.fail .rev-ans,.rev-card.to .rev-ans{color:#FCA5A5;}
+.rev-correct{font-size:12px;color:rgba(255,255,255,.5);line-height:1.5;padding-top:8px;border-top:1px solid rgba(255,255,255,.06);}
+.rev-correct strong{color:rgba(255,255,255,.8);}
+.rev-script{font-size:11px;color:rgba(255,255,255,.3);font-style:italic;margin-top:6px;line-height:1.6;}
+.end-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:8px;}
+.restart-btn{background:var(--gold);color:var(--navy2);border:none;border-radius:12px;padding:14px 36px;font-family:var(--font);font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;}
+.restart-btn:hover{transform:translateY(-2px);}
+</style>
+</head>
+<body>
+
+<div id="intro">
+  <div class="orb" style="width:500px;height:500px;background:radial-gradient(rgba(212,148,10,.1),transparent);top:-150px;right:-150px;"></div>
+  <div class="orb" style="width:400px;height:400px;background:radial-gradient(rgba(0,174,239,.06),transparent);bottom:-100px;left:-100px;"></div>
+  <div class="i-inner">
+    <div class="i-badge">🤝 THE NEGOTIATOR</div>
+    <div class="i-title">Keep both<br><em>of them.</em></div>
+    <div class="i-sub">7 customers. 7 different reasons why only one person can make it. 10 seconds to pick the right response. Speed matters — but so does substance.</div>
+    <div class="i-box">
+      <div class="i-box-lbl">📞 THE CHALLENGE</div>
+      <div class="i-box-txt">Every confirmation call has the same goal: <strong>both decision-makers at the appointment.</strong> These are 7 real objections — 7 chances to handle them right. Every second costs you points.</div>
+    </div>
+    <div class="i-rules">
+      <div class="i-rule"><div class="i-rule-ico">⏱️</div><div class="i-rule-txt"><strong>18 seconds per objection.</strong> Faster correct answers = more points.</div></div>
+      <div class="i-rule"><div class="i-rule-ico">🔥</div><div class="i-rule-txt"><strong>Streak bonus</strong> — consecutive correct answers multiply your score.</div></div>
+      <div class="i-rule"><div class="i-rule-ico">⚡</div><div class="i-rule-txt"><strong>Rematch mode</strong> — miss one and it comes back at 10 seconds. Prove you learned it.</div></div>
+    </div>
+    <button class="start-btn" onclick="startGame()">Start the speed round ⚡</button>
+  </div>
+</div>
+
+<div id="game">
+  <div class="streak-fire" id="sfire"></div>
+  <div class="hud">
+    <div class="hud-bar">
+      <div><div class="hud-rnd" id="hrnd">ROUND 1 / 7</div><div class="hud-ttl" id="httl"></div></div>
+      <div class="hud-streak" id="hstreak">🔥 x1</div>
+      <div class="hud-score" id="hscore">0 pts</div>
+    </div>
+    <div class="timer-bar"><div class="timer-fill" id="tfill"></div></div>
+  </div>
+  <div class="scene">
+    <div class="pips" id="pips"></div>
+    <div id="rc"></div>
+  </div>
+</div>
+
+<div id="rematch">
+  <div class="rm-header">
+    <div class="rm-inner">
+      <div class="rm-badge">⚡ REMATCH MODE</div>
+      <div class="rm-title">One more <em>chance.</em></div>
+      <div class="rm-sub">You dropped these — 6 seconds each. Prove you've got it.</div>
+      <div class="rm-pips" id="rmpips"></div>
+    </div>
+  </div>
+  <div class="rm-body" id="rmbody"></div>
+</div>
+
+<div id="results">
+  <div class="res-inner">
+    <div class="res-title-block">
+      <div class="res-icon" id="ricon">🏆</div>
+      <div class="res-title" id="rtitle">Both confirmed.</div>
+      <div class="res-sub" id="rsub"></div>
+    </div>
+    <div class="res-stats">
+      <div class="rs"><div class="rs-n" id="rsscore">0</div><div class="rs-l">SCORE</div></div>
+      <div class="rs"><div class="rs-n" id="rscorrect">0/7</div><div class="rs-l">CORRECT</div></div>
+      <div class="rs"><div class="rs-n" id="rsstreak">x1</div><div class="rs-l">BEST STREAK</div></div>
+    </div>
+    <div class="res-fb" id="rsfb"></div>
+    <div style="font-size:10px;font-weight:700;letter-spacing:.18em;color:rgba(255,255,255,.3);margin-bottom:16px;">ANSWER REVIEW</div>
+    <div class="review-wrap" id="review"></div>
+    <div class="end-btns"><button class="restart-btn" onclick="restartGame()">Play again ↺</button></div>
+  </div>
+</div>
+
+<script>
+const ROUNDS=[
+  {
+    customer:{emoji:'👩',name:'Sandra, 42',tag:'First-time caller'},
+    objLbl:'👫 "CAN\'T ONE OF US JUST ATTEND?"',
+    objection:'"My husband is at work tomorrow — can I just do the assessment on my own and fill him in later?"',
+    options:[
+      {text:'"The reason we ask for both of you is because the system is designed around your whole home — if you both hear it together, there\'s less to explain later and nothing gets missed. Is there a time that works better for both of you?"',correct:true,fb:'Perfect. You explained the reason, offered a solution, and didn\'t give up on dual attendance.'},
+      {text:'"That\'s completely fine — most of the time one person attends and then briefs their partner on the key points. We can absolutely lock it in for just yourself and the specialist will cover everything clearly."',correct:false,fb:'Conceding immediately defeats the purpose. Always try for both first.'},
+      {text:'"I completely understand that — though for the session to run as intended, we do really need both decision-makers to be present if at all possible."',correct:false,fb:'"It\'s our policy"-style answer. Never use rules as a reason — explain the benefit.'},
+      {text:'"No problem at all — we\'ll lock it in for just yourself. The specialist is great at making sure you walk away with a clear picture of everything so you can share the details with your husband afterwards."',correct:false,fb:'You\'ve given up on dual attendance without even trying.'}
+    ],
+    script:'"The reason we ask for both of you is because the system is designed around your whole household. If both of you hear it together, everything stays clear and aligned in one session."'
+  },
+  {
+    customer:{emoji:'👨',name:'Greg, 55',tag:'Skeptical'},
+    objLbl:'💼 "MY PARTNER WORKS"',
+    objection:'"My wife works during the day — there\'s really no way she\'s going to be able to make a weekday appointment."',
+    options:[
+      {text:'"We\'re pretty flexible with times — is there an evening or weekend slot that might work for both of you? Having both of you there just means nothing needs to be revisited later."',correct:true,fb:'You acknowledged, offered flexibility, and explained the benefit without pressure. Clean.'},
+      {text:'"Of course — we can lock it in for when you\'re available. She can always review everything once you\'ve had a chance to talk it through with her afterwards."',correct:false,fb:'You gave up immediately. Try the flexible timing option first.'},
+      {text:'"We\'d really recommend having both of you there if you can manage it — the session covers a lot of specific detail about your home and bills, and it\'s much easier when everyone hears it together rather than secondhand."',correct:false,fb:'Too rigid. Offer a solution — don\'t just state the preference and leave it there.'},
+      {text:'"Would it be possible for her to dial in via phone or join on video for part of the session, even if she can\'t be there in person?"',correct:false,fb:'Not the right approach — the session needs both people fully present, not partially.'}
+    ],
+    script:'"The good thing is we\'re flexible with times, so we can usually find a slot that works for both of you. It just helps avoid having to repeat the whole process again later — which most people prefer to avoid."'
+  },
+  {
+    customer:{emoji:'👩',name:'Michelle, 38',tag:'Busy mum'},
+    objLbl:'📝 "I\'LL JUST FILL THEM IN LATER"',
+    objection:'"I\'ll just attend and explain everything to my partner afterwards — he trusts my judgment on these things anyway."',
+    options:[
+      {text:'"The details — system design, savings, how it works for your home — can be quite specific. It\'s much easier when both of you hear it at the same time rather than one person relaying it. Is there any chance he could join for part of it?"',correct:true,fb:'Excellent. You respected her judgment, explained the risk of filling in later, and offered a partial solution.'},
+      {text:'"That\'s completely fine — if you\'re the one who handles decisions like this, we can absolutely work with that and lock it in for yourself."',correct:false,fb:'Wrong. Dual attendance has a real purpose — explain it.'},
+      {text:'"We\'d really prefer to have both of you there if possible — it makes a meaningful difference to how the session runs and what the specialist can cover with you."',correct:false,fb:'"We\'d prefer" is vague and doesn\'t explain why it matters to them specifically.'},
+      {text:'"Of course — you know your household best. The specialist is really good at summarising everything clearly, so you\'ll have all the information you need to share with your partner afterwards. Let\'s lock it in for just yourself."',correct:false,fb:'Gave up without explaining the value of having both people present.'}
+    ],
+    script:'"The reason we try to avoid that is because a lot of the details — system design, savings, and rebates — can be quite specific. It\'s much easier and more accurate when both of you hear it together at the same time."'
+  },
+  {
+    customer:{emoji:'👴',name:'Robert, 63',tag:'Direct'},
+    objLbl:'🤷 "WHY DOES IT MATTER WHO ATTENDS?"',
+    objection:'"Why do you need both of us there? Surely one of us can relay the information."',
+    options:[
+      {text:'"The system is designed around your household usage and financial goals — so both perspectives help make sure we get the design right and don\'t miss anything important for your home."',correct:true,fb:'Direct, specific, and convincing. You gave the real reason without padding.'},
+      {text:'"It\'s just our process — the specialist needs both people there to run the session properly and make sure nothing important gets missed for your situation."',correct:false,fb:'"It\'s just our process" is the kind of answer that makes customers hang up.'},
+      {text:'"The specialist covers quite a lot during the session — having both of you there makes it much easier to make sure nothing important gets missed or needs to be explained all over again afterwards."',correct:false,fb:'Vague. Why is it easier? What does covering a lot mean? Be specific about the reason.'},
+      {text:'"Honestly it works either way for us — we just find sessions tend to go more smoothly when both people hear the information at the same time rather than one person having to relay it all afterwards."',correct:false,fb:'You completely undersold the importance of dual attendance.'}
+    ],
+    script:'"The system is designed around your household\'s usage and financial goals. Both perspectives help make sure we design the right system and don\'t miss anything important."'
+  },
+  {
+    customer:{emoji:'👩',name:'Karen, 47',tag:'Pushback'},
+    objLbl:'❓ "IS THIS REALLY NECESSARY?"',
+    objection:'"Is having both of us really necessary? We make decisions together anyway so it shouldn\'t matter."',
+    options:[
+      {text:'"It\'s not about rules — it\'s just about making sure everything is clear from the start. When both of you hear it together, there\'s less confusion later and honestly it usually makes the whole session quicker."',correct:true,fb:'You reframed it as a benefit to them, not a rule they have to follow. That\'s the right move.'},
+      {text:'"It really does make a difference having both of you there — the session is built around a household conversation, and it works a lot better when both people can ask questions and hear the answers directly."',correct:false,fb:'False and confrontational. Never say "can\'t" when you mean "prefer not to".'},
+      {text:'"If you make decisions together then it shouldn\'t be a problem to have you both there — we\'d really appreciate it if that\'s at all possible."',correct:false,fb:'Argumentative. Don\'t turn their logic against them.'},
+      {text:'"We can absolutely make it work with just one of you — plenty of people do it that way, and the specialist will make sure you come away with everything you need to make a decision together."',correct:false,fb:'Caved too easily. Explain the benefit before offering exceptions.'}
+    ],
+    script:'"It\'s not about rules — it\'s about making sure everything is clear and aligned. We\'ve found when both decision-makers are involved, the process is smoother and there\'s less confusion later on."'
+  },
+  {
+    customer:{emoji:'👨',name:'David, 51',tag:'Resistant'},
+    objLbl:'💑 "WE DON\'T MAKE DECISIONS TOGETHER"',
+    objection:'"Look — I\'m the one who handles all the finances. My wife doesn\'t really need to be involved in this."',
+    options:[
+      {text:'"Completely respect that. We still recommend both attending just so everyone understands the system and savings clearly — even if you lead the decision, having her there means full visibility and no confusion later."',correct:true,fb:'Respectful, practical, and non-pushy. You acknowledged his dynamic and reframed it as clarity, not control.'},
+      {text:'"We do need both of you present if possible — the session is structured around a household conversation and it really doesn\'t work the same way when only one person is there to hear the recommendations."',correct:false,fb:'Policy answer. Never. Explain the benefit.'},
+      {text:'"That\'s absolutely fine — we can go ahead and book it in for just yourself. The specialist will make sure you walk away with a clear picture of everything that was discussed."',correct:false,fb:'Gave up without trying.'},
+      {text:'"Solar affects the whole household\'s finances — so ideally your wife should really be part of this conversation so nothing comes as a surprise to her later."',correct:false,fb:'Telling him his wife "should" be involved will backfire — he feels undermined.'}
+    ],
+    script:'"That\'s completely fine. The reason we still recommend both attending is just so everyone understands the system and savings clearly — so even if one person leads the decision, both have full visibility."'
+  },
+  {
+    customer:{emoji:'👩',name:'Lisa, 44',tag:'Just book it'},
+    objLbl:'📅 "JUST BOOK IT ANYWAY"',
+    objection:'"Can you just book it anyway? If my husband can\'t make it, we\'ll deal with that on the day."',
+    options:[
+      {text:'"Yeah, no problem — we can absolutely lock it in. I\'ll just note that ideally both decision-makers attend so you both get the full picture. If anything changes before then, we can always adjust."',correct:true,fb:'Perfect. You booked it as requested, flagged the preference without pressure, and left the door open.'},
+      {text:'"The thing is, we really need both of you confirmed before we can lock the appointment in — it\'s something we need in place for the session to proceed as planned."',correct:false,fb:'Incorrect. You can book it — the script says to book it and note the preference.'},
+      {text:'"Sure, no problem at all — we\'ll lock that in for you right now. We\'ll see you both on the day and the specialist will take it all from there!"',correct:false,fb:'You forgot to note the dual attendance preference. Always flag it.'},
+      {text:'"I\'d really like to make sure your husband can attend before we lock it in — is there a time that might work better for both of you?"',correct:false,fb:'She asked you to just book it. Holding the booking hostage will frustrate her.'}
+    ],
+    script:'"We can absolutely book it in. I\'ll just note that ideally both decision-makers attend so you both get the full picture — and if anything changes, we can always adjust."'
+  }
+];
+
+// STATE
+let round=0, score=0, streak=0, bestStreak=0, correct=0;
+let tLeft=10, tInterval=null, answered=false, wrongRnd=false;
+const results=[];
+let rmQueue=[], rmIdx=0, rmResults=[];
+const TIME=18;
+
+function startGame(){
+  document.getElementById('intro').style.display='none';
+  document.getElementById('rematch').style.display='none';
+  document.getElementById('results').style.display='none';
+  document.getElementById('game').style.display='block';
+  round=0; score=0; streak=0; bestStreak=0; correct=0;
+  results.length=0; rmQueue=[]; rmIdx=0; rmResults=[];
+  buildPips();
+  renderRound();
+}
+
+function restartGame(){
+  startGame();
+}
+
+function buildPips(){
+  document.getElementById('pips').innerHTML=ROUNDS.map((_,i)=>'<div class="pip" id="p'+i+'"></div>').join('');
+}
+
+function renderRound(){
+  if(round>=ROUNDS.length){ endRounds(); return; }
+  clearInterval(tInterval);
+  tLeft=TIME; answered=false; wrongRnd=false;
+  const r=ROUNDS[round];
+  document.getElementById('hrnd').textContent='ROUND '+(round+1)+' / '+ROUNDS.length;
+  document.getElementById('httl').textContent=r.objLbl;
+  document.getElementById('p'+round).className='pip active';
+  const opts=[...r.options].sort(()=>Math.random()-.5);
+  const optsHTML=opts.map(function(o){
+    const i=r.options.indexOf(o);
+    return '<div class="opt" id="o'+i+'" onclick="pick('+i+')">'
+      +'<div class="opt-dot"></div>'
+      +'<div style="flex:1">'+o.text+'</div>'
+      +'<div class="spd" id="spd'+i+'"></div>'
+      +'</div>';
+  }).join('');
+  document.getElementById('rc').innerHTML=
+    '<div class="fcard">'
+      +'<div class="fcard-top">'
+        +'<div class="fcard-av-wrap">'
+          +'<div class="fcard-av" id="av">'+r.customer.emoji+'</div>'
+          +'<div class="fcard-mood neu" id="ml">Neutral</div>'
+        +'</div>'
+        +'<div class="fcard-info">'
+          +'<div class="fcard-name">'+r.customer.name+'</div>'
+          +'<div class="fcard-tag">'+r.customer.tag+'</div>'
+        +'</div>'
+        +'<div class="fcard-timer">'
+          +'<div class="timer-num" id="tn">'+TIME+'</div>'
+          +'<div class="timer-suf">seconds</div>'
+        +'</div>'
+      +'</div>'
+      +'<div class="fcard-obj-lbl">'+r.objLbl+'</div>'
+      +'<div class="fcard-obj">'+r.objection+'</div>'
+    +'</div>'
+    +'<div class="opt-lbl">YOUR RESPONSE</div>'
+    +'<div class="opts">'+optsHTML+'</div>'
+    +'<div class="fb" id="fb"></div>'
+    +'<div id="nb"></div>';
+  startTimer();
+}
+
+function startTimer(){
+  const fill=document.getElementById('tfill');
+  fill.style.width='100%';
+  fill.style.background='var(--gold)';
+  fill.style.transition='width .1s linear';
+  tInterval=setInterval(function(){
+    tLeft-=0.1;
+    const pct=Math.max(0,(tLeft/TIME)*100);
+    fill.style.width=pct+'%';
+    fill.style.background=tLeft>5?'var(--gold)':tLeft>3?'var(--orange)':'#F87171';
+    const tn=document.getElementById('tn');
+    const av=document.getElementById('av');
+    const ml=document.getElementById('ml');
+    if(tn){ tn.textContent=Math.ceil(tLeft); tn.className=tLeft<=3?'timer-num urg':'timer-num'; }
+    if(av&&ml){
+      if(tLeft<=1){ av.className='fcard-av ang'; ml.className='fcard-mood ang'; ml.textContent='About to hang up! 😡'; }
+      else if(tLeft<=3){ av.className='fcard-av ang'; ml.className='fcard-mood ang'; ml.textContent='Losing patience 😤'; }
+      else if(tLeft<=5){ av.className='fcard-av imp'; ml.className='fcard-mood imp'; ml.textContent='Getting impatient...'; }
+    }
+    if(tLeft<=0){ clearInterval(tInterval); handleTimeout(); }
+  },100);
+}
+
+function handleTimeout(){
+  if(answered) return;
+  answered=true; streak=0;
+  const r=ROUNDS[round];
+  const ci=r.options.findIndex(function(o){return o.correct;});
+  r.options.forEach(function(_,j){
+    const el=document.getElementById('o'+j);
+    if(!el) return;
+    if(j===ci){ el.classList.add('ok'); el.querySelector('.opt-dot').textContent='✓'; }
+    else el.classList.add('dim');
+  });
+  document.getElementById('p'+round).className='pip fail';
+  results.push({type:'to',round:round,yourText:'⏰ Timed out',correctText:r.options[ci].text,script:r.script,fb:r.options[ci].fb});
+  const fb=document.getElementById('fb');
+  fb.className='fb show fail';
+  fb.innerHTML='⏰ <strong>Time\'s up!</strong> '+r.options[ci].fb;
+  showTOOverlay();
+  updateHUD();
+  setTimeout(function(){
+    document.getElementById('nb').innerHTML='<button class="next-btn" onclick="nextRound()">'+(round<ROUNDS.length-1?'Next →':'See results 🏆')+'</button>';
+  },600);
+}
+
+function pick(i){
+  if(answered) return;
+  clearInterval(tInterval);
+  const r=ROUNDS[round];
+  const opt=r.options[i];
+  const first=!wrongRnd;
+  if(opt.correct){
+    answered=true; correct++;
+    const speedPts=tLeft>7?200:tLeft>5?150:tLeft>3?100:50;
+    const pts=speedPts+(streak*50);
+    score+=pts; streak++; bestStreak=Math.max(bestStreak,streak);
+    r.options.forEach(function(_,j){
+      const el=document.getElementById('o'+j);
+      if(!el) return;
+      if(j===i){ el.classList.add('ok'); el.querySelector('.opt-dot').textContent='✓'; }
+      else el.classList.add('dim');
+    });
+    const spd=document.getElementById('spd'+i);
+    if(spd){ spd.className='spd show'; spd.textContent='+'+pts+(streak>1?' 🔥x'+streak:''); }
+    document.getElementById('p'+round).className='pip ok';
+    results.push({type:'ok',round:round,yourText:opt.text,correctText:opt.text,script:r.script,fb:opt.fb,pts:pts});
+    showFlash('+'+pts+(streak>1?' 🔥':''),'good');
+    const fb=document.getElementById('fb');
+    fb.className='fb show ok';
+    fb.innerHTML='✅ '+opt.fb;
+    updateHUD();
+    setTimeout(function(){
+      document.getElementById('nb').innerHTML='<button class="next-btn" onclick="nextRound()">'+(round<ROUNDS.length-1?'Next →':'See results 🏆')+'</button>';
+      document.getElementById('nb').scrollIntoView({behavior:'smooth',block:'nearest'});
+    },500);
+  } else {
+    wrongRnd=true; streak=0;
+    const el=document.getElementById('o'+i);
+    el.classList.add('fail'); el.querySelector('.opt-dot').textContent='✗';
+    const fb=document.getElementById('fb');
+    fb.className='fb show fail';
+    fb.innerHTML='❌ '+opt.fb+' <strong>Try again.</strong>';
+    updateHUD();
+    setTimeout(function(){
+      el.classList.remove('fail'); el.classList.add('dim'); el.style.pointerEvents='none';
+    },1500);
+    if(!answered) startTimer();
+  }
+}
+
+function nextRound(){ round++; renderRound(); window.scrollTo({top:0,behavior:'smooth'}); }
+
+function updateHUD(){
+  const hs=document.getElementById('hstreak');
+  const sf=document.getElementById('sfire');
+  const gs=document.getElementById('game');
+  hs.textContent=streak>=5?'🔥🔥 x'+streak:streak>=3?'🔥 x'+streak:'🔥 x'+Math.max(streak,1);
+  hs.className=streak>=5?'hud-streak h5':streak>=3?'hud-streak h3':'hud-streak';
+  if(sf) sf.className=streak>=5?'streak-fire f5':streak>=3?'streak-fire f3':'streak-fire';
+  if(gs) gs.className=streak>=5?'s5':streak>=3?'s3':'';
+  document.getElementById('hscore').textContent=score.toLocaleString()+' pts';
+}
+
+function showFlash(txt,type){
+  const el=document.createElement('div');
+  el.className='sflash '+type; el.textContent=txt;
+  document.body.appendChild(el);
+  setTimeout(function(){el.remove();},1000);
+}
+
+function showTOOverlay(){
+  const o=document.createElement('div');
+  o.className='to-overlay';
+  o.innerHTML='<div class="to-txt">⏰</div>';
+  document.body.appendChild(o);
+  setTimeout(function(){o.remove();},600);
+}
+
+// REMATCH
+function endRounds(){
+  clearInterval(tInterval);
+  const missed=results.filter(function(r){return r.type!=='ok';}).map(function(r){return r.round;});
+  if(missed.length>0){
+    rmQueue=missed; rmIdx=0; rmResults=[];
+    startRematch();
+  } else {
+    showResults();
+  }
+}
+
+function startRematch(){
+  document.getElementById('game').style.display='none';
+  document.getElementById('rematch').style.display='block';
+  const pips=document.getElementById('rmpips');
+  pips.innerHTML=rmQueue.map(function(_,i){
+    return '<div class="rm-pip '+(i===0?'active':'')+'" id="rp'+i+'"></div>';
+  }).join('');
+  renderRematch();
+  document.getElementById('rematch').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function renderRematch(){
+  rmQueue.forEach(function(_,i){
+    const p=document.getElementById('rp'+i);
+    if(p) p.className='rm-pip '+(i<rmIdx?'done':i===rmIdx?'active':'');
+  });
+  const ri=rmQueue[rmIdx];
+  const r=ROUNDS[ri];
+  clearInterval(tInterval);
+  tLeft=10; answered=false; wrongRnd=false;
+  document.getElementById('hrnd').textContent='REMATCH '+(rmIdx+1)+' / '+rmQueue.length;
+  document.getElementById('httl').textContent='⚡ '+r.objLbl;
+  const opts=[...r.options].sort(()=>Math.random()-.5);
+  const optsHTML=opts.map(function(o){
+    const i=r.options.indexOf(o);
+    return '<div class="opt" id="rmo'+i+'" onclick="pickRM('+i+')">'
+      +'<div class="opt-dot"></div>'
+      +'<div style="flex:1">'+o.text+'</div>'
+      +'</div>';
+  }).join('');
+  document.getElementById('rmbody').innerHTML=
+    '<div class="fcard" style="border-top-color:rgba(181,37,27,.5);">'
+      +'<div class="fcard-top">'
+        +'<div class="fcard-av-wrap">'
+          +'<div class="fcard-av" id="av">'+r.customer.emoji+'</div>'
+          +'<div class="fcard-mood neu" id="ml">Neutral</div>'
+        +'</div>'
+        +'<div class="fcard-info">'
+          +'<div class="fcard-name">'+r.customer.name+'</div>'
+          +'<div class="fcard-tag" style="background:rgba(181,37,27,.15);color:#F87171;">Rematch</div>'
+        +'</div>'
+        +'<div class="fcard-timer">'
+          +'<div class="timer-num" id="tn">10</div>'
+          +'<div class="timer-suf">seconds</div>'
+        +'</div>'
+      +'</div>'
+      +'<div class="fcard-obj-lbl">'+r.objLbl+'</div>'
+      +'<div class="fcard-obj">'+r.objection+'</div>'
+    +'</div>'
+    +'<div class="opt-lbl">YOUR RESPONSE</div>'
+    +'<div class="opts">'+optsHTML+'</div>'
+    +'<div class="fb" id="fb"></div>'
+    +'<div id="nb"></div>';
+  startTimerRM(ri);
+}
+
+function startTimerRM(ri){
+  const fill=document.getElementById('tfill');
+  if(fill){ fill.style.width='100%'; fill.style.background='#F87171'; fill.style.transition='width .1s linear'; }
+  tInterval=setInterval(function(){
+    tLeft-=0.1;
+    const pct=Math.max(0,(tLeft/10)*100);
+    if(fill) fill.style.width=pct+'%';
+    const tn=document.getElementById('tn');
+    const av=document.getElementById('av');
+    const ml=document.getElementById('ml');
+    if(tn){ tn.textContent=Math.ceil(tLeft); tn.className=tLeft<=2?'timer-num urg':'timer-num'; }
+    if(av&&ml){
+      if(tLeft<=1){ av.className='fcard-av ang'; ml.className='fcard-mood ang'; ml.textContent='About to hang up! 😡'; }
+      else if(tLeft<=3){ av.className='fcard-av ang'; ml.className='fcard-mood ang'; ml.textContent='Losing patience 😤'; }
+    }
+    if(tLeft<=0){ clearInterval(tInterval); handleRMTimeout(ri); }
+  },100);
+}
+
+function handleRMTimeout(ri){
+  if(answered) return;
+  answered=true;
+  const r=ROUNDS[ri];
+  const ci=r.options.findIndex(function(o){return o.correct;});
+  r.options.forEach(function(_,j){
+    const el=document.getElementById('rmo'+j);
+    if(!el) return;
+    if(j===ci){ el.classList.add('ok'); el.querySelector('.opt-dot').textContent='✓'; }
+    else el.classList.add('dim');
+  });
+  rmResults.push({correct:false});
+  const fb=document.getElementById('fb');
+  fb.className='fb show fail';
+  fb.innerHTML='⏰ <strong>Time\'s up again!</strong> '+r.options[ci].fb;
+  showTOOverlay();
+  setTimeout(function(){
+    document.getElementById('nb').innerHTML='<button class="next-btn" onclick="nextRM()">'+(rmIdx<rmQueue.length-1?'Next rematch →':'See final results 🏆')+'</button>';
+  },600);
+}
+
+function pickRM(i){
+  if(answered) return;
+  clearInterval(tInterval);
+  const ri=rmQueue[rmIdx];
+  const r=ROUNDS[ri];
+  const opt=r.options[i];
+  answered=true;
+  r.options.forEach(function(_,j){
+    const el=document.getElementById('rmo'+j);
+    if(!el) return;
+    if(j===i){ el.classList.add(opt.correct?'ok':'fail'); el.querySelector('.opt-dot').textContent=opt.correct?'✓':'✗'; }
+    else if(!opt.correct&&r.options[j].correct){ el.classList.add('ok'); el.querySelector('.opt-dot').textContent='✓'; el.classList.remove('dim'); }
+    else el.classList.add('dim');
+  });
+  const fb=document.getElementById('fb');
+  if(opt.correct){
+    score+=100; rmResults.push({correct:true});
+    showFlash('+100 ⚡','good');
+    fb.className='fb show ok'; fb.innerHTML='✅ '+opt.fb;
+  } else {
+    rmResults.push({correct:false});
+    fb.className='fb show fail'; fb.innerHTML='❌ '+opt.fb;
+  }
+  updateHUD();
+  setTimeout(function(){
+    document.getElementById('nb').innerHTML='<button class="next-btn" onclick="nextRM()">'+(rmIdx<rmQueue.length-1?'Next rematch →':'See final results 🏆')+'</button>';
+    document.getElementById('nb').scrollIntoView({behavior:'smooth',block:'nearest'});
+  },600);
+}
+
+function nextRM(){
+  rmIdx++;
+  if(rmIdx<rmQueue.length){
+    renderRematch();
+    document.getElementById('rematch').scrollIntoView({behavior:'smooth',block:'start'});
+  } else {
+    document.getElementById('rematch').style.display='none';
+    showResults();
+  }
+}
+
+// RESULTS
+function showResults(){
+  clearInterval(tInterval);
+  document.getElementById('game').style.display='none';
+  document.getElementById('rematch').style.display='none';
+  document.getElementById('results').style.display='block';
+  score+=correct*20;
+  document.getElementById('rsscore').textContent=score.toLocaleString();
+  document.getElementById('rscorrect').textContent=correct+'/'+ROUNDS.length;
+  document.getElementById('rsstreak').textContent='x'+bestStreak;
+  const won=correct>=5;
+  document.getElementById('ricon').textContent=correct===7?'🏆':won?'✅':'📋';
+  document.getElementById('rtitle').innerHTML=won?'Both of them <em>confirmed.</em>':'Still some <em>work to do.</em>';
+  document.getElementById('rsub').textContent=won?correct+' out of 7 handled correctly.':correct+' out of 7. Study the review and try again.';
+  const fbs={7:'<strong>Flawless.</strong> Every objection handled correctly — fast. You know this script cold.',6:'<strong>Excellent.</strong> One slip. Review the one you missed.',5:'<strong>Good.</strong> Two objections got away. Pattern: acknowledge → explain the reason → offer a solution.',4:'<strong>Halfway.</strong> The hardest ones are usually "just book it anyway" and "I\'ll fill them in later".',3:'<strong>Needs work.</strong> Core structure: don\'t concede immediately, explain WHY dual attendance matters, offer a solution.',2:'<strong>Keep practising.</strong> Traps: caving too quickly and using policy as a reason. The benefit always wins.',1:'<strong>Start again.</strong> Study the scripts carefully before the next round.'};
+  document.getElementById('rsfb').innerHTML=fbs[correct]||fbs[1];
+  document.getElementById('review').innerHTML=results.map(function(res,i){
+    const r=ROUNDS[res.round];
+    const cls=res.type==='ok'?'ok':res.type==='to'?'to':'fail';
+    const lbl=res.type==='ok'?'✅ CORRECT'+(res.pts?' (+'+res.pts+' pts)':''):'❌ '+(res.type==='to'?'TIMED OUT':'WRONG');
+    return '<div class="rev-card '+cls+'">'
+      +'<div class="rev-lbl">ROUND '+(i+1)+' — '+lbl+'</div>'
+      +'<div class="rev-obj">'+r.objection+'</div>'
+      +(res.type!=='ok'?'<div class="rev-ans">'+res.yourText+'</div>':'')
+      +(res.type!=='ok'?'<div class="rev-correct"><strong>✓ Correct:</strong> '+res.correctText+'</div>':'')
+      +'<div class="rev-script">📋 '+r.script+'</div>'
+      +'</div>';
+  }).join('');
+  document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
+}
+</script>
+</body>
+</html>
