@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Tag or Don't Tag? | Confirmations Team</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0A3542;--navy2:#071F28;--navy3:#0D4558;
+  --sky:#00AEEF;--sky2:#0090C4;--sky-lt:#EAF6FD;--sky-bg:#F2FAFF;
+  --green:#0B7A4E;--green-lt:#E3F5EC;
+  --red:#B5251B;--red-lt:#FDECEB;
+  --orange:#D4620A;--orange-lt:#FEF3EB;
+  --gold:#D4940A;
+  --purple:#6B4FBB;
+  --body:#1A2A32;--muted:#5A6E78;--light:#F4F8FB;
+  --border:#C8DDE8;--line:#E2EEF4;
+  --font:'DM Sans',system-ui,sans-serif;
+  --serif:'DM Serif Display',Georgia,serif;
+  --max:800px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--navy2);color:#fff;min-height:100vh;}
+
+/* INTRO */
+#intro{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;position:relative;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;}
+.i-inner{max-width:580px;text-align:center;position:relative;z-index:1;}
+.i-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(212,148,10,.12);border:1.5px solid rgba(212,148,10,.25);border-radius:20px;padding:7px 18px;margin-bottom:24px;font-size:10px;font-weight:700;letter-spacing:.2em;color:var(--gold);}
+.i-title{font-family:var(--serif);font-size:clamp(44px,8vw,68px);color:#fff;line-height:.95;margin-bottom:14px;}
+.i-title em{color:var(--gold);font-style:italic;display:block;}
+.i-sub{color:rgba(255,255,255,.5);font-size:15px;line-height:1.7;max-width:440px;margin:0 auto 28px;}
+.i-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:20px 24px;margin-bottom:24px;text-align:left;}
+.i-box-lbl{font-size:9px;font-weight:700;letter-spacing:.2em;color:var(--gold);margin-bottom:10px;}
+.i-box-txt{font-size:13.5px;color:rgba(255,255,255,.7);line-height:1.7;}
+.i-box-txt strong{color:#fff;}
+.i-stats{display:flex;gap:14px;justify-content:center;margin-bottom:28px;}
+.i-stat{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:14px 20px;text-align:center;}
+.i-stat-n{font-family:var(--serif);font-size:32px;font-weight:700;color:var(--gold);}
+.i-stat-l{font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.1em;margin-top:2px;}
+.start-btn{background:var(--gold);color:var(--navy2);border:none;border-radius:14px;padding:18px 52px;font-family:var(--font);font-size:16px;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 8px 32px rgba(212,148,10,.4);}
+.start-btn:hover{transform:translateY(-3px);}
+
+/* GAME */
+#game{display:none;min-height:100vh;padding-bottom:60px;}
+
+/* HUD */
+.hud{position:sticky;top:0;z-index:50;background:rgba(7,31,40,.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06);padding:10px 20px;}
+.hud-inner{max-width:var(--max);margin:0 auto;display:flex;align-items:center;gap:14px;}
+.hud-rnd{font-size:9px;font-weight:700;letter-spacing:.16em;color:rgba(255,255,255,.35);}
+.hud-ttl{font-size:13px;font-weight:700;color:#fff;flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.hud-score{font-size:13px;font-weight:700;color:var(--gold);}
+
+/* PROGRESS */
+.pdots{display:flex;justify-content:center;gap:8px;padding:20px 20px 0;max-width:var(--max);margin:0 auto;}
+.pd{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.1);transition:all .3s;flex-shrink:0;}
+.pd.active{background:var(--gold);transform:scale(1.3);}
+.pd.ok{background:var(--green);}
+.pd.bad{background:var(--red);}
+
+/* SCENARIO CARD */
+.scene{max-width:var(--max);margin:0 auto;padding:20px 20px 0;}
+.sc-card{background:var(--navy);border-radius:20px;padding:22px;margin-bottom:16px;border:1.5px solid rgba(255,255,255,.06);position:relative;overflow:hidden;animation:cdIn .35s cubic-bezier(.34,1.56,.64,1);}
+@keyframes cdIn{from{opacity:0;transform:translateY(-12px) scale(.97);}to{opacity:1;transform:none;}}
+.sc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--orange));}
+.sc-top{display:flex;align-items:flex-start;gap:14px;margin-bottom:16px;}
+.sc-av{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#2A3E4A,#1A2E3A);border:2px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.sc-info{flex:1;}
+.sc-name{font-size:14px;font-weight:700;color:#fff;margin-bottom:3px;}
+.sc-context{font-size:11px;color:rgba(255,255,255,.4);}
+.sc-run{display:inline-flex;align-items:center;gap:5px;background:rgba(212,148,10,.12);border:1px solid rgba(212,148,10,.2);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;color:var(--gold);margin-top:4px;}
+.sc-situation{background:rgba(255,255,255,.05);border-radius:12px;padding:14px 16px;font-size:14px;color:rgba(255,255,255,.85);line-height:1.65;border:1px solid rgba(255,255,255,.07);margin-bottom:14px;}
+.sc-situation strong{color:#fff;}
+
+/* FLAGS */
+.flags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:4px;}
+.flag{display:inline-flex;align-items:center;gap:5px;border-radius:8px;padding:5px 10px;font-size:11.5px;font-weight:600;}
+.flag.red{background:rgba(181,37,27,.15);color:#F87171;border:1px solid rgba(181,37,27,.2);}
+.flag.amber{background:rgba(212,98,10,.12);color:#FBBF24;border:1px solid rgba(212,98,10,.2);}
+.flag.green{background:rgba(11,122,78,.12);color:#4ADE80;border:1px solid rgba(11,122,78,.2);}
+
+/* TWO STAGE — first tag/dont, then who */
+.stage-label{font-size:9px;font-weight:700;letter-spacing:.16em;color:rgba(255,255,255,.35);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.stage-label::before{content:'▶';font-size:7px;color:var(--gold);}
+
+/* DECISION BTNS */
+.dec-wrap{max-width:var(--max);margin:0 auto;padding:0 20px 0;display:flex;flex-direction:column;gap:16px;}
+.dec-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.d-btn{border:none;border-radius:14px;padding:16px;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:6px;line-height:1.3;}
+.d-btn-ico{font-size:28px;}
+.d-btn.tag-yes{background:rgba(181,37,27,.15);border:2px solid rgba(181,37,27,.3);color:#F87171;}
+.d-btn.tag-yes:hover:not(:disabled){background:rgba(181,37,27,.25);transform:translateY(-2px);}
+.d-btn.tag-no{background:rgba(11,122,78,.12);border:2px solid rgba(11,122,78,.25);color:#4ADE80;}
+.d-btn.tag-no:hover:not(:disabled){background:rgba(11,122,78,.2);transform:translateY(-2px);}
+.d-btn.correct-p{pointer-events:none;animation:cpulse .4s ease;}
+@keyframes cpulse{0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);}}
+.d-btn.wrong-p{opacity:.3;pointer-events:none;}
+.d-btn:disabled{cursor:not-allowed;}
+
+/* WHO TO TAG — second stage */
+.who-wrap{display:none;animation:fadeUp .3s ease;}
+.who-wrap.show{display:block;}
+.who-btns{display:flex;flex-wrap:wrap;gap:8px;}
+.who-btn{border:none;border-radius:10px;padding:10px 16px;font-family:var(--font);font-size:12.5px;font-weight:700;cursor:pointer;transition:all .2s;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);color:rgba(255,255,255,.75);}
+.who-btn:hover:not(:disabled){background:rgba(0,174,239,.1);border-color:var(--sky);color:var(--sky);}
+.who-btn.correct-who{background:rgba(11,122,78,.15);border-color:rgba(11,122,78,.4);color:#4ADE80;pointer-events:none;}
+.who-btn.wrong-who{background:rgba(181,37,27,.1);border-color:rgba(181,37,27,.3);color:#F87171;pointer-events:none;}
+.who-btn.dim-who{opacity:.25;pointer-events:none;}
+
+/* FEEDBACK */
+.fb-wrap{max-width:var(--max);margin:0 auto;padding:0 20px;}
+.fb{border-radius:14px;padding:16px 18px;font-size:13px;line-height:1.65;display:none;animation:fadeUp .3s ease;margin-top:12px;}
+.fb.show{display:block;}
+.fb.ok{background:rgba(11,122,78,.12);border-left:4px solid var(--green);color:#A3F0C8;}
+.fb.bad{background:rgba(181,37,27,.1);border-left:4px solid var(--red);color:#FCA5A5;}
+.fb-rule{background:rgba(212,148,10,.07);border:1px solid rgba(212,148,10,.15);border-radius:8px;padding:10px 14px;margin-top:10px;font-size:12px;color:rgba(255,255,255,.6);line-height:1.6;}
+.fb-rule strong{color:var(--gold);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+/* SCORE FLASH */
+.sflash{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:200;font-family:var(--serif);font-size:52px;font-weight:700;animation:sfa 1s ease forwards;}
+.sflash.good{color:#4ADE80;text-shadow:0 0 30px rgba(74,222,128,.6);}
+.sflash.bad{color:#F87171;text-shadow:0 0 30px rgba(248,113,113,.6);}
+@keyframes sfa{0%{opacity:1;transform:translate(-50%,-50%) scale(1);}100%{opacity:0;transform:translate(-50%,-130%) scale(1.4);}}
+
+/* NEXT BTN */
+#nbw{max-width:var(--max);margin:0 auto;padding:0 20px;}
+.next-btn{background:var(--gold);color:var(--navy2);border:none;border-radius:12px;padding:13px 28px;font-family:var(--font);font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;margin-top:8px;}
+.next-btn:hover{transform:translateY(-2px);}
+
+/* END */
+#end{display:none;min-height:100vh;align-items:center;justify-content:center;padding:40px 20px;}
+#end.show{display:flex;}
+.end-inner{max-width:680px;width:100%;text-align:center;}
+.end-icon{font-size:72px;margin-bottom:16px;animation:bounceIn .6s cubic-bezier(.34,1.56,.64,1);}
+@keyframes bounceIn{from{opacity:0;transform:scale(.4);}to{opacity:1;transform:scale(1);}}
+.end-title{font-family:var(--serif);font-size:48px;color:#fff;line-height:1;margin-bottom:8px;}
+.end-title em{color:var(--gold);font-style:italic;}
+.end-sub{color:rgba(255,255,255,.5);font-size:14px;margin-bottom:24px;line-height:1.6;}
+.end-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+.es{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px 12px;}
+.es-n{font-family:var(--serif);font-size:36px;font-weight:700;color:var(--gold);margin-bottom:4px;}
+.es-l{font-size:9.5px;color:rgba(255,255,255,.35);letter-spacing:.1em;}
+.end-fb{background:rgba(212,148,10,.06);border:1px solid rgba(212,148,10,.12);border-radius:14px;padding:18px 22px;margin-bottom:24px;font-size:13.5px;color:rgba(255,255,255,.65);line-height:1.7;text-align:left;}
+.end-fb strong{color:#fff;}
+.rev-wrap{display:flex;flex-direction:column;gap:10px;margin-bottom:24px;text-align:left;}
+.rev-card{background:var(--navy);border-radius:14px;padding:16px 18px;border:1.5px solid;}
+.rev-card.ok{border-color:rgba(11,122,78,.3);}
+.rev-card.bad{border-color:rgba(181,37,27,.2);}
+.rev-lbl{font-size:9px;font-weight:700;letter-spacing:.12em;margin-bottom:5px;}
+.rev-card.ok .rev-lbl{color:#4ADE80;}
+.rev-card.bad .rev-lbl{color:#F87171;}
+.rev-name{font-size:13px;font-weight:700;color:#fff;margin-bottom:4px;}
+.rev-txt{font-size:12px;color:rgba(255,255,255,.6);line-height:1.6;}
+.end-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.restart-btn{background:var(--gold);color:var(--navy2);border:none;border-radius:12px;padding:14px 36px;font-family:var(--font);font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;}
+.restart-btn:hover{transform:translateY(-2px);}
+
+/* REF PANEL */
+.ref-wrap{background:var(--navy);border-radius:14px;overflow:hidden;margin-top:28px;text-align:left;}
+.ref-header{padding:12px 18px;background:rgba(212,148,10,.1);border-bottom:1px solid rgba(212,148,10,.15);}
+.ref-header-title{font-size:11px;font-weight:700;color:var(--gold);letter-spacing:.14em;}
+.ref-body{padding:16px 18px;display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:500px){.ref-body{grid-template-columns:1fr;}}
+.ref-section-title{font-size:10px;font-weight:700;letter-spacing:.12em;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid rgba(255,255,255,.07);}
+.ref-section-title.yes{color:#F87171;}
+.ref-section-title.no{color:#4ADE80;}
+.ref-item{font-size:11.5px;color:rgba(255,255,255,.6);line-height:1.5;padding:3px 0;display:flex;gap:6px;}
+.ref-dot{flex-shrink:0;margin-top:5px;width:5px;height:5px;border-radius:50%;}
+.ref-dot.yes{background:#F87171;}
+.ref-dot.no{background:#4ADE80;}
+</style>
+</head>
+<body>
+
+<div id="intro">
+  <div class="orb" style="width:500px;height:500px;background:radial-gradient(rgba(212,148,10,.1),transparent);top:-150px;right:-150px;"></div>
+  <div class="orb" style="width:400px;height:400px;background:radial-gradient(rgba(181,37,27,.08),transparent);bottom:-100px;left:-100px;"></div>
+  <div class="i-inner">
+    <div class="i-badge">🏷️ NON-PAYABLES</div>
+    <div class="i-title">Tag or<br><em>Don't Tag?</em></div>
+    <div class="i-sub">10 real scenarios from your inbox and your calls. Decide whether to tag for a non-payable — and if so, who to tag. Wrong calls cost the team.</div>
+    <div class="i-box">
+      <div class="i-box-lbl">WHY THIS MATTERS</div>
+      <div class="i-box-txt">A non-payable is an appointment that doesn't meet RESINC's standards. <strong>Tagging ensures management can review, coach, and fix booking issues.</strong> Tag when it matters. Don't flood inboxes when it doesn't.</div>
+    </div>
+    <div class="i-stats">
+      <div class="i-stat"><div class="i-stat-n">10</div><div class="i-stat-l">SCENARIOS</div></div>
+      <div class="i-stat"><div class="i-stat-n">2</div><div class="i-stat-l">STAGES</div></div>
+      <div class="i-stat"><div class="i-stat-n">S–D</div><div class="i-stat-l">GRADE</div></div>
+    </div>
+    <button class="start-btn" onclick="startGame()">Start the game 🏷️</button>
+  </div>
+</div>
+
+<div id="game">
+  <div class="hud">
+    <div class="hud-inner">
+      <div>
+        <div class="hud-rnd" id="hrnd">SCENARIO 1 / 10</div>
+        <div class="hud-ttl" id="httl"></div>
+      </div>
+      <div class="hud-score" id="hscore">0 pts</div>
+    </div>
+  </div>
+  <div class="pdots" id="pdots"></div>
+  <div class="scene" id="scene"></div>
+  <div class="dec-wrap" id="dec-wrap"></div>
+  <div class="fb-wrap"><div class="fb" id="fb"></div></div>
+  <div id="nbw"></div>
+</div>
+
+<div id="end">
+  <div class="end-inner">
+    <div class="end-icon" id="eico">🏆</div>
+    <div class="end-title" id="etitle">Clean <em>tags.</em></div>
+    <div class="end-sub" id="esub"></div>
+    <div class="end-stats">
+      <div class="es"><div class="es-n" id="esscore">0</div><div class="es-l">SCORE</div></div>
+      <div class="es"><div class="es-n" id="escorrect">0/10</div><div class="es-l">CORRECT</div></div>
+      <div class="es"><div class="es-n" id="esgrade">—</div><div class="es-l">GRADE</div></div>
+    </div>
+    <div class="end-fb" id="efb"></div>
+    <div style="font-size:10px;font-weight:700;letter-spacing:.18em;color:rgba(255,255,255,.3);margin-bottom:14px;text-align:left;">SCENARIO REVIEW</div>
+    <div class="rev-wrap" id="review"></div>
+    <div class="end-btns"><button class="restart-btn" onclick="restartGame()">Play again ↺</button></div>
+    <div class="ref-wrap">
+      <div class="ref-header"><div class="ref-header-title">NON-PAYABLES QUICK REFERENCE</div></div>
+      <div class="ref-body">
+        <div>
+          <div class="ref-section-title yes">🏷️ TAG REQUIRED</div>
+          <div class="ref-item"><div class="ref-dot yes"></div>No contact number or wrong number</div>
+          <div class="ref-item"><div class="ref-dot yes"></div>No email for Zoom appointments</div>
+          <div class="ref-item"><div class="ref-dot yes"></div>11AM Tuesday bookings (sales meeting conflict)</div>
+          <div class="ref-item"><div class="ref-dot yes"></div>Bill under $300 with no usage explanation</div>
+          <div class="ref-item"><div class="ref-dot yes"></div>Renter booked — not a homeowner</div>
+          <div class="ref-item"><div class="ref-dot yes"></div>Roof replacement in 3+ months</div>
+          <div class="ref-item"><div class="ref-dot yes"></div>Moving or selling within 2 years</div>
+          <div class="ref-item"><div class="ref-dot yes"></div>Customer says they didn't book</div>
+          <div class="ref-item"><div class="ref-dot yes"></div>Customer felt pressured — mark as complaint</div>
+          <div class="ref-item"><div class="ref-dot yes"></div>Booked more than 10 days from lead creation</div>
+          <div class="ref-item"><div class="ref-dot yes"></div>Wrong date, time, or primary contact</div>
+          <div class="ref-item"><div class="ref-dot yes"></div>No suitable space / cannot proceed</div>
+        </div>
+        <div>
+          <div class="ref-section-title no">✅ DO NOT TAG</div>
+          <div class="ref-item"><div class="ref-dot no"></div>Incorrect email address (not a non-payable)</div>
+          <div class="ref-item"><div class="ref-dot no"></div>Customer changes mind after booking</div>
+          <div class="ref-item"><div class="ref-dot no"></div>Partner not interested after the fact</div>
+          <div class="ref-item" style="margin-top:12px;"><div class="ref-dot no" style="background:var(--gold);"></div><span style="color:rgba(255,255,255,.6);">Always tag Kaysie as FYI on all relevant cases</span></div>
+          <div style="margin-top:16px;padding-top:12px;border-top:1px solid rgba(255,255,255,.07);">
+            <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.1em;margin-bottom:8px;">WHO TO TAG</div>
+            <div class="ref-item"><div class="ref-dot" style="background:#F87171;"></div><span style="color:rgba(255,255,255,.6);">RESINC D2D: Chris Paines & Chris Johns</span></div>
+            <div class="ref-item"><div class="ref-dot" style="background:#F87171;"></div><span style="color:rgba(255,255,255,.6);">AH D2D: Eliana Torres & Jac Antonio-Burgos</span></div>
+            <div class="ref-item"><div class="ref-dot" style="background:var(--sky);"></div><span style="color:rgba(255,255,255,.6);">RESINC Setters: Jordan Edwards & Chris Johns</span></div>
+            <div class="ref-item"><div class="ref-dot" style="background:var(--sky);"></div><span style="color:rgba(255,255,255,.6);">AH Setters: Luke Jory & Eliana Torres</span></div>
+            <div class="ref-item"><div class="ref-dot" style="background:var(--gold);"></div><span style="color:rgba(255,255,255,.6);">Always + Kaysie as FYI</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SCENARIOS=[
+  {
+    name:'Daniel Marsh',context:'Inbound call — called after receiving SMS',run:'Appointment Setters — RESINC',emoji:'👨',
+    situation:'Daniel called in and you booked him for a Zoom assessment. When you try to confirm his email to send the Zoom link, he says <strong>"I don\'t use email — just call me on the day."</strong> No email address provided.',
+    flags:[{cls:'red',text:'❌ No email for Zoom appointment'},{cls:'amber',text:'⚠️ Zoom requires email link'}],
+    shouldTag:true,
+    who:'resinc-setter',
+    whoOptions:[
+      {id:'resinc-d2d',label:'RESINC D2D\nChris Paines & Chris Johns'},
+      {id:'resinc-setter',label:'RESINC Setters\nJordan Edwards & Chris Johns'},
+      {id:'ah-setter',label:'AH Setters\nLuke Jory & Eliana Torres'},
+      {id:'ah-d2d',label:'AH D2D\nEliana Torres & Jac'},
+    ],
+    fb:'🏷️ <strong>Tag — Non-Payable.</strong> A Zoom appointment requires an email address to receive the link. No email = no Zoom link = no appointment. Tag the RESINC Setter team (Jordan + Chris) and Kaysie as FYI.',
+    rule:'No email for Zoom appointments is a non-payable scenario. Always tag the relevant setter team.'
+  },
+  {
+    name:'Michelle & Terry Crawford',context:'Confirmation call — Run 1',run:'Alpha Hippo D2D',emoji:'👩',
+    situation:'You call to confirm. Michelle answers and says <strong>"I\'m not sure who booked this — my husband might have spoken to someone at the door but I didn\'t know about it."</strong> She\'s uncertain but hasn\'t said she doesn\'t want to proceed.',
+    flags:[{cls:'amber',text:'⚠️ Customer unaware of booking'},{cls:'amber',text:'⚠️ Possible pressure concern'}],
+    shouldTag:true,
+    who:'ah-d2d',
+    whoOptions:[
+      {id:'resinc-d2d',label:'RESINC D2D\nChris Paines & Chris Johns'},
+      {id:'resinc-setter',label:'RESINC Setters\nJordan Edwards & Chris Johns'},
+      {id:'ah-setter',label:'AH Setters\nLuke Jory & Eliana Torres'},
+      {id:'ah-d2d',label:'AH D2D\nEliana & Jac Antonio-Burgos'},
+    ],
+    fb:'🏷️ <strong>Tag — potential complaint/pressure situation.</strong> When a customer is unaware of a booking, it must be flagged. This came through Alpha Hippo D2D — tag Eliana Torres & Jac Antonio-Burgos plus Kaysie as FYI. Include Michelle\'s exact words in your note.',
+    rule:'Customer unaware of booking = must be marked and flagged, especially if pressure is possible. Include exact customer wording.'
+  },
+  {
+    name:'Priya Sharma',context:'Confirmation call — Run 2',run:'RESINC Appointment Setters',emoji:'👩',
+    situation:'You confirm the appointment. Priya is happy, confirms both she and her husband will attend, and says <strong>"I\'ll get the electricity bill sent through today."</strong> The appointment is 3 days away. Everything checks out.',
+    flags:[{cls:'green',text:'✅ Customer engaged'},{cls:'green',text:'✅ Both decision-makers confirmed'},{cls:'amber',text:'⏳ Bill pending'}],
+    shouldTag:false,
+    who:null,
+    whoOptions:[],
+    fb:'✅ <strong>Don\'t Tag.</strong> Everything is on track. Customer confirmed, both decision-makers attending, bill coming through. A pending electricity bill is not a non-payable trigger — just note it in the CRM and follow up on Run 3 if still outstanding.',
+    rule:'Do not tag for a pending electricity bill. It is not a non-payable. Note it in the CRM and follow up.'
+  },
+  {
+    name:'Greg Wilson',context:'Appointment was booked 11 days ago',run:'RESINC Appointment Setters',emoji:'👨‍🦱',
+    situation:'You pull up the record and notice the lead was created on the 10th and the appointment is booked for the 21st — <strong>11 days from lead creation.</strong> The customer confirmed on the call but the booking falls outside the window.',
+    flags:[{cls:'red',text:'❌ 11 days from lead creation (max 10)'},{cls:'green',text:'✅ Customer confirmed'}],
+    shouldTag:true,
+    who:'resinc-setter',
+    whoOptions:[
+      {id:'resinc-d2d',label:'RESINC D2D\nChris Paines & Chris Johns'},
+      {id:'resinc-setter',label:'RESINC Setters\nJordan Edwards & Chris Johns'},
+      {id:'ah-setter',label:'AH Setters\nLuke Jory & Eliana Torres'},
+      {id:'ah-d2d',label:'AH D2D\nEliana Torres & Jac'},
+    ],
+    fb:'🏷️ <strong>Tag — Non-Payable.</strong> Appointments booked more than 10 days from lead creation are a non-payable scenario regardless of whether the customer confirmed. Tag the RESINC Setter team and Kaysie as FYI.',
+    rule:'Appointment booked more than 10 days from lead creation = non-payable. This rule applies even if the customer is confirmed.'
+  },
+  {
+    name:'Sandra Kowalski',context:'Outbound confirmation call',run:'Alpha Hippo Setters',emoji:'👩‍🦰',
+    situation:'You call Sandra to confirm her appointment and she says <strong>"Look, I changed my mind — we\'ve just been too busy lately and decided solar isn\'t for us right now."</strong>',
+    flags:[{cls:'amber',text:'⚠️ Customer changed mind after booking'},{cls:'green',text:'✅ No pressure complaint'}],
+    shouldTag:false,
+    who:null,
+    whoOptions:[],
+    fb:'✅ <strong>Don\'t Tag.</strong> A customer changing their mind after booking is explicitly NOT a non-payable scenario. This is normal attrition. Update the CRM status to Cancelled, note the reason, and move on. No tag required.',
+    rule:'Customer changes mind after booking = do NOT tag. This is explicitly excluded from non-payable scenarios.'
+  },
+  {
+    name:'Kevin & Anna Tran',context:'Confirmation call — Run 3',run:'RESINC D2D',emoji:'👫',
+    situation:'Kevin answers. You go through the confirmation script. Near the end he says <strong>"Actually — I didn\'t book any appointment. I spoke to a guy at the door but I told him I wasn\'t interested. I definitely did not agree to this."</strong>',
+    flags:[{cls:'red',text:'🚨 Customer says they did NOT book'},{cls:'red',text:'🚨 Critical red flag — must escalate'}],
+    shouldTag:true,
+    who:'resinc-d2d',
+    whoOptions:[
+      {id:'resinc-d2d',label:'RESINC D2D\nChris Paines & Chris Johns'},
+      {id:'resinc-setter',label:'RESINC Setters\nJordan Edwards & Chris Johns'},
+      {id:'ah-setter',label:'AH Setters\nLuke Jory & Eliana Torres'},
+      {id:'ah-d2d',label:'AH D2D\nEliana Torres & Jac'},
+    ],
+    fb:'🚨 <strong>Critical — Tag immediately.</strong> "I didn\'t book this appointment" is the most serious non-payable flag. Must be marked, escalated, and include Kevin\'s exact words in Zoho. This came through RESINC D2D — tag Chris Paines & Chris Johns plus Kaysie as FYI.',
+    rule:'"I didn\'t book this appointment" is a critical red flag. Tag immediately with exact customer wording. Escalate to management.'
+  },
+  {
+    name:'Tom Fletcher',context:'Booking review — pre-confirmation',run:'Alpha Hippo Setters',emoji:'👨',
+    situation:'You review the record before calling. Tom\'s appointment is booked for <strong>Tuesday at 11:00AM.</strong> You notice this conflicts with the weekly sales meeting. Tom hasn\'t been called yet.',
+    flags:[{cls:'red',text:'❌ 11AM Tuesday — sales meeting conflict'},{cls:'amber',text:'⚠️ Catch it before calling'}],
+    shouldTag:true,
+    who:'ah-setter',
+    whoOptions:[
+      {id:'resinc-d2d',label:'RESINC D2D\nChris Paines & Chris Johns'},
+      {id:'resinc-setter',label:'RESINC Setters\nJordan Edwards & Chris Johns'},
+      {id:'ah-setter',label:'AH Setters\nLuke Jory & Eliana Torres'},
+      {id:'ah-d2d',label:'AH D2D\nEliana Torres & Jac'},
+    ],
+    fb:'🏷️ <strong>Tag — Non-Payable.</strong> 11AM Tuesday bookings conflict with the sales meeting and cannot proceed. This came from Alpha Hippo Setters — tag Luke Jory & Eliana Torres plus Kaysie as FYI. Flag it before the customer is confirmed into the wrong slot.',
+    rule:'11AM Tuesday bookings are always non-payable — sales meeting conflict. Catch it before confirming the customer.'
+  },
+  {
+    name:'Rachel Okafor',context:'Confirmation call — Run 1',run:'RESINC D2D',emoji:'👩',
+    situation:'Rachel confirms enthusiastically but mentions <strong>"Oh, my husband isn\'t that interested — it\'s mainly me pushing for this."</strong> She is a homeowner, the bill is $480/qtr, and she is the sole decision-maker willing to attend.',
+    flags:[{cls:'amber',text:'⚠️ Partner not interested'},{cls:'green',text:'✅ Rachel is homeowner + keen'},{cls:'green',text:'✅ High bill'}],
+    shouldTag:false,
+    who:null,
+    whoOptions:[],
+    fb:'✅ <strong>Don\'t Tag.</strong> A partner not being interested after the fact is explicitly excluded from non-payable scenarios. Rachel is a homeowner with a high bill and genuine intent. Note the partner situation in the CRM and flag it for the specialist — but this is not a non-payable.',
+    rule:'Partner not interested after booking = do NOT tag. This is explicitly excluded. Note it in the CRM for the specialist.'
+  },
+  {
+    name:'Brian & Sue Lawson',context:'Confirmation call — Run 2',run:'RESINC Appointment Setters',emoji:'👴',
+    situation:'You call and Brian answers. He confirms the appointment but says <strong>"The roof is getting replaced next month — we\'ve got roofers coming in about 5 weeks."</strong>',
+    flags:[{cls:'red',text:'❌ Roof replacement in 5 weeks (3+ months = non-payable)'},{cls:'amber',text:'⚠️ 5 weeks = over 3 month rule? Check the rule'}],
+    shouldTag:false,
+    who:null,
+    whoOptions:[],
+    fb:'✅ <strong>Don\'t Tag — but note it carefully.</strong> The rule is: roof replacement planned in <strong>3+ months</strong> is a non-payable. 5 weeks is under 3 months, so this does NOT qualify as a non-payable. However, note the upcoming roof work clearly in the CRM so the specialist is aware.',
+    rule:'Roof replacement in under 3 months = still OK to proceed. 3+ months = non-payable. Always check the timeframe carefully.'
+  },
+  {
+    name:'Chloe Martin',context:'Incoming call — no appointment found',run:'Unknown — D2D',emoji:'👩‍🦳',
+    situation:'Chloe calls in saying she just spoke to someone at her door who booked her for solar. When you search the CRM, <strong>no record exists.</strong> She gives you her details and you can\'t find any lead or appointment. She mentions the person at the door was very pushy.',
+    flags:[{cls:'red',text:'❌ No CRM record found'},{cls:'red',text:'🚨 Pushy door knocker reported'},{cls:'red',text:'❌ No rep identified'}],
+    shouldTag:true,
+    who:'resinc-d2d',
+    whoOptions:[
+      {id:'resinc-d2d',label:'RESINC D2D\nChris Paines & Chris Johns'},
+      {id:'resinc-setter',label:'RESINC Setters\nJordan Edwards & Chris Johns'},
+      {id:'ah-setter',label:'AH Setters\nLuke Jory & Eliana Torres'},
+      {id:'ah-d2d',label:'AH D2D\nEliana Torres & Jac'},
+    ],
+    fb:'🚨 <strong>Tag — complaint and escalation required.</strong> No CRM record + pushy D2D behaviour reported = serious flag. Since the source is unclear but appears D2D, tag RESINC D2D (Chris Paines & Chris Johns) and Kaysie as FYI. Create a record, note Chloe\'s exact words, and escalate.',
+    rule:'Pushy door knocker complaints with no CRM record must be escalated immediately. Tag D2D team and Kaysie. Include exact customer wording.'
+  }
+];
+
+let round=0, score=0, correct=0;
+const results=[];
+let stage=1; // 1=tag/dont, 2=who
+
+function startGame(){
+  document.getElementById('intro').style.display='none';
+  document.getElementById('game').style.display='block';
+  round=0; score=0; correct=0; results.length=0;
+  buildDots(); renderRound();
+}
+
+function restartGame(){
+  document.getElementById('end').classList.remove('show');
+  document.getElementById('end').style.display='none';
+  startGame();
+}
+
+function buildDots(){
+  document.getElementById('pdots').innerHTML=SCENARIOS.map((_,i)=>`<div class="pd" id="pd${i}"></div>`).join('');
+}
+
+function renderRound(){
+  if(round>=SCENARIOS.length){ showEnd(); return; }
+  stage=1;
+  const s=SCENARIOS[round];
+  document.getElementById('hrnd').textContent='SCENARIO '+(round+1)+' / '+SCENARIOS.length;
+  document.getElementById('httl').textContent=s.name+' — '+s.run;
+  document.getElementById('pd'+round).className='pd active';
+  document.getElementById('fb').className='fb';
+  document.getElementById('nbw').innerHTML='';
+
+  document.getElementById('scene').innerHTML=`
+    <div class="sc-card">
+      <div class="sc-top">
+        <div class="sc-av">${s.emoji}</div>
+        <div class="sc-info">
+          <div class="sc-name">${s.name}</div>
+          <div class="sc-context">${s.context}</div>
+          <div class="sc-run">${s.run}</div>
+        </div>
+      </div>
+      <div class="sc-situation">${s.situation}</div>
+      <div class="flags">${s.flags.map(f=>`<div class="flag ${f.cls}">${f.text}</div>`).join('')}</div>
+    </div>`;
+
+  document.getElementById('dec-wrap').innerHTML=`
+    <div class="stage-label">IS THIS A NON-PAYABLE? DO YOU TAG?</div>
+    <div class="dec-btns">
+      <button class="d-btn tag-yes" id="btn-tag" onclick="decideTag(true)">
+        <div class="d-btn-ico">🏷️</div>
+        <div>Yes — Tag for<br>Non-Payable</div>
+      </button>
+      <button class="d-btn tag-no" id="btn-notag" onclick="decideTag(false)">
+        <div class="d-btn-ico">✅</div>
+        <div>No — Don't Tag,<br>just note it</div>
+      </button>
+    </div>
+    <div class="who-wrap" id="who-wrap">
+      <div class="stage-label" style="margin-top:16px;">WHO DO YOU TAG?</div>
+      <div class="who-btns" id="who-btns"></div>
+      <p style="font-size:11px;color:rgba(255,255,255,.3);margin-top:8px;">Always tag Kaysie as FYI as well — select the primary team below.</p>
+    </div>`;
+}
+
+function decideTag(isTag){
+  const s=SCENARIOS[round];
+  const btn1=document.getElementById('btn-tag');
+  const btn2=document.getElementById('btn-notag');
+  btn1.disabled=true; btn2.disabled=true;
+
+  if(isTag===s.shouldTag){
+    // Correct first stage
+    if(s.shouldTag){
+      // Show who to tag
+      btn1.classList.add('correct-p');
+      btn2.classList.add('wrong-p');
+      showWhoButtons(s);
+    } else {
+      // Don't tag — complete
+      btn2.classList.add('correct-p');
+      btn1.classList.add('wrong-p');
+      correct++;
+      score+=150;
+      showFlash('+150','good');
+      document.getElementById('pd'+round).className='pd ok';
+      results.push({round,ok:true,s});
+      const fb=document.getElementById('fb');
+      fb.className='fb show ok';
+      fb.innerHTML=s.fb+`<div class="fb-rule"><strong>Key rule:</strong> ${s.rule}</div>`;
+      setTimeout(()=>nextBtn(),600);
+    }
+  } else {
+    // Wrong first stage
+    if(s.shouldTag){ btn1.classList.add('correct-p'); } else { btn2.classList.add('correct-p'); }
+    if(isTag){ btn1.classList.add('wrong-p'); } else { btn2.classList.add('wrong-p'); }
+    document.getElementById('pd'+round).className='pd bad';
+    results.push({round,ok:false,s});
+    showFlash('✗','bad');
+    const fb=document.getElementById('fb');
+    fb.className='fb show bad';
+    fb.innerHTML=s.fb+`<div class="fb-rule"><strong>Key rule:</strong> ${s.rule}</div>`;
+    setTimeout(()=>nextBtn(),600);
+  }
+  document.getElementById('hscore').textContent=score.toLocaleString()+' pts';
+}
+
+function showWhoButtons(s){
+  const wrap=document.getElementById('who-wrap');
+  wrap.classList.add('show');
+  document.getElementById('who-btns').innerHTML=s.whoOptions.map(o=>
+    `<button class="who-btn" id="who-${o.id}" onclick="pickWho('${o.id}')">${o.label.replace('\n','<br>')}</button>`
+  ).join('');
+  wrap.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function pickWho(id){
+  const s=SCENARIOS[round];
+  const isCorrect=id===s.who;
+  s.whoOptions.forEach(o=>{
+    const btn=document.getElementById('who-'+o.id);
+    if(o.id===id){ btn.className='who-btn '+(isCorrect?'correct-who':'wrong-who'); }
+    else if(o.id===s.who){ btn.className='who-btn correct-who'; }
+    else{ btn.className='who-btn dim-who'; }
+  });
+  document.querySelectorAll('.who-btn').forEach(b=>b.disabled=true);
+  if(isCorrect){
+    correct++;
+    score+=200;
+    showFlash('+200','good');
+    document.getElementById('pd'+round).className='pd ok';
+    results.push({round,ok:true,s});
+    const fb=document.getElementById('fb');
+    fb.className='fb show ok';
+    fb.innerHTML=s.fb+`<div class="fb-rule"><strong>Key rule:</strong> ${s.rule}</div>`;
+  } else {
+    document.getElementById('pd'+round).className='pd bad';
+    results.push({round,ok:false,s});
+    showFlash('✗','bad');
+    const fb=document.getElementById('fb');
+    fb.className='fb show bad';
+    fb.innerHTML=s.fb+`<div class="fb-rule"><strong>Key rule:</strong> ${s.rule}</div>`;
+  }
+  document.getElementById('hscore').textContent=score.toLocaleString()+' pts';
+  setTimeout(()=>nextBtn(),600);
+}
+
+function nextBtn(){
+  const wrap=document.getElementById('nbw');
+  wrap.innerHTML=`<button class="next-btn" onclick="nextRound()">${round<SCENARIOS.length-1?'Next scenario →':'See results 🏆'}</button>`;
+  wrap.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function nextRound(){ round++; renderRound(); window.scrollTo({top:0,behavior:'smooth'}); }
+
+function showFlash(txt,type){
+  const el=document.createElement('div');
+  el.className='sflash '+type; el.textContent=txt;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),1000);
+}
+
+function showEnd(){
+  document.getElementById('game').style.display='none';
+  const end=document.getElementById('end');
+  end.style.display='flex'; end.classList.add('show');
+  const pct=Math.round(correct/SCENARIOS.length*100);
+  let grade,gcol;
+  if(pct===100){grade='S';gcol='#FFD700';}
+  else if(pct>=80){grade='A';gcol='#4ADE80';}
+  else if(pct>=60){grade='B';gcol='var(--sky)';}
+  else if(pct>=40){grade='C';gcol='var(--orange)';}
+  else{grade='D';gcol='#F87171';}
+  document.getElementById('eico').textContent=pct>=80?'🏆':pct>=60?'✅':'📋';
+  document.getElementById('etitle').innerHTML=pct>=80?'Clean <em>tags.</em>':'Study the <em>rules.</em>';
+  document.getElementById('esub').textContent=correct+' out of '+SCENARIOS.length+' correct.';
+  document.getElementById('esscore').textContent=score.toLocaleString();
+  document.getElementById('escorrect').textContent=correct+'/'+SCENARIOS.length;
+  document.getElementById('esgrade').textContent=grade;
+  document.getElementById('esgrade').style.color=gcol;
+
+  const fbs={10:'<strong>Perfect.</strong> You know exactly when to tag, when not to, and who to send it to. That\'s what keeps the team protected and management informed.',8:'<strong>Sharp.</strong> A couple of edge cases got you — likely the ones that are explicitly excluded (changed mind, wrong email, partner not interested). Review those.',6:'<strong>Decent.</strong> The core logic is there but some boundary cases are tripping you up. Study the quick reference below — pay attention to what\'s explicitly NOT a non-payable.',4:'<strong>Needs work.</strong> Too many misses — especially on who to tag. The team you tag depends on the source of the booking. Know your channels.',0:'<strong>Start again.</strong> Work through the quick reference below carefully, then replay.'};
+  const fbKey=pct===100?10:pct>=80?8:pct>=60?6:pct>=40?4:0;
+  document.getElementById('efb').innerHTML=fbs[fbKey];
+
+  document.getElementById('review').innerHTML=results.map((r,i)=>`
+    <div class="rev-card ${r.ok?'ok':'bad'}">
+      <div class="rev-lbl">SCENARIO ${i+1} — ${r.ok?'✅ CORRECT':'❌ WRONG'}</div>
+      <div class="rev-name">${r.s.name} · ${r.s.run}</div>
+      <div class="rev-txt">${r.s.rule}</div>
+    </div>`).join('');
+  end.scrollIntoView({behavior:'smooth',block:'start'});
+}
+</script>
+</body>
+</html>
