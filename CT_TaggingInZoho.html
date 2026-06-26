@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Tagging in Zoho | Confirmations Team</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0A3542;--navy2:#071F28;
+  --sky:#00AEEF;--sky2:#0090C4;--sky-lt:#EAF6FD;--sky-bg:#F2FAFF;
+  --green:#0B7A4E;--green-lt:#E3F5EC;
+  --red:#B5251B;--red-lt:#FDECEB;
+  --orange:#D4620A;--orange-lt:#FEF3EB;
+  --gold:#D4940A;--gold-lt:#FEF3CD;
+  --purple:#6B4FBB;
+  --body:#1A2A32;--muted:#5A6E78;--light:#F4F8FB;
+  --border:#C8DDE8;--line:#E2EEF4;
+  --font:'DM Sans',system-ui,sans-serif;
+  --serif:'DM Serif Display',Georgia,serif;
+  --shadow:0 1px 3px rgba(10,53,66,.06),0 4px 12px rgba(10,53,66,.08);
+  --max:880px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--light);color:var(--body);line-height:1.6;}
+#prog{position:fixed;top:0;left:0;right:0;height:3px;background:rgba(0,174,239,.15);z-index:100;}
+#prog-fill{height:100%;background:var(--sky);width:0%;transition:width .4s ease;}
+.hero{background:var(--navy);padding:60px 20px 50px;position:relative;overflow:hidden;}
+.hero-stripe{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--sky);}
+.hero-inner{max-width:var(--max);margin:0 auto;position:relative;z-index:1;}
+.hero-ey{color:var(--sky);font-size:9px;letter-spacing:.28em;font-weight:600;margin-bottom:16px;}
+.hero-title{color:#fff;font-size:44px;font-weight:700;line-height:1.05;margin-bottom:12px;font-family:var(--serif);}
+.hero-title em{color:var(--sky);font-style:italic;}
+.hero-sub{color:rgba(255,255,255,.6);font-size:14px;line-height:1.7;max-width:520px;margin-bottom:28px;}
+.hero-pills{display:flex;flex-wrap:wrap;gap:8px;}
+.hero-pill{background:rgba(0,174,239,.12);border:1px solid rgba(0,174,239,.25);border-radius:20px;padding:4px 12px;color:var(--sky);font-size:11px;font-weight:600;}
+.section{padding:40px 20px;}
+.inner{max-width:var(--max);margin:0 auto;}
+.s-label{font-size:8.5px;letter-spacing:.22em;font-weight:700;color:var(--sky);margin-bottom:6px;}
+.s-title{font-family:var(--serif);font-size:26px;color:var(--navy);margin-bottom:6px;}
+.s-bar{width:44px;height:3px;background:var(--sky);border-radius:2px;margin-bottom:20px;}
+.sep{height:1px;background:var(--line);max-width:var(--max);margin:0 auto;}
+.body-text{font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:16px;}
+.body-text strong{color:var(--body);}
+
+/* GOLDEN RULES */
+.rule-card{background:#fff;border-radius:14px;padding:18px 20px;margin-bottom:12px;display:flex;gap:14px;align-items:flex-start;box-shadow:var(--shadow);border:1.5px solid var(--line);}
+.rule-ico{font-size:22px;flex-shrink:0;}
+.rule-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px;}
+.rule-text{font-size:13px;color:var(--muted);line-height:1.6;}
+.rule-text strong{color:var(--body);}
+
+/* HOW TO TAG */
+.how-box{background:var(--navy);border-radius:14px;padding:20px 22px;margin-bottom:20px;border-left:4px solid var(--sky);}
+.how-text{font-size:13.5px;color:rgba(255,255,255,.8);line-height:1.75;}
+.how-text strong{color:#fff;}
+.how-text code{background:rgba(0,174,239,.15);border-radius:5px;padding:2px 7px;color:var(--sky);font-family:monospace;font-size:13px;}
+
+/* JOURNEY */
+.journey-wrap{margin-bottom:28px;overflow-x:auto;}
+.journey{display:flex;align-items:stretch;gap:0;min-width:600px;}
+.j-stage{flex:1;position:relative;}
+.j-stage:not(:last-child)::after{content:'›';position:absolute;right:-12px;top:50%;transform:translateY(-50%);font-size:20px;font-weight:700;color:var(--muted);z-index:2;}
+.j-card{background:#fff;border-radius:12px;padding:16px 14px;box-shadow:var(--shadow);border:1.5px solid var(--line);height:100%;display:flex;flex-direction:column;margin-right:20px;}
+.j-stage:last-child .j-card{margin-right:0;}
+.j-phase{font-size:8.5px;font-weight:700;letter-spacing:.14em;color:var(--muted);margin-bottom:6px;}
+.j-tag{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:4px;}
+.j-tag-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;margin-bottom:8px;}
+.j-card.cx .j-tag-badge{background:rgba(0,174,239,.12);color:var(--sky2);}
+.j-card.ops .j-tag-badge{background:rgba(107,79,187,.12);color:var(--purple);}
+.j-card.fulfilment .j-tag-badge{background:rgba(11,122,78,.12);color:var(--green);}
+.j-card.support .j-tag-badge{background:rgba(212,148,10,.12);color:var(--gold);}
+.j-desc{font-size:11.5px;color:var(--muted);line-height:1.5;flex:1;}
+
+/* MONEY TAGS */
+.money-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+@media(max-width:500px){.money-grid{grid-template-columns:1fr;}}
+.money-card{background:#fff;border-radius:12px;padding:16px;box-shadow:var(--shadow);border:1.5px solid var(--line);}
+.money-label{font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--gold);margin-bottom:4px;}
+.money-tag{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px;}
+.money-owners{font-size:11px;color:var(--muted);margin-bottom:8px;}
+.money-desc{font-size:12.5px;color:var(--muted);line-height:1.55;}
+
+/* WHO TABLE */
+.who-table{background:#fff;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:20px;}
+.who-row{display:grid;grid-template-columns:160px 1fr 1fr;border-bottom:1px solid var(--line);}
+.who-row:last-child{border-bottom:none;}
+.who-row.header{background:var(--navy);}
+.who-cell{padding:12px 16px;font-size:13px;}
+.who-row.header .who-cell{font-size:10px;font-weight:700;letter-spacing:.12em;color:rgba(255,255,255,.6);}
+.who-tag{display:inline-block;background:rgba(0,174,239,.1);border-radius:6px;padding:4px 10px;font-size:12px;font-weight:700;color:var(--sky2);margin-bottom:4px;}
+.who-when{font-size:12px;font-weight:600;color:var(--navy);}
+.who-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+.who-eg{font-size:11px;color:var(--sky);font-style:italic;margin-top:4px;}
+
+/* BLUEPRINT */
+.bp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
+@media(max-width:500px){.bp-grid{grid-template-columns:1fr;}}
+.bp-card{background:#fff;border-radius:12px;padding:18px;box-shadow:var(--shadow);border:1.5px solid var(--line);text-align:center;}
+.bp-ico{font-size:32px;margin-bottom:8px;}
+.bp-title{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:4px;}
+.bp-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+
+/* BACK TO REP */
+.back-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+@media(max-width:500px){.back-grid{grid-template-columns:1fr;}}
+.back-card{background:#fff;border-radius:12px;padding:18px;box-shadow:var(--shadow);border-top:3px solid;}
+.back-card.fix{border-color:var(--orange);}
+.back-card.call{border-color:var(--sky);}
+.back-card-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;}
+.back-item{font-size:12.5px;color:var(--muted);padding:5px 0;border-bottom:1px solid var(--line);line-height:1.5;}
+.back-item:last-child{border:none;}
+
+/* RESPONSIVE RULE */
+.responsive-card{background:var(--navy);border-radius:14px;padding:20px 22px;margin-bottom:14px;display:flex;gap:14px;align-items:flex-start;}
+.responsive-ico{font-size:22px;flex-shrink:0;}
+.responsive-title{font-size:13px;font-weight:700;color:var(--sky);margin-bottom:4px;}
+.responsive-text{font-size:13px;color:rgba(255,255,255,.75);line-height:1.6;}
+.responsive-text strong{color:#fff;}
+
+/* QUIZ */
+.quiz-card{background:#fff;border-radius:16px;padding:22px;box-shadow:var(--shadow);border:1.5px solid var(--line);margin-bottom:16px;}
+.quiz-num{font-size:9px;font-weight:700;letter-spacing:.18em;color:var(--sky);margin-bottom:8px;}
+.quiz-q{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:14px;line-height:1.4;}
+.quiz-opts{display:flex;flex-direction:column;gap:8px;}
+.quiz-opt{background:var(--light);border:1.5px solid var(--line);border-radius:10px;padding:11px 14px;cursor:pointer;transition:all .18s;font-size:13px;color:var(--body);display:flex;align-items:center;gap:10px;}
+.quiz-opt:hover:not(.q-correct):not(.q-wrong):not(.q-dim){border-color:var(--sky);background:var(--sky-bg);}
+.quiz-opt.q-correct{border-color:var(--green);background:var(--green-lt);pointer-events:none;}
+.quiz-opt.q-wrong{border-color:var(--red);background:var(--red-lt);pointer-events:none;}
+.quiz-opt.q-dim{opacity:.3;pointer-events:none;}
+.q-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
+.quiz-opt.q-correct .q-dot{background:var(--green);border-color:var(--green);color:#fff;}
+.quiz-opt.q-wrong .q-dot{background:var(--red);border-color:var(--red);color:#fff;}
+.quiz-fb{margin-top:10px;font-size:12.5px;padding:10px 14px;border-radius:8px;display:none;line-height:1.6;}
+.quiz-fb.show{display:block;}
+.quiz-fb.ok{background:var(--green-lt);color:#0A4425;}
+.quiz-fb.bad{background:var(--red-lt);color:#7A1010;}
+.quiz-score{background:var(--navy);border-radius:14px;padding:20px;text-align:center;display:none;}
+.quiz-score.show{display:block;}
+.quiz-score-n{font-family:var(--serif);font-size:48px;font-weight:700;color:var(--sky);margin-bottom:6px;}
+.quiz-score-t{font-size:14px;color:rgba(255,255,255,.6);}
+.quiz-retry{background:var(--sky);color:#fff;border:none;border-radius:10px;padding:11px 24px;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;margin-top:14px;transition:all .18s;}
+.quiz-retry:hover{background:var(--sky2);}
+</style>
+</head>
+<body>
+<div id="prog"><div id="prog-fill"></div></div>
+<div class="hero">
+  <div class="hero-stripe"></div>
+  <div class="hero-inner">
+    <div class="hero-ey">CONFIRMATIONS TEAM · ZOHO CRM</div>
+    <div class="hero-title">Tagging<br><em>in Zoho</em></div>
+    <div class="hero-sub">A tag sends an email to whoever you tag. Used well, it keeps jobs moving. Used loosely, it floods inboxes and pulls people off the work that matters.</div>
+    <div class="hero-pills">
+      <span class="hero-pill">🏷️ When to tag</span>
+      <span class="hero-pill">👥 Who to tag</span>
+      <span class="hero-pill">📋 The Blueprint</span>
+      <span class="hero-pill">✅ Quiz</span>
+    </div>
+  </div>
+</div>
+
+<!-- GOLDEN RULES -->
+<div class="section" style="background:#fff;">
+  <div class="inner">
+    <div class="s-label">THE GOLDEN RULES</div>
+    <div class="s-title">Before you tag anyone.</div>
+    <div class="s-bar"></div>
+    <div class="rule-card"><div class="rule-ico">🎯</div><div><div class="rule-title">Tag only when attention is genuinely needed</div><div class="rule-text">For help, a decision, or to confirm something is done. If no one needs to act — don't tag.</div></div></div>
+    <div class="rule-card"><div class="rule-ico">1️⃣</div><div><div class="rule-title">Tag one person or one group — not five</div><div class="rule-text">Pick the owner. Group tags reach the right team even if one person is away. <strong>Five tags = five people's inboxes cluttered with something only one team needs to act on.</strong></div></div></div>
+    <div class="rule-card"><div class="rule-ico">📢</div><div><div class="rule-title">Lead with the action</div><div class="rule-text">A clear summary, the issue, the instruction, or exactly what you need done. Don't make people guess what you want.</div></div></div>
+    <div class="rule-card"><div class="rule-ico">💾</div><div><div class="rule-title">Double-check before you save</div><div class="rule-text"><strong>Editing and re-saving a note re-sends the email to everyone tagged.</strong> Get it right the first time. Do not "re-send".</div></div></div>
+    <div class="rule-card"><div class="rule-ico">🚫</div><div><div class="rule-title">Don't tag for "thanks" or non-essential FYIs</div><div class="rule-text">We all know our efforts are appreciated. Leave a note instead of pinging the team. Save tags for when action is needed.</div></div></div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- HOW TO TAG -->
+<div class="section">
+  <div class="inner">
+    <div class="s-label">HOW TO TAG</div>
+    <div class="s-title">Two steps.</div>
+    <div class="s-bar"></div>
+    <div class="how-box">
+      <div class="how-text">In the <strong>Notes section</strong> of a record, type <code>@</code> and start typing the person or team name. Pick the right suggestion from the list, add your clear note, and <strong>save once.</strong><br><br>When you are tagged, you will receive an email. Click the <strong>lead or record name</strong> in it to jump straight to the record and action it.</div>
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- WHO TO TAG — JOURNEY -->
+<div class="section" style="background:#fff;">
+  <div class="inner">
+    <div class="s-label">WHO TO TAG</div>
+    <div class="s-title">Follow the customer journey.</div>
+    <div class="s-bar"></div>
+    <p class="body-text">Every stage of a job has a team that owns it. <strong>Tag the stage the job is in</strong> — and it lands with the people who can act, not on a rep who is mid-sprint.</p>
+
+    <div class="journey-wrap">
+      <div class="journey">
+        <div class="j-stage">
+          <div class="j-card cx">
+            <div class="j-phase">BEFORE THE APPOINTMENT</div>
+            <div class="j-tag-badge">@Customer Experience</div>
+            <div class="j-desc">Booking, calendar management and rescheduling — before or after the appointment.</div>
+          </div>
+        </div>
+        <div class="j-stage">
+          <div class="j-card ops">
+            <div class="j-phase">SIGNED → INSTALL-READY</div>
+            <div class="j-tag-badge">@Senior Ops Team</div>
+            <div class="j-desc">Tech checks, desktop reviews, pre-site and technical questions. Gets the job install-ready, then hands to Fulfilment.</div>
+          </div>
+        </div>
+        <div class="j-stage">
+          <div class="j-card fulfilment">
+            <div class="j-phase">THE INSTALL</div>
+            <div class="j-tag-badge">@Fulfilment Team</div>
+            <div class="j-desc">All install relations, concerns or feedback — including booking and coordinating the install itself.</div>
+          </div>
+        </div>
+        <div class="j-stage">
+          <div class="j-card support">
+            <div class="j-phase">AFTER INSTALLATION</div>
+            <div class="j-tag-badge">@Support Team</div>
+            <div class="j-desc">System performance, monitoring, Wi-Fi connectivity and other system issues.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="s-label" style="margin-top:8px;">MONEY MATTERS — AT ANY STAGE</div>
+    <div class="money-grid">
+      <div class="money-card">
+        <div class="money-label">💰 FINANCE</div>
+        <div class="money-tag">@Finance Team</div>
+        <div class="money-owners">Jessie & Regine</div>
+        <div class="money-desc">All finance customers and finance-related questions, approval updates, payment-method changes, and finance queries.</div>
+      </div>
+      <div class="money-card">
+        <div class="money-label">🧾 ACCOUNTS</div>
+        <div class="money-tag">@Accounts Team</div>
+        <div class="money-owners">Jacqui, Kiara & Regine</div>
+        <div class="money-desc">Cash-based activity: payments, invoice adjustments, cashbacks, refunds, referral payments, and installer invoice queries.</div>
+      </div>
+    </div>
+
+    <!-- Full table -->
+    <div class="who-table">
+      <div class="who-row header">
+        <div class="who-cell">Tag</div>
+        <div class="who-cell">When</div>
+        <div class="who-cell">Example</div>
+      </div>
+      <div class="who-row">
+        <div class="who-cell"><div class="who-tag">@Customer Experience</div></div>
+        <div class="who-cell"><div class="who-when">Before & around the appointment</div><div class="who-desc">Booking, rescheduling, calendar issues</div></div>
+        <div class="who-cell"><div class="who-eg">"Customer needs to move Thursday's appointment to next week."</div></div>
+      </div>
+      <div class="who-row" style="background:var(--light);">
+        <div class="who-cell"><div class="who-tag">@Senior Ops Team</div></div>
+        <div class="who-cell"><div class="who-when">Signed sale → install-ready</div><div class="who-desc">Tech checks, desktop reviews, pre-site</div></div>
+        <div class="who-cell"><div class="who-eg">"Confirm the number of phases before we book pre-site."</div></div>
+      </div>
+      <div class="who-row">
+        <div class="who-cell"><div class="who-tag">@Fulfilment Team</div></div>
+        <div class="who-cell"><div class="who-when">The install</div><div class="who-desc">All install relations, concerns, feedback</div></div>
+        <div class="who-cell"><div class="who-eg">"Customer has a concern about their upcoming install date."</div></div>
+      </div>
+      <div class="who-row" style="background:var(--light);">
+        <div class="who-cell"><div class="who-tag">@Support Team</div></div>
+        <div class="who-cell"><div class="who-when">After installation</div><div class="who-desc">Performance, monitoring, Wi-Fi, system issues</div></div>
+        <div class="who-cell"><div class="who-eg">"Customer's app hasn't shown generation data since Tuesday."</div></div>
+      </div>
+      <div class="who-row">
+        <div class="who-cell"><div class="who-tag">@Finance Team</div></div>
+        <div class="who-cell"><div class="who-when">Finance customers & questions</div><div class="who-desc">Approvals, payment changes, finance queries</div></div>
+        <div class="who-cell"><div class="who-eg">"Customer wants to switch from cash to finance — can we check approval?"</div></div>
+      </div>
+      <div class="who-row" style="background:var(--light);">
+        <div class="who-cell"><div class="who-tag">@Accounts Team</div></div>
+        <div class="who-cell"><div class="who-when">Cash transactions & invoices</div><div class="who-desc">Payments, refunds, cashbacks, referrals</div></div>
+        <div class="who-cell"><div class="who-eg">"Referral payment is due to the referrer on this job."</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- BLUEPRINT -->
+<div class="section">
+  <div class="inner">
+    <div class="s-label">THE BLUEPRINT</div>
+    <div class="s-title">Getting the sale right first.</div>
+    <div class="s-bar"></div>
+    <p class="body-text">The Blueprint lives in Zoho. It's the rep's check that the sale is correct before it moves. <strong>A clean blueprint lets Senior Ops pick a job up and run with it — no back-and-forth.</strong></p>
+    <div class="bp-grid">
+      <div class="bp-card"><div class="bp-ico">💰</div><div class="bp-title">Price right</div><div class="bp-desc">Pricing correct and consistent across all documents.</div></div>
+      <div class="bp-card"><div class="bp-ico">📦</div><div class="bp-title">Stock right</div><div class="bp-desc">Correct system and components selected for the customer.</div></div>
+      <div class="bp-card"><div class="bp-ico">📎</div><div class="bp-title">Attachments right</div><div class="bp-desc">Signed order form, matching estimator, site photos, tech notes. Everything Senior Ops needs to proceed.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- BACK TO REP -->
+<div class="section" style="background:#fff;">
+  <div class="inner">
+    <div class="s-label">WHEN A TAG GOES BACK TO THE REP</div>
+    <div class="s-title">Only two reasons.</div>
+    <div class="s-bar"></div>
+    <p class="body-text">Outside of these two reasons, the team that owns the stage sorts it — <strong>it never lands back on the rep.</strong> That's the goal.</p>
+    <div class="back-grid">
+      <div class="back-card fix">
+        <div class="back-card-title">1. To fix their own work</div>
+        <div class="back-item">Incorrect paperwork — price, stock, or attachments wrong</div>
+        <div class="back-item">Sold something incorrectly — rep clarifies the tech</div>
+      </div>
+      <div class="back-card call">
+        <div class="back-card-title">2. A call only they can make</div>
+        <div class="back-item">Change the deal, resize, or re-price</div>
+        <div class="back-item">Deal at risk — customer wants to cancel or is unhappy</div>
+        <div class="back-item">Customer asks for their rep by name</div>
+        <div class="back-item">New opportunity, upgrade, referral, or second system</div>
+        <div class="back-item">Reputation issue tied to their specific sale</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- BEING RESPONSIVE -->
+<div class="section">
+  <div class="inner">
+    <div class="s-label">BEING RESPONSIVE</div>
+    <div class="s-title">One tag. One owner. One day.</div>
+    <div class="s-bar"></div>
+    <div class="responsive-card"><div class="responsive-ico">⚡</div><div><div class="responsive-title">RESPOND PROMPTLY</div><div class="responsive-text">When you are tagged and action is needed, respond so other teams are not chasing you for an outcome.</div></div></div>
+    <div class="responsive-card"><div class="responsive-ico">📅</div><div><div class="responsive-title">ONE BUSINESS DAY</div><div class="responsive-text">Already tagged someone? <strong>Do not re-tag — give them the day.</strong> One tag, one owner, one business day.</div></div></div>
+    <div class="responsive-card"><div class="responsive-ico">🎯</div><div><div class="responsive-title">REPS — STAY ON BOOKING</div><div class="responsive-text">Stay on booking fresh appointments during your sprint, then clear your tags and admin once the sprint is done.</div></div></div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- QUIZ -->
+<div class="section" style="background:#fff;">
+  <div class="inner">
+    <div class="s-label">QUICK CHECK</div>
+    <div class="s-title">Who would you tag?</div>
+    <div class="s-bar"></div>
+    <p class="body-text" style="margin-bottom:24px;">5 scenarios. Pick the right tag for each one.</p>
+
+    <div id="quiz-wrap"></div>
+    <div class="quiz-score" id="quiz-score">
+      <div class="quiz-score-n" id="qsn">0/5</div>
+      <div class="quiz-score-t" id="qst">Loading...</div>
+      <button class="quiz-retry" onclick="buildQuiz()">Try again ↺</button>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('prog-fill').style.width=Math.min(p,100)+'%';
+});
+
+const QUESTIONS=[
+  {
+    q:'A customer just called saying their solar system hasn\'t shown any generation data for the past three days.',
+    opts:['@Customer Experience RESINC Solar','@Senior Ops Team','@Support Team','@Fulfilment Team'],
+    correct:2,
+    fb:'@Support Team owns post-installation system issues — performance, monitoring, and connectivity problems all go to them.'
+  },
+  {
+    q:'A rep has just signed a sale. The blueprint is complete and clean. What happens next, and who gets tagged?',
+    opts:['@Fulfilment Team — they handle the install','@Finance Team — money needs to be sorted first','@Senior Ops Team — they take it from signed to install-ready','@Customer Experience — to book the install date'],
+    correct:2,
+    fb:'@Senior Ops Team picks up every clean signed job and drives it to install-ready. That\'s their role — the rep\'s job is done once the blueprint is clean.'
+  },
+  {
+    q:'A customer wants to change their upcoming solar appointment to next week.',
+    opts:['@Senior Ops Team','@Customer Experience RESINC Solar','@Fulfilment Team','@Support Team'],
+    correct:1,
+    fb:'@Customer Experience RESINC Solar owns everything before and around the appointment — bookings, rescheduling, and calendar management.'
+  },
+  {
+    q:'A customer is asking whether they can switch from paying cash to a finance arrangement.',
+    opts:['@Accounts Team — they handle all payments','@Finance Team — finance customers and questions go here','@Senior Ops Team — they handle financial decisions','@Customer Experience — they manage the customer relationship'],
+    correct:1,
+    fb:'@Finance Team handles all finance customers and finance-related questions, including approval updates and payment-method changes.'
+  },
+  {
+    q:'An install has just been completed. The customer is calling about a concern with the installation team\'s work on the day.',
+    opts:['@Support Team — they handle all post-install issues','@Senior Ops Team — they coordinated the install','@Fulfilment Team — they own all install relations and feedback','@Customer Experience — they manage the customer'],
+    correct:2,
+    fb:'@Fulfilment Team owns the install stage — all install relations, concerns, and feedback including issues that arise from the install itself.'
+  }
+];
+
+let answers={};
+let quizDone=false;
+
+function buildQuiz(){
+  answers={}; quizDone=false;
+  document.getElementById('quiz-score').classList.remove('show');
+  const wrap=document.getElementById('quiz-wrap');
+  wrap.innerHTML=QUESTIONS.map((q,qi)=>`
+    <div class="quiz-card" id="qcard-${qi}">
+      <div class="quiz-num">QUESTION ${qi+1} OF ${QUESTIONS.length}</div>
+      <div class="quiz-q">${q.q}</div>
+      <div class="quiz-opts">
+        ${q.opts.map((o,oi)=>`
+          <div class="quiz-opt" onclick="pickQ(${qi},${oi})" id="qopt-${qi}-${oi}">
+            <div class="q-dot" id="qdot-${qi}-${oi}"></div>
+            <div>${o}</div>
+          </div>`).join('')}
+      </div>
+      <div class="quiz-fb" id="qfb-${qi}"></div>
+    </div>`).join('');
+}
+
+function pickQ(qi,oi){
+  if(answers[qi]!==undefined) return;
+  answers[qi]=oi;
+  const q=QUESTIONS[qi];
+  const isCorrect=oi===q.correct;
+  q.opts.forEach((_,j)=>{
+    const opt=document.getElementById('qopt-'+qi+'-'+j);
+    const dot=document.getElementById('qdot-'+qi+'-'+j);
+    if(j===oi){ opt.classList.add(isCorrect?'q-correct':'q-wrong'); dot.textContent=isCorrect?'✓':'✗'; }
+    else if(j===q.correct&&!isCorrect){ opt.classList.add('q-correct'); dot.textContent='✓'; }
+    else opt.classList.add('q-dim');
+  });
+  const fb=document.getElementById('qfb-'+qi);
+  fb.className='quiz-fb show '+(isCorrect?'ok':'bad');
+  fb.innerHTML=(isCorrect?'✅ ':'❌ ')+q.fb;
+
+  if(Object.keys(answers).length===QUESTIONS.length){
+    setTimeout(showScore,600);
+  }
+}
+
+function showScore(){
+  const correct=Object.entries(answers).filter(([qi,oi])=>QUESTIONS[qi].correct===oi).length;
+  const score=document.getElementById('quiz-score');
+  document.getElementById('qsn').textContent=correct+'/'+QUESTIONS.length;
+  const msgs={5:'Perfect — you know exactly who owns each stage.',4:'Strong — one slip. Review the one you missed.',3:'Getting there — check the journey again.',2:'Review the Who to Tag table above.',1:'Study the journey before trying again.',0:'Go back to the Who to Tag section first.'};
+  document.getElementById('qst').textContent=msgs[correct]||msgs[0];
+  score.classList.add('show');
+  score.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+buildQuiz();
+</script>
+</body>
+</html>
