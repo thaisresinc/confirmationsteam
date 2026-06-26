@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Book or Don't Book? | Confirmations Team</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0A3542;--navy2:#071F28;--navy3:#0D4558;
+  --sky:#00AEEF;--sky2:#0090C4;--sky-lt:#EAF6FD;--sky-bg:#F2FAFF;
+  --green:#0B7A4E;--green-lt:#E3F5EC;
+  --red:#B5251B;--red-lt:#FDECEB;
+  --orange:#D4620A;--orange-lt:#FEF3EB;
+  --gold:#D4940A;--gold-lt:#FEF3CD;
+  --purple:#6B4FBB;
+  --body:#1A2A32;--muted:#5A6E78;--light:#F4F8FB;
+  --border:#C8DDE8;--line:#E2EEF4;
+  --font:'DM Sans',system-ui,sans-serif;
+  --serif:'DM Serif Display',Georgia,serif;
+  --shadow:0 2px 8px rgba(10,53,66,.08),0 8px 24px rgba(10,53,66,.06);
+  --max:800px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--navy2);color:#fff;min-height:100vh;}
+
+/* INTRO */
+#intro{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;position:relative;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;}
+.i-inner{max-width:580px;text-align:center;position:relative;z-index:1;}
+.i-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,174,239,.12);border:1.5px solid rgba(0,174,239,.25);border-radius:20px;padding:7px 18px;margin-bottom:24px;font-size:10px;font-weight:700;letter-spacing:.2em;color:var(--sky);}
+.i-title{font-family:var(--serif);font-size:clamp(44px,8vw,68px);color:#fff;line-height:.95;margin-bottom:14px;}
+.i-title em{color:var(--sky);font-style:italic;display:block;}
+.i-sub{color:rgba(255,255,255,.5);font-size:15px;line-height:1.7;max-width:440px;margin:0 auto 28px;}
+.i-rules{display:flex;flex-direction:column;gap:10px;margin-bottom:32px;text-align:left;}
+.i-rule{display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:12px 16px;}
+.i-rule-ico{font-size:20px;flex-shrink:0;}
+.i-rule-txt{font-size:13px;color:rgba(255,255,255,.65);line-height:1.5;}
+.i-rule-txt strong{color:#fff;}
+.i-stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;}
+.i-stat{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:14px 20px;text-align:center;}
+.i-stat-n{font-family:var(--serif);font-size:32px;font-weight:700;color:var(--sky);}
+.i-stat-l{font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.1em;margin-top:2px;}
+.start-btn{background:var(--sky);color:#fff;border:none;border-radius:14px;padding:18px 52px;font-family:var(--font);font-size:16px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 8px 32px rgba(0,174,239,.4);}
+.start-btn:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,174,239,.5);}
+
+/* GAME */
+#game{display:none;min-height:100vh;padding-bottom:60px;}
+
+/* HUD */
+.hud{position:sticky;top:0;z-index:50;background:rgba(7,31,40,.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06);padding:10px 20px;}
+.hud-inner{max-width:var(--max);margin:0 auto;display:flex;align-items:center;gap:14px;}
+.hud-round{font-size:9px;font-weight:700;letter-spacing:.16em;color:rgba(255,255,255,.35);}
+.hud-title{font-size:13px;font-weight:700;color:#fff;flex:1;}
+.hud-score{font-size:13px;font-weight:700;color:var(--sky);}
+.hud-streak{font-size:12px;font-weight:700;color:var(--gold);}
+
+/* PROGRESS DOTS */
+.progress-dots{display:flex;justify-content:center;gap:8px;padding:20px 20px 0;max-width:var(--max);margin:0 auto;}
+.pdot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.1);transition:all .3s;flex-shrink:0;}
+.pdot.active{background:var(--sky);transform:scale(1.3);}
+.pdot.correct{background:var(--green);}
+.pdot.wrong{background:var(--red);}
+
+/* CUSTOMER CARD */
+.scene{max-width:var(--max);margin:0 auto;padding:20px 20px 0;}
+.customer-card{background:var(--navy);border-radius:20px;padding:24px;margin-bottom:20px;border:1.5px solid rgba(255,255,255,.06);position:relative;overflow:hidden;animation:cardIn .35s cubic-bezier(.34,1.56,.64,1);}
+@keyframes cardIn{from{opacity:0;transform:translateY(-12px) scale(.97);}to{opacity:1;transform:none;}}
+.customer-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--sky),var(--purple));}
+.cust-top{display:flex;align-items:flex-start;gap:14px;margin-bottom:18px;}
+.cust-av{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#2A3E4A,#1A2E3A);border:2px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.cust-info{flex:1;}
+.cust-name{font-size:15px;font-weight:700;color:#fff;margin-bottom:3px;}
+.cust-loc{font-size:11px;color:rgba(255,255,255,.4);}
+.cust-tag{display:inline-flex;align-items:center;gap:5px;background:rgba(0,174,239,.12);border:1px solid rgba(0,174,239,.2);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;color:var(--sky);margin-top:4px;}
+.cust-quote{background:rgba(255,255,255,.05);border-radius:0 14px 14px 14px;padding:14px 16px;font-size:14px;color:rgba(255,255,255,.85);line-height:1.65;font-style:italic;border:1px solid rgba(255,255,255,.07);margin-bottom:16px;}
+
+/* FACTS GRID */
+.facts-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+@media(min-width:500px){.facts-grid{grid-template-columns:repeat(3,1fr);}}
+.fact{background:rgba(255,255,255,.04);border-radius:10px;padding:10px 12px;}
+.fact-label{font-size:9px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.35);margin-bottom:3px;}
+.fact-val{font-size:13px;font-weight:600;color:#fff;}
+.fact-val.good{color:#4ADE80;}
+.fact-val.warn{color:#FBBF24;}
+.fact-val.bad{color:#F87171;}
+
+/* DECISION BUTTONS */
+.decision-wrap{max-width:var(--max);margin:0 auto;padding:0 20px;display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.decision-label{font-size:9px;font-weight:700;letter-spacing:.18em;color:rgba(255,255,255,.35);margin-bottom:4px;display:flex;align-items:center;gap:6px;}
+.decision-label::before{content:'▶';font-size:7px;color:var(--sky);}
+.decision-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+@media(max-width:480px){.decision-btns{grid-template-columns:1fr;}}
+.d-btn{border:none;border-radius:14px;padding:16px 12px;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:6px;line-height:1.3;}
+.d-btn-ico{font-size:28px;}
+.d-btn.full{background:rgba(11,122,78,.15);border:2px solid rgba(11,122,78,.3);color:#4ADE80;}
+.d-btn.full:hover:not(:disabled){background:rgba(11,122,78,.25);transform:translateY(-2px);box-shadow:0 6px 20px rgba(11,122,78,.2);}
+.d-btn.battery{background:rgba(0,174,239,.12);border:2px solid rgba(0,174,239,.25);color:var(--sky);}
+.d-btn.battery:hover:not(:disabled){background:rgba(0,174,239,.2);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,174,239,.2);}
+.d-btn.dont{background:rgba(181,37,27,.12);border:2px solid rgba(181,37,27,.25);color:#F87171;}
+.d-btn.dont:hover:not(:disabled){background:rgba(181,37,27,.2);transform:translateY(-2px);box-shadow:0 6px 20px rgba(181,37,27,.2);}
+.d-btn.correct-pick{border-width:2px;pointer-events:none;animation:correctPulse .4s ease;}
+@keyframes correctPulse{0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);}}
+.d-btn.wrong-pick{opacity:.35;pointer-events:none;}
+.d-btn:disabled{cursor:not-allowed;}
+
+/* FEEDBACK */
+.fb-wrap{max-width:var(--max);margin:0 auto;padding:0 20px;}
+.fb{border-radius:14px;padding:16px 18px;font-size:13px;line-height:1.65;display:none;animation:fadeUp .3s ease;margin-bottom:14px;}
+.fb.show{display:block;}
+.fb.ok{background:rgba(11,122,78,.12);border-left:4px solid var(--green);color:#A3F0C8;}
+.fb.bad{background:rgba(181,37,27,.1);border-left:4px solid var(--red);color:#FCA5A5;}
+.fb-rule{background:rgba(0,174,239,.07);border:1px solid rgba(0,174,239,.15);border-radius:8px;padding:10px 14px;margin-top:10px;font-size:12px;color:rgba(255,255,255,.6);line-height:1.6;}
+.fb-rule strong{color:var(--sky);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+/* SCORE FLASH */
+.sflash{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:200;font-family:var(--serif);font-size:52px;font-weight:700;animation:sfa 1s ease forwards;}
+.sflash.good{color:#4ADE80;text-shadow:0 0 30px rgba(74,222,128,.6);}
+.sflash.bad{color:#F87171;text-shadow:0 0 30px rgba(248,113,113,.6);}
+@keyframes sfa{0%{opacity:1;transform:translate(-50%,-50%) scale(1);}100%{opacity:0;transform:translate(-50%,-130%) scale(1.4);}}
+
+/* NEXT BTN */
+#next-btn-wrap{max-width:var(--max);margin:0 auto;padding:0 20px;}
+.next-btn{background:var(--sky);color:#fff;border:none;border-radius:12px;padding:13px 28px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(0,174,239,.35);margin-top:4px;}
+.next-btn:hover{transform:translateY(-2px);}
+
+/* END SCREEN */
+#end{display:none;min-height:100vh;align-items:center;justify-content:center;padding:40px 20px;}
+#end.show{display:flex;}
+.end-inner{max-width:680px;width:100%;text-align:center;}
+.end-icon{font-size:72px;margin-bottom:16px;animation:bounceIn .6s cubic-bezier(.34,1.56,.64,1);}
+@keyframes bounceIn{from{opacity:0;transform:scale(.4);}to{opacity:1;transform:scale(1);}}
+.end-title{font-family:var(--serif);font-size:48px;color:#fff;line-height:1;margin-bottom:8px;}
+.end-title em{color:var(--sky);font-style:italic;}
+.end-sub{color:rgba(255,255,255,.5);font-size:14px;margin-bottom:24px;line-height:1.6;}
+.end-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+.es{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px 12px;}
+.es-n{font-family:var(--serif);font-size:36px;font-weight:700;color:var(--sky);margin-bottom:4px;}
+.es-l{font-size:9.5px;color:rgba(255,255,255,.35);letter-spacing:.1em;}
+.end-fb{background:rgba(0,174,239,.06);border:1px solid rgba(0,174,239,.12);border-radius:14px;padding:18px 22px;margin-bottom:24px;font-size:13.5px;color:rgba(255,255,255,.65);line-height:1.7;text-align:left;}
+.end-fb strong{color:#fff;}
+
+/* REVIEW */
+.review-wrap{display:flex;flex-direction:column;gap:10px;margin-bottom:24px;text-align:left;}
+.rev-card{background:var(--navy);border-radius:14px;padding:16px 18px;border:1.5px solid;}
+.rev-card.ok{border-color:rgba(11,122,78,.3);}
+.rev-card.bad{border-color:rgba(181,37,27,.2);}
+.rev-lbl{font-size:9px;font-weight:700;letter-spacing:.12em;margin-bottom:6px;}
+.rev-card.ok .rev-lbl{color:#4ADE80;}
+.rev-card.bad .rev-lbl{color:#F87171;}
+.rev-name{font-size:13px;font-weight:700;color:#fff;margin-bottom:4px;}
+.rev-verdict{font-size:12px;color:rgba(255,255,255,.5);margin-bottom:6px;}
+.rev-why{font-size:12px;color:rgba(255,255,255,.65);line-height:1.6;}
+
+.end-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.restart-btn{background:var(--sky);color:#fff;border:none;border-radius:12px;padding:14px 36px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;}
+.restart-btn:hover{transform:translateY(-2px);}
+
+/* QUICK REF */
+.qr-wrap{background:var(--navy);border-radius:14px;overflow:hidden;margin-top:28px;text-align:left;}
+.qr-header{padding:12px 18px;background:rgba(0,174,239,.1);border-bottom:1px solid rgba(0,174,239,.15);}
+.qr-header-title{font-size:11px;font-weight:700;color:var(--sky);letter-spacing:.14em;}
+.qr-body{padding:16px 18px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+@media(max-width:500px){.qr-body{grid-template-columns:1fr;}}
+.qr-section-title{font-size:10px;font-weight:700;letter-spacing:.12em;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,.08);}
+.qr-section-title.full{color:#4ADE80;}
+.qr-section-title.battery{color:var(--sky);}
+.qr-section-title.dont{color:#F87171;}
+.qr-item{font-size:11.5px;color:rgba(255,255,255,.6);line-height:1.5;padding:3px 0;display:flex;gap:6px;}
+.qr-dot{flex-shrink:0;margin-top:5px;width:5px;height:5px;border-radius:50%;}
+.qr-dot.full{background:#4ADE80;}
+.qr-dot.battery{background:var(--sky);}
+.qr-dot.dont{background:#F87171;}
+</style>
+</head>
+<body>
+
+<div id="intro">
+  <div class="orb" style="width:500px;height:500px;background:radial-gradient(rgba(0,174,239,.1),transparent);top:-150px;right:-150px;"></div>
+  <div class="orb" style="width:400px;height:400px;background:radial-gradient(rgba(11,122,78,.08),transparent);bottom:-100px;left:-100px;"></div>
+  <div class="i-inner">
+    <div class="i-badge">📋 LEAD QUALIFICATION</div>
+    <div class="i-title">Book or<br><em>Don't Book?</em></div>
+    <div class="i-sub">10 customers. 3 decisions: Full Solar Zoom, Battery Only Zoom, or Don't Book. Read the profile and call it correctly.</div>
+    <div class="i-stats">
+      <div class="i-stat"><div class="i-stat-n">10</div><div class="i-stat-l">CUSTOMERS</div></div>
+      <div class="i-stat"><div class="i-stat-n">3</div><div class="i-stat-l">DECISIONS</div></div>
+      <div class="i-stat"><div class="i-stat-n">S–D</div><div class="i-stat-l">GRADE</div></div>
+    </div>
+    <div class="i-rules">
+      <div class="i-rule"><div class="i-rule-ico">☀️</div><div class="i-rule-txt"><strong>Full Solar + Battery Zoom (2hr)</strong> — no existing solar, qualified property, clear usage, financially capable, decision-makers aligned.</div></div>
+      <div class="i-rule"><div class="i-rule-ico">🔋</div><div class="i-rule-txt"><strong>Battery Only Zoom (1hr)</strong> — existing solar installed and working, clear battery motivation, export potential.</div></div>
+      <div class="i-rule"><div class="i-rule-ico">🚫</div><div class="i-rule-txt"><strong>Don't Book</strong> — unqualified, no authority, renter, price shopper, or no viable benefit case.</div></div>
+    </div>
+    <button class="start-btn" onclick="startGame()">Make the call ☎️</button>
+  </div>
+</div>
+
+<div id="game">
+  <div class="hud">
+    <div class="hud-inner">
+      <div>
+        <div class="hud-round" id="hrnd">CUSTOMER 1 / 10</div>
+        <div class="hud-title" id="httl"></div>
+      </div>
+      <div class="hud-streak" id="hstreak">🔥 x1</div>
+      <div class="hud-score" id="hscore">0 pts</div>
+    </div>
+  </div>
+  <div class="progress-dots" id="pdots"></div>
+  <div class="scene" id="scene"></div>
+  <div class="decision-wrap">
+    <div class="decision-label">WHAT DO YOU DO WITH THIS CUSTOMER?</div>
+    <div class="decision-btns">
+      <button class="d-btn full" id="btn-full" onclick="decide('full')">
+        <div class="d-btn-ico">☀️</div>
+        <div>Book Full Solar<br>2hr Zoom</div>
+      </button>
+      <button class="d-btn battery" id="btn-battery" onclick="decide('battery')">
+        <div class="d-btn-ico">🔋</div>
+        <div>Book Battery<br>1hr Zoom</div>
+      </button>
+      <button class="d-btn dont" id="btn-dont" onclick="decide('dont')">
+        <div class="d-btn-ico">🚫</div>
+        <div>Don't Book</div>
+      </button>
+    </div>
+  </div>
+  <div class="fb-wrap">
+    <div class="fb" id="fb"></div>
+  </div>
+  <div id="next-btn-wrap"></div>
+</div>
+
+<div id="end">
+  <div class="end-inner">
+    <div class="end-icon" id="eico">🏆</div>
+    <div class="end-title" id="etitle">All calls <em>made.</em></div>
+    <div class="end-sub" id="esub"></div>
+    <div class="end-stats">
+      <div class="es"><div class="es-n" id="esscore">0</div><div class="es-l">SCORE</div></div>
+      <div class="es"><div class="es-n" id="escorrect">0/10</div><div class="es-l">CORRECT</div></div>
+      <div class="es"><div class="es-n" id="esgrade">—</div><div class="es-l">GRADE</div></div>
+    </div>
+    <div class="end-fb" id="efb"></div>
+    <div style="font-size:10px;font-weight:700;letter-spacing:.18em;color:rgba(255,255,255,.3);margin-bottom:14px;text-align:left;">CUSTOMER REVIEW</div>
+    <div class="review-wrap" id="review"></div>
+    <div class="end-btns"><button class="restart-btn" onclick="restartGame()">Play again ↺</button></div>
+    <div class="qr-wrap">
+      <div class="qr-header"><div class="qr-header-title">QUALIFICATION QUICK REFERENCE</div></div>
+      <div class="qr-body">
+        <div>
+          <div class="qr-section-title full">☀️ FULL SOLAR (2HR)</div>
+          <div class="qr-item"><div class="qr-dot full"></div>No existing solar</div>
+          <div class="qr-item"><div class="qr-dot full"></div>Bill $300+/qtr (or strong usage driver)</div>
+          <div class="qr-item"><div class="qr-dot full"></div>Owns property, no move plans</div>
+          <div class="qr-item"><div class="qr-dot full"></div>All decision-makers aligned</div>
+          <div class="qr-item"><div class="qr-dot full"></div>Suitable roof, no major barriers</div>
+          <div class="qr-item"><div class="qr-dot full"></div>Clear motivation & intent</div>
+        </div>
+        <div>
+          <div class="qr-section-title battery">🔋 BATTERY ONLY (1HR)</div>
+          <div class="qr-item"><div class="qr-dot battery"></div>Existing solar — working & online</div>
+          <div class="qr-item"><div class="qr-dot battery"></div>Exporting ~10kWh/day or strong motivation</div>
+          <div class="qr-item"><div class="qr-dot battery"></div>Clear reason: bills, blackouts, independence</div>
+          <div class="qr-item"><div class="qr-dot battery"></div>High night-time or daytime-absence usage</div>
+          <div class="qr-item"><div class="qr-dot battery"></div>Not "just curious"</div>
+        </div>
+        <div>
+          <div class="qr-section-title dont">🚫 DON'T BOOK</div>
+          <div class="qr-item"><div class="qr-dot dont"></div>Bill under $300, no usage driver</div>
+          <div class="qr-item"><div class="qr-dot dont"></div>Renter or no authority to install</div>
+          <div class="qr-item"><div class="qr-dot dont"></div>Moving/selling within 2 years</div>
+          <div class="qr-item"><div class="qr-dot dont"></div>Price-shopping only</div>
+          <div class="qr-item"><div class="qr-dot dont"></div>No clear motivation or intent</div>
+          <div class="qr-item"><div class="qr-dot dont"></div>Wants battery but has no existing solar → redirect to Full Solar</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const CUSTOMERS=[
+  {
+    name:'Margaret & Ken Lawson',loc:'Penrith, NSW',emoji:'👩‍🦳',
+    tag:'Family home',
+    quote:'"We\'re trying to get ahead of these rising bills and want to understand the full system properly."',
+    facts:[
+      {label:'Bill',val:'~$680/qtr',cls:'good'},
+      {label:'Existing Solar',val:'None',cls:''},
+      {label:'Household',val:'4 people',cls:''},
+      {label:'Property',val:'Owns — 12 years',cls:'good'},
+      {label:'Roof',val:'North-facing, solid',cls:'good'},
+      {label:'Usage',val:'Ducted AC, pool',cls:'good'},
+      {label:'Decision Makers',val:'Both available',cls:'good'},
+      {label:'Plans',val:'No move plans',cls:'good'},
+    ],
+    correct:'full',
+    fb:'✅ <strong>Book Full Solar + Battery (2hr).</strong> High bill, high usage, owns the home long-term, both decision-makers aligned, and a clear motivation. This is the ideal Full Solar candidate.',
+    rule:'High-usage family home with all criteria met — decision-makers aligned, strong motivation, suitable property.'
+  },
+  {
+    name:'Tom Nguyen',loc:'Parramatta, NSW',emoji:'👨',
+    tag:'Existing solar',
+    quote:'"We\'re exporting heaps during the day but still paying bills at night. Feels like the solar\'s going to waste."',
+    facts:[
+      {label:'Bill',val:'~$320/qtr',cls:'warn'},
+      {label:'Existing Solar',val:'6.6kW — working',cls:'good'},
+      {label:'Export',val:'~15kWh/day',cls:'good'},
+      {label:'Property',val:'Owns',cls:'good'},
+      {label:'Night Usage',val:'High (AC, cooking)',cls:'good'},
+      {label:'Motivation',val:'Energy independence',cls:'good'},
+      {label:'Decision Makers',val:'Tom only — wife aware',cls:'warn'},
+      {label:'Plans',val:'No move plans',cls:'good'},
+    ],
+    correct:'battery',
+    fb:'✅ <strong>Book Battery Only (1hr).</strong> Existing solar working, strong export of 15kWh/day, high night usage, and a clear motivation to stop exporting and start storing. Classic battery candidate.',
+    rule:'Existing solar + strong export + high night usage + clear motivation = Battery Only Zoom.'
+  },
+  {
+    name:'Sandra Kowalski',loc:'Campbelltown, NSW',emoji:'👩',
+    tag:'Renter',
+    quote:'"I\'m renting but just curious what solar would cost. My landlord hasn\'t said no."',
+    facts:[
+      {label:'Bill',val:'~$280/qtr',cls:'warn'},
+      {label:'Existing Solar',val:'None',cls:''},
+      {label:'Property',val:'Renting',cls:'bad'},
+      {label:'Authority',val:'No — tenant only',cls:'bad'},
+      {label:'Landlord',val:'No formal approval',cls:'bad'},
+      {label:'Motivation',val:'Curious',cls:'bad'},
+      {label:'Decision Makers',val:'No authority',cls:'bad'},
+      {label:'Plans',val:'Lease ends in 8 months',cls:'bad'},
+    ],
+    correct:'dont',
+    fb:'🚫 <strong>Don\'t Book.</strong> Sandra is a renter with no authority to install solar. Low bill, no approval from landlord, and no real decision-making power. A booking here wastes the specialist\'s time.',
+    rule:'Renters without written landlord approval cannot proceed. No authority = no booking.'
+  },
+  {
+    name:'David & Claire Papadopoulos',loc:'Castle Hill, NSW',emoji:'👫',
+    tag:'Future electrification',
+    quote:'"We\'re expecting our usage to go up a lot — we\'re getting an EV and looking at switching everything to electric."',
+    facts:[
+      {label:'Bill',val:'~$380/qtr',cls:'good'},
+      {label:'Existing Solar',val:'None',cls:''},
+      {label:'Property',val:'Owns — long-term',cls:'good'},
+      {label:'Roof',val:'Good aspect, no shading',cls:'good'},
+      {label:'EV',val:'Confirmed purchase next 6 months',cls:'good'},
+      {label:'Hot Water',val:'Planning electric',cls:'good'},
+      {label:'Decision Makers',val:'Both confirmed',cls:'good'},
+      {label:'Income',val:'Dual income, stable',cls:'good'},
+    ],
+    correct:'full',
+    fb:'✅ <strong>Book Full Solar + Battery (2hr).</strong> Future electrification household with strong intent. EV incoming plus planned full electrification makes this a high-value solar candidate even before the bill hits $500+.',
+    rule:'EV, electric hot water, and full electrification plans are strong usage drivers even if current bill is moderate.'
+  },
+  {
+    name:'Phil Hartmann',loc:'Hornsby, NSW',emoji:'👨‍🦱',
+    tag:'Price shopper',
+    quote:'"How much is solar roughly? I\'m getting a few quotes from different companies."',
+    facts:[
+      {label:'Bill',val:'Unknown — won\'t share',cls:'bad'},
+      {label:'Existing Solar',val:'None',cls:''},
+      {label:'Property',val:'Unclear — owns/rents',cls:'bad'},
+      {label:'Motivation',val:'Price only',cls:'bad'},
+      {label:'Intent',val:'Comparing 3 companies',cls:'bad'},
+      {label:'Appointment',val:'Doesn\'t understand it\'s 2hrs',cls:'bad'},
+      {label:'Decision Makers',val:'Not discussed',cls:'bad'},
+      {label:'Urgency',val:'None',cls:'bad'},
+    ],
+    correct:'dont',
+    fb:'🚫 <strong>Don\'t Book.</strong> Phil is price-shopping across multiple companies with no genuine intent, no bill information, and no understanding of what the appointment involves. Booking here produces a low-quality lead and wastes specialist time.',
+    rule:'Price-only enquiries with no bill details, no clear motivation, and no understanding of the process are non-payable scenarios.'
+  },
+  {
+    name:'Irene & Bob Marchetti',loc:'Sutherland, NSW',emoji:'👴',
+    tag:'Home-heavy retirees',
+    quote:'"We\'re home all day, so it feels like we should be using the sun more effectively."',
+    facts:[
+      {label:'Bill',val:'~$520/qtr',cls:'good'},
+      {label:'Existing Solar',val:'None',cls:''},
+      {label:'Property',val:'Owns — 20+ years',cls:'good'},
+      {label:'Roof',val:'Solid, good aspect',cls:'good'},
+      {label:'Usage',val:'Home all day — high daytime',cls:'good'},
+      {label:'Motivation',val:'Energy independence',cls:'good'},
+      {label:'Decision Makers',val:'Both home, both keen',cls:'good'},
+      {label:'Plans',val:'No move plans — forever home',cls:'good'},
+    ],
+    correct:'full',
+    fb:'✅ <strong>Book Full Solar + Battery (2hr).</strong> Retired couple, home all day with high daytime usage — perfect solar profile. High bill, strong motivation, both decision-makers aligned, and a long-term forever home.',
+    rule:'Retirees who are home during the day have ideal solar usage patterns — high daytime consumption maximises ROI.'
+  },
+  {
+    name:'Aiden Fletcher',loc:'Blacktown, NSW',emoji:'👦',
+    tag:'No existing solar — wants battery',
+    quote:'"I want to get a battery to save money but I don\'t have solar yet."',
+    facts:[
+      {label:'Bill',val:'~$290/qtr',cls:'warn'},
+      {label:'Existing Solar',val:'None',cls:'bad'},
+      {label:'Property',val:'Owns',cls:'good'},
+      {label:'Motivation',val:'Save money',cls:'warn'},
+      {label:'Understanding',val:'Unclear on solar need',cls:'bad'},
+      {label:'Decision Makers',val:'Sole owner',cls:'good'},
+      {label:'Roof',val:'Adequate',cls:'good'},
+      {label:'Plans',val:'No move plans',cls:'good'},
+    ],
+    correct:'full',
+    fb:'✅ <strong>Book Full Solar + Battery (2hr) — redirect from battery.</strong> Aiden wants a battery but has no solar. You cannot book a Battery Only Zoom without existing solar. Redirect to a Full Solar + Battery assessment so the specialist can explain the full picture.',
+    rule:'No solar installed = cannot proceed with Battery Only. Always redirect to Full Solar + Battery assessment. This is a key rule.'
+  },
+  {
+    name:'Carol Bennett',loc:'Cronulla, NSW',emoji:'👩‍🦳',
+    tag:'Low usage household',
+    quote:'"I just wanted to see roughly what solar costs. My bills aren\'t that high to be honest."',
+    facts:[
+      {label:'Bill',val:'~$160/qtr',cls:'bad'},
+      {label:'Existing Solar',val:'None',cls:''},
+      {label:'Property',val:'Small apartment — strata',cls:'bad'},
+      {label:'Roof',val:'No roof access — strata',cls:'bad'},
+      {label:'Motivation',val:'Curiosity only',cls:'bad'},
+      {label:'Appliances',val:'Minimal — no AC, no pool',cls:'bad'},
+      {label:'Decision Makers',val:'Sole owner',cls:'good'},
+      {label:'Plans',val:'May move in 12 months',cls:'bad'},
+    ],
+    correct:'dont',
+    fb:'🚫 <strong>Don\'t Book.</strong> Very low bill, strata apartment with no roof access, minimal appliances, possible move within 12 months, and no real motivation beyond curiosity. Multiple disqualifiers — no viable ROI case.',
+    rule:'Bill under $300 with no usage drivers, strata restrictions, and potential move plans = do not book.'
+  },
+  {
+    name:'Jason & Mel Okafor',loc:'Liverpool, NSW',emoji:'👨‍👩‍👦',
+    tag:'Energy independence',
+    quote:'"We just want security if the grid goes down — we had three blackouts last summer."',
+    facts:[
+      {label:'Bill',val:'~$390/qtr',cls:'good'},
+      {label:'Existing Solar',val:'5kW — working',cls:'good'},
+      {label:'Export',val:'~8kWh/day',cls:'warn'},
+      {label:'Blackouts',val:'3 last summer — major concern',cls:'good'},
+      {label:'Motivation',val:'Backup power + independence',cls:'good'},
+      {label:'Property',val:'Owns',cls:'good'},
+      {label:'Decision Makers',val:'Both available',cls:'good'},
+      {label:'Plans',val:'No move plans',cls:'good'},
+    ],
+    correct:'battery',
+    fb:'✅ <strong>Book Battery Only (1hr).</strong> Existing solar working, motivated by blackout protection and energy independence — both strong battery drivers. Export is moderate but motivation is clear. This is a strong battery candidate.',
+    rule:'Blackout concern + energy independence + existing solar = Battery Only Zoom. Motivation quality matters as much as export volume.'
+  },
+  {
+    name:'Lisa Ngo',loc:'Fairfield, NSW',emoji:'👩',
+    tag:'Selling soon',
+    quote:'"We\'re thinking about solar before we sell — might add value to the home."',
+    facts:[
+      {label:'Bill',val:'~$340/qtr',cls:'warn'},
+      {label:'Existing Solar',val:'None',cls:''},
+      {label:'Property',val:'Owns',cls:'good'},
+      {label:'Roof',val:'Adequate',cls:'good'},
+      {label:'Move Plans',val:'Selling in 6–8 months',cls:'bad'},
+      {label:'Motivation',val:'Resale value only',cls:'bad'},
+      {label:'Decision Makers',val:'Husband not available',cls:'bad'},
+      {label:'ROI Case',val:'Won\'t benefit long-term',cls:'bad'},
+    ],
+    correct:'dont',
+    fb:'🚫 <strong>Don\'t Book.</strong> Lisa is selling within 6–8 months — within the 2-year rule — and the motivation is purely resale value rather than genuine solar benefit. Combined with the husband not available, this is not a qualified lead.',
+    rule:'Customers moving or selling within 2 years do not qualify. Short-term ownership = no viable ROI case.'
+  }
+];
+
+let round=0;
+let score=0;
+let streak=0;
+let correct=0;
+const results=[];
+
+function startGame(){
+  document.getElementById('intro').style.display='none';
+  document.getElementById('game').style.display='block';
+  round=0; score=0; streak=0; correct=0; results.length=0;
+  buildDots();
+  renderRound();
+}
+
+function restartGame(){
+  document.getElementById('end').classList.remove('show');
+  document.getElementById('end').style.display='none';
+  startGame();
+}
+
+function buildDots(){
+  document.getElementById('pdots').innerHTML=CUSTOMERS.map((_,i)=>`<div class="pdot" id="pd${i}"></div>`).join('');
+}
+
+function renderRound(){
+  if(round>=CUSTOMERS.length){ showEnd(); return; }
+  const c=CUSTOMERS[round];
+  document.getElementById('hrnd').textContent='CUSTOMER '+(round+1)+' / '+CUSTOMERS.length;
+  document.getElementById('httl').textContent=c.name+' · '+c.loc;
+  document.getElementById('pd'+round).className='pdot active';
+  ['full','battery','dont'].forEach(t=>{ const b=document.getElementById('btn-'+t); b.disabled=false; b.className='d-btn '+t; });
+  document.getElementById('fb').className='fb';
+  document.getElementById('next-btn-wrap').innerHTML='';
+
+  document.getElementById('scene').innerHTML=`
+    <div class="customer-card">
+      <div class="cust-top">
+        <div class="cust-av">${c.emoji}</div>
+        <div class="cust-info">
+          <div class="cust-name">${c.name}</div>
+          <div class="cust-loc">📍 ${c.loc}</div>
+          <div class="cust-tag">${c.tag}</div>
+        </div>
+      </div>
+      <div class="cust-quote">${c.quote}</div>
+      <div class="facts-grid">
+        ${c.facts.map(f=>`<div class="fact"><div class="fact-label">${f.label.toUpperCase()}</div><div class="fact-val${f.cls?' '+f.cls:''}">${f.val}</div></div>`).join('')}
+      </div>
+    </div>`;
+}
+
+function decide(choice){
+  const c=CUSTOMERS[round];
+  const isCorrect=choice===c.correct;
+  ['full','battery','dont'].forEach(t=>{
+    const b=document.getElementById('btn-'+t);
+    b.disabled=true;
+    if(t===choice){ b.classList.add(isCorrect?'correct-pick':'wrong-pick'); }
+    else if(t===c.correct&&!isCorrect){ b.classList.add('correct-pick'); }
+    else{ b.classList.add('wrong-pick'); }
+  });
+
+  const fb=document.getElementById('fb');
+  if(isCorrect){
+    correct++;
+    const pts=100+(streak*25);
+    score+=pts;
+    streak++;
+    fb.className='fb show ok';
+    fb.innerHTML=c.fb+`<div class="fb-rule"><strong>Key rule:</strong> ${c.rule}</div>`;
+    document.getElementById('pd'+round).className='pdot correct';
+    showFlash('+'+pts,'good');
+  } else {
+    streak=0;
+    fb.className='fb show bad';
+    fb.innerHTML=c.fb+`<div class="fb-rule"><strong>Key rule:</strong> ${c.rule}</div>`;
+    document.getElementById('pd'+round).className='pdot wrong';
+    showFlash('✗','bad');
+  }
+
+  results.push({round,correct:isCorrect,choice,customer:c});
+  document.getElementById('hstreak').textContent=streak>1?'🔥 x'+streak:'🔥 x1';
+  document.getElementById('hscore').textContent=score.toLocaleString()+' pts';
+
+  const wrap=document.getElementById('next-btn-wrap');
+  setTimeout(()=>{
+    wrap.innerHTML=`<button class="next-btn" onclick="nextRound()">${round<CUSTOMERS.length-1?'Next customer →':'See results 🏆'}</button>`;
+    wrap.scrollIntoView({behavior:'smooth',block:'nearest'});
+  },600);
+  fb.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function nextRound(){ round++; renderRound(); window.scrollTo({top:0,behavior:'smooth'}); }
+
+function showFlash(txt,type){
+  const el=document.createElement('div');
+  el.className='sflash '+type; el.textContent=txt;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),1000);
+}
+
+function showEnd(){
+  document.getElementById('game').style.display='none';
+  const end=document.getElementById('end');
+  end.style.display='flex'; end.classList.add('show');
+  const pct=Math.round(correct/CUSTOMERS.length*100);
+  let grade,gcolor;
+  if(pct===100){grade='S';gcolor='#FFD700';}
+  else if(pct>=80){grade='A';gcolor='#4ADE80';}
+  else if(pct>=60){grade='B';gcolor='var(--sky)';}
+  else if(pct>=40){grade='C';gcolor:'var(--orange)';}
+  else{grade='D';gcolor='#F87171';}
+  document.getElementById('eico').textContent=pct>=80?'🏆':pct>=60?'✅':'📋';
+  document.getElementById('etitle').innerHTML=pct>=80?'Sharp <em>instincts.</em>':pct>=60?'Getting <em>there.</em>':'Study the <em>rules.</em>';
+  document.getElementById('esub').textContent=correct+' out of '+CUSTOMERS.length+' correct.';
+  document.getElementById('esscore').textContent=score.toLocaleString();
+  document.getElementById('escorrect').textContent=correct+'/'+CUSTOMERS.length;
+  document.getElementById('esgrade').textContent=grade;
+  document.getElementById('esgrade').style.color=gcolor;
+
+  const fbs={10:'<strong>Perfect.</strong> 10 out of 10 — you called every customer correctly. You know the difference between a qualified lead, a battery candidate, and a time-waster. That\'s exactly the instinct that keeps specialist calendars full of quality.',8:'<strong>Sharp.</strong> Strong instincts — a couple of edge cases caught you out. Review the ones you missed, especially the battery-redirect scenario (no solar = Full Solar, not Battery Only).',6:'<strong>Decent foundation.</strong> The core logic is there but the edge cases are getting you. Pay attention to: renters, price shoppers, moving-within-2-years, and the battery-without-solar redirect.',4:'<strong>Needs work.</strong> Several misses — usually on the boundary cases. Study the qualification rules below carefully. The goal isn\'t fewer bookings, it\'s the right bookings.',0:'<strong>Start with the rules.</strong> Work through the Quick Reference below, then play again. The qualification criteria are clear once you know them.'};
+  const fbKey=pct===100?10:pct>=80?8:pct>=60?6:pct>=40?4:0;
+  document.getElementById('efb').innerHTML=fbs[fbKey];
+
+  document.getElementById('review').innerHTML=results.map((r,i)=>{
+    const verdictMap={full:'Book Full Solar (2hr)',battery:'Book Battery Only (1hr)',dont:'Don\'t Book'};
+    const yourVerdict=verdictMap[r.choice]||'—';
+    const correctVerdict=verdictMap[r.customer.correct];
+    return `<div class="rev-card ${r.correct?'ok':'bad'}">
+      <div class="rev-lbl">CUSTOMER ${i+1} — ${r.correct?'✅ CORRECT':'❌ WRONG'}</div>
+      <div class="rev-name">${r.customer.name} · ${r.customer.loc}</div>
+      <div class="rev-verdict" style="color:rgba(255,255,255,.4);font-size:12px;">Your call: <strong style="color:${r.correct?'#4ADE80':'#F87171'}">${yourVerdict}</strong>${!r.correct?' · Correct: <strong style="color:#4ADE80">'+correctVerdict+'</strong>':''}</div>
+      <div class="rev-why">${r.customer.rule}</div>
+    </div>`;
+  }).join('');
+  end.scrollIntoView({behavior:'smooth',block:'start'});
+}
+</script>
+</body>
+</html>
